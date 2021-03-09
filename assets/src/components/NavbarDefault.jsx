@@ -1,17 +1,18 @@
 import React from "react";
-import {Nav} from "react-bootstrap";
+import {Navbar, Nav} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
-const Navbar = () => {
+const NavbarDefault = () => {
     return (
-        <Navbar className="navbar-horizontal navbar-dark bg-default">
-            <Navbar.Brand href="/">Backlog</Navbar.Brand>
-            <Nav className="mr-auto">
+        <Nav variant="pills" defaultActiveKey="/">
+            <Nav.Item>
                 <Nav.Link as={Link} to="/">Home</Nav.Link>
-                <Nav.Link as={Link} to="/game">Games</Nav.Link>
-            </Nav>
-        </Navbar>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link  as={Link} to="/game">Search Game</Nav.Link>
+            </Nav.Item>
+        </Nav>
     )
 }
 
-export default Navbar;
+export default NavbarDefault;
