@@ -3,6 +3,7 @@ import {Route, Switch,Redirect, Link} from 'react-router-dom';
 import NavbarDefault from "./components/NavbarDefault";
 import Home from "./Home/Home";
 import Game from "./Game/Game";
+import Login from "./Login/Login";
 import FooterDefault from "./components/FooterDefault";
 
 const App = () => {
@@ -17,6 +18,9 @@ const App = () => {
                 </Route>
                 <Route path="/game">
                     <Game />
+                </Route>
+                <Route path="/login">
+                    <Login />
                 </Route>
                 <Route render={() => <Redirect to="/" />} />
             </Switch>

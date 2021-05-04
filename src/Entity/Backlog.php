@@ -33,27 +33,23 @@ class Backlog
     private $addedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="backlogs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $userGame;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Platform::class, inversedBy="backlogs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $platform;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="backlogs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $status;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="backlogs")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="backlogs")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $game;
+
 
     public function getId(): ?int
     {
@@ -96,30 +92,6 @@ class Backlog
         return $this;
     }
 
-    public function getUserGame(): ?User
-    {
-        return $this->userGame;
-    }
-
-    public function setUserGame(?User $userGame): self
-    {
-        $this->userGame = $userGame;
-
-        return $this;
-    }
-
-    public function getPlatform(): ?Platform
-    {
-        return $this->platform;
-    }
-
-    public function setPlatform(?Platform $platform): self
-    {
-        $this->platform = $platform;
-
-        return $this;
-    }
-
     public function getStatus(): ?Status
     {
         return $this->status;
@@ -128,6 +100,18 @@ class Backlog
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

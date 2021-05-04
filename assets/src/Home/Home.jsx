@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Container, Row, Col, Button, Jumbotron} from "react-bootstrap";
-import axios from "axios";
+import {getUsers} from "../../api/ApiGames";
+import {API_URL, tokenHeader} from "../../api/Auth/DataService";
 
 const Home = () => {
 
@@ -9,11 +10,11 @@ const Home = () => {
     const [error, setError] = React.useState({});
 
     React.useEffect(() => {
-        getUsers();
+        getGames();
     }, []);
 
-    const getUsers = () => {
-        axios.get("https://127.0.0.1:8000/api/games/")
+    const getGames = () => {
+        getUsers(API_URL, tokenHeader("foo"))
             .then(result => {
                 setData(result.data);
                 setLoaded(true);
@@ -26,16 +27,27 @@ const Home = () => {
 
     return (
         <Container className="py-lg-md d-flex">
-            <Jumbotron>
-                <h1>Hello, world!</h1>
-                <p>
-                    This is a simple hero unit, a simple jumbotron-style component for calling
-                    extra attention to featured content or information.
-                </p>
-                <p>
-                    <Button variant="primary">Learn more</Button>
-                </p>
-            </Jumbotron>
+            <Row>
+                <Jumbotron>
+                    <h1>Hello, world!</h1>
+                    <p>
+                        This is a simple hero unit, a simple jumbotron-style component for calling
+                        extra attention to featured content or information.
+                    </p>
+                    <p>
+                        <Button variant="primary">Learn more</Button>
+                    </p>
+                </Jumbotron>
+            </Row>
+            <Row>
+                <Col>
+                    <ul>
+                        { data.map(game => (
+                            <li key={game.id}>{ game.name }</li>
+                        ))}
+                    </ul>
+                </Col>
+            </Row>
         </Container>
 
     )

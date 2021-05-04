@@ -29,6 +29,7 @@ class Status
      */
     private $backlogs;
 
+
     public function __construct()
     {
         $this->backlogs = new ArrayCollection();

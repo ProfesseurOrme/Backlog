@@ -63,13 +63,13 @@ class User implements UserInterface
     private $lastActivity;
 
     /**
-     * @ORM\OneToMany(targetEntity=Backlog::class, mappedBy="userGame", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Backlog::class, mappedBy="user")
      */
     private $backlogs;
 
+
     public function __construct()
     {
-        $this->games = new ArrayCollection();
         $this->backlogs = new ArrayCollection();
     }
 
@@ -221,7 +221,7 @@ class User implements UserInterface
     {
         if (!$this->backlogs->contains($backlog)) {
             $this->backlogs[] = $backlog;
-            $backlog->setUserGame($this);
+            $backlog->setUser($this);
         }
 
         return $this;
@@ -231,12 +231,11 @@ class User implements UserInterface
     {
         if ($this->backlogs->removeElement($backlog)) {
             // set the owning side to null (unless already changed)
-            if ($backlog->getUserGame() === $this) {
-                $backlog->setUserGame(null);
+            if ($backlog->getUser() === $this) {
+                $backlog->setUser(null);
             }
         }
 
         return $this;
     }
-
 }

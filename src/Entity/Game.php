@@ -6,6 +6,7 @@ use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=GameRepository::class)
@@ -20,7 +21,7 @@ class Game
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $uuid;
 
@@ -30,6 +31,7 @@ class Game
     private $name;
 
     /**
+		 * @Gedmo\Slug(fields={"uuid","name"})
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
@@ -59,16 +61,21 @@ class Game
      */
     private $backlogs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ReleaseData::class, mappedBy="game")
+     */
+    private $releaseData;
+
     public function __construct()
     {
-        $this->users = new ArrayCollection();
         $this->backlogs = new ArrayCollection();
+        $this->releaseData = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+		public function getId(): ?int
+		{
+				return $this->id;
+		}
 
     public function getUuid(): ?string
     {
@@ -178,6 +185,36 @@ class Game
             // set the owning side to null (unless already changed)
             if ($backlog->getGame() === $this) {
                 $backlog->setGame(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ReleaseData[]
+     */
+    public function getReleaseData(): Collection
+    {
+        return $this->releaseData;
+    }
+
+    public function addReleaseData(ReleaseData $releaseData): self
+    {
+        if (!$this->releaseData->contains($releaseData)) {
+            $this->releaseData[] = $releaseData;
+            $releaseData->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReleaseData(ReleaseData $releaseData): self
+    {
+        if ($this->releaseData->removeElement($releaseData)) {
+            // set the owning side to null (unless already changed)
+            if ($releaseData->getGame() === $this) {
+                $releaseData->setGame(null);
             }
         }
 

@@ -30,13 +30,14 @@ class Platform
     private $uuid;
 
     /**
-     * @ORM\OneToMany(targetEntity=Backlog::class, mappedBy="platform")
+     * @ORM\OneToMany(targetEntity=ReleaseData::class, mappedBy="platform")
      */
-    private $backlogs;
+    private $releaseData;
+
 
     public function __construct()
     {
-        $this->backlogs = new ArrayCollection();
+        $this->releaseData = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,29 +70,29 @@ class Platform
     }
 
     /**
-     * @return Collection|Backlog[]
+     * @return Collection|ReleaseData[]
      */
-    public function getBacklogs(): Collection
+    public function getReleaseData(): Collection
     {
-        return $this->backlogs;
+        return $this->releaseData;
     }
 
-    public function addBacklog(Backlog $backlog): self
+    public function addReleaseData(ReleaseData $releaseData): self
     {
-        if (!$this->backlogs->contains($backlog)) {
-            $this->backlogs[] = $backlog;
-            $backlog->setPlatform($this);
+        if (!$this->releaseData->contains($releaseData)) {
+            $this->releaseData[] = $releaseData;
+            $releaseData->setPlatform($this);
         }
 
         return $this;
     }
 
-    public function removeBacklog(Backlog $backlog): self
+    public function removeReleaseData(ReleaseData $releaseData): self
     {
-        if ($this->backlogs->removeElement($backlog)) {
+        if ($this->releaseData->removeElement($releaseData)) {
             // set the owning side to null (unless already changed)
-            if ($backlog->getPlatform() === $this) {
-                $backlog->setPlatform(null);
+            if ($releaseData->getPlatform() === $this) {
+                $releaseData->setPlatform(null);
             }
         }
 

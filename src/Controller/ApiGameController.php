@@ -2,18 +2,23 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class GameController extends AbstractController
+/**
+ * Class GameController
+ * @package App\Controller
+ * @Route("/api")
+ */
+class ApiGameController extends AbstractApiController
 {
+
     /**
-     * @Route("/api/games/", name="game_list")
+     * @Route("/games", name="game_list")
      */
     public function index(): Response
 		{
-			$data = [
+			$games = [
 				[
 					'id' => 1,
 					'name' => 'Olususi Oluyemi',
@@ -46,12 +51,6 @@ class GameController extends AbstractController
 				]
 			];
 
-			$response = new Response();
-
-			$response->headers->set('Content-Type', 'application/json');
-			$response->headers->set('Access-Control-Allow-Origin', '*');
-
-			$response->setContent(json_encode($data));
-			return $response;
+			return $this->respond($games);
     }
 }
