@@ -19,6 +19,7 @@ security:
             security: false
         api:
             pattern: ^/api
+            anonymous: ~
             stateless: true
             provider: app_user_provider
             guard:

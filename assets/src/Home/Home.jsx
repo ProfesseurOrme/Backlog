@@ -1,26 +1,29 @@
 import * as React from "react";
 import {Container, Row, Col, Button, Jumbotron} from "react-bootstrap";
 import {getUsers} from "../../api/ApiGames";
-import {API_URL, tokenHeader} from "../../api/Auth/DataService";
+import DataService from "../../api/Auth/DataService";
 
-const Home = () => {
+const Home = ({user}) => {
 
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(false);
     const [error, setError] = React.useState({});
 
     React.useEffect(() => {
-        getGames();
+        if(user) {
+            getGames(user.token);
+        }
     }, []);
 
-    const getGames = () => {
-        getUsers(API_URL, tokenHeader("foo"))
+    const getGames = (token) => {
+        getUsers(DataService.API_URL, DataService.tokenHeader(token))
             .then(result => {
                 setData(result.data);
                 setLoaded(true);
             })
             .catch(error => {
-                setError(error);
+                setError(error.message);
+                setLoaded(true);
             })
         ;
     }
@@ -29,7 +32,7 @@ const Home = () => {
         <Container className="py-lg-md d-flex">
             <Row>
                 <Jumbotron>
-                    <h1>Hello, world!</h1>
+                    {user ? <h1>Hello {user.data.user} !</h1> : <h1> Hello World !</h1> }
                     <p>
                         This is a simple hero unit, a simple jumbotron-style component for calling
                         extra attention to featured content or information.

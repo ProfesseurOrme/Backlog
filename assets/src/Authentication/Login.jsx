@@ -1,27 +1,31 @@
 import React from "react";
+import {useHistory} from "react-router-dom";
 import { Button, Card, Form} from "react-bootstrap";
-import AlertDefault from "../components/AlertDefault";
-import {login} from "../../api/Auth/AuthService";
-import {API_URL} from "../../api/Auth/DataService";
+import AlertDefault from "../Assets/AlertDefault";
+import AuthService from "../../api/Auth/AuthService";
+import DataService from "../../api/Auth/DataService";
 
-const Login = () => {
+const Login = ({setUser}) => {
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [error, setError] = React.useState("");
+    let history = useHistory();
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
         const data = {
             username : username,
             password : password
         }
 
-        const loginResult = login(API_URL, data)
-            .then(res => {
-                // set action when authenticate
-            }).catch(err => {
-                setError(err.response.data.message);
+        const loginResult = AuthService.login(DataService.API_URL, data)
+            .then(result => {
+                setError("");
+                setUser(result);
+                history.push("/");
+            }).catch(error => {
+                setError(error);
             })
         ;
 

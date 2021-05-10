@@ -32,8 +32,13 @@ services:
     # please note that last definitions always *replace* previous ones
 
     acme_api.event.jwt_expired_listener:
-        class: App\EventListener\JWTEventListener
+        class: App\EventListener\JWTErrorListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTError }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTError }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTError }
+
+    acme_api.event.authentication_success_listener:
+        class: App\EventListener\JWTAuthenticationSuccessListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }

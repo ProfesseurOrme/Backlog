@@ -1,27 +1,52 @@
 import * as React from 'react';
-import {Route, Switch,Redirect, Link} from 'react-router-dom';
-import NavbarDefault from "./components/NavbarDefault";
+import {Route, Switch,Redirect} from 'react-router-dom';
+import NavbarDefault from "./Assets/NavbarDefault";
 import Home from "./Home/Home";
 import Game from "./Game/Game";
-import Login from "./Login/Login";
-import FooterDefault from "./components/FooterDefault";
+import Login from "./Authentication/Login";
+import FooterDefault from "./Assets/FooterDefault";
+import AuthService from "../api/Auth/AuthService";
+import DataService  from "../api/Auth/DataService";
+import Register from "./Authentication/Register";
 
 const App = () => {
-    const[ greetings, setGreetings ] = React.useState("Salut c'est un test");
+
+    const [user, setUser] = React.useState("");
+    const [loaded, setLoaded] = React.useState(false);
+
+    React.useEffect(() => {
+        AuthService.checkUser(DataService.API_URL,"user")
+            .then(result => {
+                setUser(result);
+                setLoaded(true);
+            })
+            .catch(error => {
+                setLoaded(true);
+            })
+        ;
+    }, [loaded]);
+
+    const logout = () => {
+        AuthService.logout();
+        setUser("");
+    }
+
+    const NotAuthenticatedRoutes = (props) => {
+        return (!user) ? <Route {...props} /> : <Redirect to="/" /> ;
+    }
+    const AuthenticatedRoutes = (props) => {
+        return (user) ? <Route {...props} /> : <Redirect to="/"/>;
+    }
 
     return (
         <>
-            <NavbarDefault />
+            <NavbarDefault user={user} logout={logout} />
             <Switch>
-                <Route path="/" exact>
-                    <Home />
-                </Route>
-                <Route path="/game">
-                    <Game />
-                </Route>
-                <Route path="/login">
-                    <Login />
-                </Route>
+                <Route path="/" exact render={() => <Home user={user} />} />
+                <Route path="/game" component={Game} />
+                <NotAuthenticatedRoutes path="/register" component={Register} />
+                <NotAuthenticatedRoutes path="/login" render={() => <Login setUser={setUser}/>} />
+                <AuthenticatedRoutes path="/logout" />
                 <Route render={() => <Redirect to="/" />} />
             </Switch>
             <FooterDefault />

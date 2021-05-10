@@ -26,7 +26,7 @@ abstract class AbstractApiController extends AbstractController
 			return $this->statusCode;
 		}
 
-		public function setStatusCode($statusCode): ApiController
+		public function setStatusCode($statusCode): AbstractApiController
 		{
 			$this->statusCode = $statusCode;
 
@@ -50,25 +50,24 @@ abstract class AbstractApiController extends AbstractController
 
 		public function respondWithErrors($errors): Response
 		{
-			$data = [
+			return $this->respond([
 				'code' => $this->getStatutsCode(),
 				'error' => $errors
-			];
-			return $this->respond($data);
+			]);
 		}
 
-		public function respondCreated($data): Response
+		public function respondCreated($message): Response
 		{
-			return $this->setStatusCode(Response::HTTP_CREATED)->respond($data);
+			return $this->setStatusCode(Response::HTTP_CREATED)->respond(["code" => Response::HTTP_CREATED, "message" => $message]);
 		}
 
-		public function respondDeleted($data) : Response
+		public function respondDeleted($message) : Response
 		{
-			return $this->setStatusCode(Response::HTTP_NO_CONTENT)->respond($data);
+			return $this->setStatusCode(Response::HTTP_NO_CONTENT)->respond(["code" => Response::HTTP_NO_CONTENT, "message" => $message]);
 		}
 
-		public function respondNotFound($data) : Response
+		public function respondNotFound($message) : Response
 		{
-			return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithErrors($data);
+			return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithErrors(["code" => Response::HTTP_NOT_FOUND, "message" => $message]);
 		}
 }

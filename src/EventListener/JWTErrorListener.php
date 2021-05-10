@@ -10,7 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class JWTEventListener
+class JWTErrorListener
 {
 	public function onJWTError(JWTFailureEventInterface $failureEvent)
 	{
