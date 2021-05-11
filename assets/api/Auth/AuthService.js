@@ -34,10 +34,12 @@ class AuthService {
         }
 
         const item = JSON.parse(itemStr)
+        const pastDate = new Date(item.expired_token_date).getTime();
+        const now = new Date();
 
-        const now = new Date()
-        if (now.getTime() > item.expired_token_date) {
-            await refreshToken(domain, item.refresh_token)
+        if (now.getTime() > pastDate) {
+
+            await refreshToken(domain, {"refresh_token" : item.refresh_token})
                 .then(result => {
                     const newItem = {
                         ...item,

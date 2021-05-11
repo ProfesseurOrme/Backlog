@@ -20,7 +20,9 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@popperjs/core": "^2.9.2",
         "bootstrap": "^4.6.0",
+        "notus-js": "^1.1.0",
         "prop-types": "^15.7.2",
         "react": "^17.0.1",
         "react-bootstrap": "^1.5.1",

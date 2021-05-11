@@ -1,75 +1,80 @@
-import * as React from "react";
-import {Button, Col, Form, Container, FormControl, InputGroup, Jumbotron, Row, Table, Accordion} from "react-bootstrap";
-import GameList from "./GameList";
-import axios from "axios";
-import {apiKey} from "../../api/config";
-
+import React from "react";
+import background from "../../img/background.jpg";
+import Dashboard from "./Components/Dashboard";
+import Search from "./Components/Search";
 
 const Game = () => {
 
-    const [search, setSearch] = React.useState("");
-    const [games, setGames] = React.useState(null);
-    const [nbResults, setNbResults] = React.useState(0);
-    const [error, setError] = React.useState("");
-    const [loaded, setLoaded] = React.useState();
-
-    const handleSearch = async (event) => {
-        event.preventDefault();
-        let slug = search.split(' ').join('-').toLowerCase();
-        if(search.length > 3) {
-            axios.get("https://api.rawg.io/api/games?key=" + apiKey + "&search=" + slug +"&search_exact=true&exclude_additions=true")
-                .then(result => {
-                    console.log(result);
-                    setNbResults(result.data.count);
-                    setGames(result.data.results);
-                })
-                .catch(error => {
-                    setError(error.message);
-                })
-            ;
-        }
-    }
-
+    const [openTab, setOpenTab] = React.useState(1);
     return (
-        <>
-            <Container>
-                <Row>
-                    <Jumbotron>
-                        <h1> Search your game !</h1>
-                        <p>
-                            Please enter the name of the game and choose it from the proposed list.
-                        </p>
-                        <Form onSubmit={handleSearch}>
-                            <InputGroup className="mb-3">
-                                <FormControl
-                                    placeholder="Search a game"
-                                    aria-label="Search a game"
-                                    aria-describedby="search-a-game"
-                                    onChange={(event) => setSearch(event.target.value)}
-                                />
-                                <InputGroup.Append>
-                                    <Button variant="outline-secondary" type="submit">Search</Button>
-                                </InputGroup.Append>
-                            </InputGroup>
-                        </Form>
-                    </Jumbotron>
-                </Row>
-            </Container>
-            {games ?
-                <Container>
-                    { (nbResults > 0) ? <h1>There is {nbResults} result(s) !</h1> : <h1>No result ! Repeat your search</h1> }
-                    <Row>
-                        <Col>
-                            <Accordion>
-
-                                {games.map(game => (game.added_by_status) ? <GameList key={game.id} game={game} /> : null )}
-                            </Accordion>
-                        </Col>
-                    </Row>
-                </Container>
-                : "" }
-
-        </>
+        <main>
+            <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">
+                <div className="absolute top-0 w-full h-full bg-center bg-cover" style={{ backgroundImage: `url(${background})` }}>
+                    <span id="blackOverlay" className="w-full h-full absolute opacity-75 bg-black">
+                    </span>
+                </div>
+                <div className="container relative mx-auto">
+                    <div className="items-center flex flex-wrap">
+                        <div className="w-full lg:w-10/12 px-4 ml-auto mr-auto text-center">
+                            <h1 className="text-white">Votre profil</h1>
+                            <ul className="dashboard__list flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row" role="tablist">
+                                <li className="-mb-px mr-4 last:mr-0 flex-auto text-center">
+                                    <a
+                                        className={
+                                            "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
+                                            (openTab === 1
+                                                ? "text-white bg-purple-900"
+                                                : "text-purple-900 bg-white")
+                                        }
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            setOpenTab(1);
+                                        }}
+                                        data-toggle="tab"
+                                        href="#link1"
+                                        role="tablist"
+                                    >
+                                        <i className="text-base mr-1 fas fa-book-open">
+                                        </i> Dashboard
+                                    </a>
+                                </li>
+                                <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                                    <a className={
+                                            "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
+                                            (openTab === 2
+                                                ? "text-white bg-purple-900"
+                                                : "text-purple-900 bg-white")
+                                        }
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            setOpenTab(2);
+                                        }}
+                                        data-toggle="tab"
+                                        href="#link2"
+                                        role="tablist"
+                                    >
+                                        <i className="fas fa-search text-base mr-1">
+                                        </i> Search
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px" style={{ transform: "translateZ(0)" }}>
+                    <svg className="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0">
+                        <polygon className="text-blueGray-200 fill-current" points="2560 0 2560 100 0 100">
+                        </polygon>
+                    </svg>
+                </div>
+            </div>
+            <section className="pb-20 bg-blueGray-200 -mt-24">
+                <div className="container mx-auto px-4">
+                    <Dashboard openTab={openTab} className={openTab === 1 ? "block" : "hidden"} id="link1" />
+                    <Search openTab={openTab} className={openTab === 2 ? "block" : "hidden"} id="link2" />
+                </div>
+            </section>
+        </main>
     )
 }
 

@@ -1,5 +1,70 @@
-@import '~bootstrap/scss/bootstrap.scss';
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+@import '~notus-js/assets/styles/tailwind.css';
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-body {
-    background-color: lightgray;
+// Variables
+:root {
+    --purple: #6B21A8;
+    --font-family-titles : 'Press Start 2P', sans-serif;
+}
+
+%bg-purple-900 {
+    background-color: var(--purple);
+}
+
+//App
+
+a {
+    color: inherit;
+}
+
+h1, h5, h6  {
+    font-family: var(--font-family-titles);
+}
+
+button {
+    &.bg-purple-900 {
+        @extend %bg-purple-900;
+    }
+}
+
+//Home
+
+// Navbar
+
+nav {
+    @extend %bg-purple-900;
+    font-family: var(--font-family-titles);
+}
+
+.navbar__items {
+    margin-bottom: 0;
+}
+
+// Game
+
+.dashboard__list {
+    li {
+        a {
+            @extend %bg-purple-900;
+            font-family: var(--font-family-titles);
+        }
+    }
+}
+
+.input__search {
+    font-size: 1.6rem;
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+table {
+    tbody {
+        tr {
+            td.border {
+                border: none;
+            }
+        }
+    }
 }
