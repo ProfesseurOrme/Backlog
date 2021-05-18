@@ -63,14 +63,19 @@ class User implements UserInterface
     private $lastActivity;
 
     /**
-     * @ORM\OneToMany(targetEntity=Backlog::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="user")
      */
     private $backlogs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserGameStatus::class, mappedBy="user")
+     */
+    private $userGameStatuses;
 
     public function __construct()
     {
         $this->backlogs = new ArrayCollection();
+        $this->userGameStatuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -233,6 +238,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($backlog->getUser() === $this) {
                 $backlog->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserGameStatus[]
+     */
+    public function getUserGameStatuses(): Collection
+    {
+        return $this->userGameStatuses;
+    }
+
+    public function addUserGameStatus(UserGameStatus $userGameStatus): self
+    {
+        if (!$this->userGameStatuses->contains($userGameStatus)) {
+            $this->userGameStatuses[] = $userGameStatus;
+            $userGameStatus->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserGameStatus(UserGameStatus $userGameStatus): self
+    {
+        if ($this->userGameStatuses->removeElement($userGameStatus)) {
+            // set the owning side to null (unless already changed)
+            if ($userGameStatus->getUser() === $this) {
+                $userGameStatus->setUser(null);
             }
         }
 

@@ -35,19 +35,19 @@ const App = () => {
         return (!user) ? <Route {...props} /> : <Redirect to="/" /> ;
     }
     const AuthenticatedRoutes = (props) => {
-        return (user) ? <Route {...props} /> : <Redirect to="/"/>;
+        return (user) ? <Route {...props} user={user} /> : <Redirect to="/"/>;
     }
 
     return (
         <>
             <NavbarDefault user={user} logout={logout} />
-
             <Switch>
                 <Route path="/" exact render={() => <Home user={user} />} />
-                <AuthenticatedRoutes path="/games" component={Game} />
+                <AuthenticatedRoutes path="/games" render={() => <Game user={user}/>} />
+                <AuthenticatedRoutes path="/logout" />
                 <NotAuthenticatedRoutes path="/register" component={Register} />
                 <NotAuthenticatedRoutes path="/login" render={() => <Login setUser={setUser}/>} />
-                <AuthenticatedRoutes path="/logout" />
+
                 <Route render={() => <Redirect to="/" />} />
             </Switch>
             <FooterDefault />

@@ -25,14 +25,13 @@ class Status
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity=Backlog::class, mappedBy="status")
+     * @ORM\OneToMany(targetEntity=UserGameStatus::class, mappedBy="status")
      */
-    private $backlogs;
-
+    private $userGameStatuses;
 
     public function __construct()
     {
-        $this->backlogs = new ArrayCollection();
+        $this->userGameStatuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,29 +52,29 @@ class Status
     }
 
     /**
-     * @return Collection|Backlog[]
+     * @return Collection|UserGameStatus[]
      */
-    public function getBacklogs(): Collection
+    public function getUserGameStatuses(): Collection
     {
-        return $this->backlogs;
+        return $this->userGameStatuses;
     }
 
-    public function addBacklog(Backlog $backlog): self
+    public function addUserGameStatus(UserGameStatus $userGameStatus): self
     {
-        if (!$this->backlogs->contains($backlog)) {
-            $this->backlogs[] = $backlog;
-            $backlog->setStatus($this);
+        if (!$this->userGameStatuses->contains($userGameStatus)) {
+            $this->userGameStatuses[] = $userGameStatus;
+            $userGameStatus->setStatus($this);
         }
 
         return $this;
     }
 
-    public function removeBacklog(Backlog $backlog): self
+    public function removeUserGameStatus(UserGameStatus $userGameStatus): self
     {
-        if ($this->backlogs->removeElement($backlog)) {
+        if ($this->userGameStatuses->removeElement($userGameStatus)) {
             // set the owning side to null (unless already changed)
-            if ($backlog->getStatus() === $this) {
-                $backlog->setStatus(null);
+            if ($userGameStatus->getStatus() === $this) {
+                $userGameStatus->setStatus(null);
             }
         }
 

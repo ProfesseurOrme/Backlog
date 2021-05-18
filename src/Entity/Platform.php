@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PlateformRepository;
+use App\Repository\PlatformRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=PlateformRepository::class)
+ * @ORM\Entity(repositoryClass=PlatformRepository::class)
  */
 class Platform
 {
@@ -25,19 +25,18 @@ class Platform
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255, unique=true)
      */
     private $uuid;
 
     /**
-     * @ORM\OneToMany(targetEntity=ReleaseData::class, mappedBy="platform")
+     * @ORM\ManyToMany(targetEntity=Game::class, mappedBy="platform", cascade={"persist"})
      */
-    private $releaseData;
-
+    private $games;
 
     public function __construct()
     {
-        $this->releaseData = new ArrayCollection();
+        $this->games = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,30 +69,27 @@ class Platform
     }
 
     /**
-     * @return Collection|ReleaseData[]
+     * @return Collection|Game[]
      */
-    public function getReleaseData(): Collection
+    public function getGames(): Collection
     {
-        return $this->releaseData;
+        return $this->games;
     }
 
-    public function addReleaseData(ReleaseData $releaseData): self
+    public function addGame(Game $game): self
     {
-        if (!$this->releaseData->contains($releaseData)) {
-            $this->releaseData[] = $releaseData;
-            $releaseData->setPlatform($this);
+        if (!$this->games->contains($game)) {
+            $this->games[] = $game;
+            $game->addPlatform($this);
         }
 
         return $this;
     }
 
-    public function removeReleaseData(ReleaseData $releaseData): self
+    public function removeGame(Game $game): self
     {
-        if ($this->releaseData->removeElement($releaseData)) {
-            // set the owning side to null (unless already changed)
-            if ($releaseData->getPlatform() === $this) {
-                $releaseData->setPlatform(null);
-            }
+        if ($this->games->removeElement($game)) {
+            $game->removePlatform($this);
         }
 
         return $this;

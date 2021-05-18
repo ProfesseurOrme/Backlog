@@ -7,29 +7,6 @@ import {Link} from "react-router-dom";
 
 const Home = ({user}) => {
 
-    const [data, setData] = React.useState([]);
-    const [loaded, setLoaded] = React.useState(false);
-    const [error, setError] = React.useState({});
-
-    React.useEffect(() => {
-        if(user) {
-            getGames(user.token);
-        }
-    }, []);
-
-    const getGames = (token) => {
-        getUsers(DataService.API_URL, DataService.tokenHeader(token))
-            .then(result => {
-                setData(result.data);
-                setLoaded(true);
-            })
-            .catch(error => {
-                setError(error.message);
-                setLoaded(true);
-            })
-        ;
-    }
-
     return (
         <main>
             <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">

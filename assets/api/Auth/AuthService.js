@@ -48,7 +48,6 @@ class AuthService {
                         expired_token_date : this.setExpirationDate()
                     };
                     localStorage.setItem(key, JSON.stringify(newItem));
-                    console.log("oui");
                     return newItem;
                 })
                 .catch(_ => {

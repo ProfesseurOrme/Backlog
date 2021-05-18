@@ -1,7 +1,13 @@
 import axios from "axios";
 
-export const getUsers = async(domain,header) => {
-    await axios.get(domain + "/api/games", {
+export const getGamesPerUsers = (domain, header) => {
+    return axios.get(domain + "/api/games" , {
         headers : header
-    });
+    })
+}
+
+export const updateGameUserStatus= (domain, header, statusId, gameUuid, gameSlug) => {
+    return axios.put(domain + "/api/games/" + gameUuid + "-" + gameSlug + "/status" + statusId, {}, {
+        headers : header
+    })
 }

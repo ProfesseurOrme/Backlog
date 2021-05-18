@@ -1,12 +1,35 @@
 import React from "react";
 import background from "../../img/background.jpg";
 import Dashboard from "./Components/Dashboard";
-import Search from "./Components/Search";
+import SearchGame from "./Components/SearchGame";
+import DataService from "../../api/Auth/DataService";
+import axios from "axios";
+import {getGamesPerUsers} from "../../api/ApiGames";
 
-const Game = () => {
-
+const Game = ({user}) => {
     const [openTab, setOpenTab] = React.useState(1);
+    const [userGames, setUserGames] = React.useState(null);
+    const [error, setError] = React.useState("");
+    const [loaded, setLoaded] = React.useState(false);
+
+    React.useEffect(() => {
+        if(user) {
+            getGames(DataService.API_URL, DataService.tokenHeader(user.token))
+        }
+    }, [])
+
+    const getGames = (domain, header) => {
+        getGamesPerUsers(domain, header).then(result => {
+            setUserGames(result.data);
+            setLoaded(true);
+        })
+        .catch(error => {
+            setError(error.message);
+        })
+    }
+
     return (
+
         <main>
             <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">
                 <div className="absolute top-0 w-full h-full bg-center bg-cover" style={{ backgroundImage: `url(${background})` }}>
@@ -69,9 +92,12 @@ const Game = () => {
                 </div>
             </div>
             <section className="pb-20 bg-blueGray-200 -mt-24">
-                <div className="container mx-auto px-4">
-                    <Dashboard openTab={openTab} className={openTab === 1 ? "block" : "hidden"} id="link1" />
-                    <Search openTab={openTab} className={openTab === 2 ? "block" : "hidden"} id="link2" />
+                <div className="container mx-auto">
+
+                            <Dashboard openTab={openTab} className={openTab === 1 ? "block" : "hidden"} id="link1" user={user} userGames={userGames ? userGames : null} />
+                            <SearchGame openTab={openTab} className={openTab === 2 ? "block" : "hidden"} id="link2" user={user} userGames={userGames ? userGames : null} />
+
+
                 </div>
             </section>
         </main>

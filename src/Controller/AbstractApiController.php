@@ -66,8 +66,13 @@ abstract class AbstractApiController extends AbstractController
 			return $this->setStatusCode(Response::HTTP_NO_CONTENT)->respond(["code" => Response::HTTP_NO_CONTENT, "message" => $message]);
 		}
 
+		public function respondUpdated($message) : Response
+		{
+			return $this->setStatusCode(Response::HTTP_OK)->respond(["code" => Response::HTTP_OK, "message" => $message]);
+		}
+
 		public function respondNotFound($message) : Response
 		{
-			return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respondWithErrors(["code" => Response::HTTP_NOT_FOUND, "message" => $message]);
+			return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respond(["code" => Response::HTTP_NOT_FOUND, "message" => $message]);
 		}
 }

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\BacklogRepository;
+use App\Repository\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=BacklogRepository::class)
+ * @ORM\Entity(repositoryClass=RatingRepository::class)
  */
-class Backlog
+class Rating
 {
     /**
      * @ORM\Id

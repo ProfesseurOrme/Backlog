@@ -21,7 +21,7 @@ class Game
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="integer", length=255, unique=true)
      */
     private $uuid;
 
@@ -31,15 +31,10 @@ class Game
     private $name;
 
     /**
-		 * @Gedmo\Slug(fields={"uuid","name"})
+		 * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $releaseDate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -47,29 +42,30 @@ class Game
     private $metacriticRank;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="game")
      */
-    private $rating;
+    private $ratings;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToMany(targetEntity=Platform::class, inversedBy="games", cascade={"persist"})
      */
-    private $ratingCount;
+    private $platforms;
 
     /**
-     * @ORM\OneToMany(targetEntity=Backlog::class, mappedBy="game")
+     * @ORM\Column(type="date", nullable=true)
      */
-    private $backlogs;
+    private $released;
 
     /**
-     * @ORM\OneToMany(targetEntity=ReleaseData::class, mappedBy="game")
+     * @ORM\OneToMany(targetEntity=UserGameStatus::class, mappedBy="game")
      */
-    private $releaseData;
+    private $userGameStatuses;
 
     public function __construct()
     {
-        $this->backlogs = new ArrayCollection();
-        $this->releaseData = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
+        $this->platforms = new ArrayCollection();
+        $this->userGameStatuses = new ArrayCollection();
     }
 
 		public function getId(): ?int
@@ -113,18 +109,6 @@ class Game
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
-    {
-        return $this->releaseDate;
-    }
-
-    public function setReleaseDate(\DateTimeInterface $releaseDate): self
-    {
-        $this->releaseDate = $releaseDate;
-
-        return $this;
-    }
-
     public function getMetacriticRank(): ?int
     {
         return $this->metacriticRank;
@@ -137,54 +121,30 @@ class Game
         return $this;
     }
 
-    public function getRating(): ?int
-    {
-        return $this->rating;
-    }
-
-    public function setRating(?int $rating): self
-    {
-        $this->rating = $rating;
-
-        return $this;
-    }
-
-    public function getRatingCount(): ?int
-    {
-        return $this->ratingCount;
-    }
-
-    public function setRatingCount(?int $ratingCount): self
-    {
-        $this->ratingCount = $ratingCount;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|Backlog[]
+     * @return Collection|Rating[]
      */
-    public function getBacklogs(): Collection
+    public function getRatings(): Collection
     {
-        return $this->backlogs;
+        return $this->ratings;
     }
 
-    public function addBacklog(Backlog $backlog): self
+    public function addRating(Rating $rating): self
     {
-        if (!$this->backlogs->contains($backlog)) {
-            $this->backlogs[] = $backlog;
-            $backlog->setGame($this);
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setGame($this);
         }
 
         return $this;
     }
 
-    public function removeBacklog(Backlog $backlog): self
+    public function removeRating(Rating $rating): self
     {
-        if ($this->backlogs->removeElement($backlog)) {
+        if ($this->ratings->removeElement($rating)) {
             // set the owning side to null (unless already changed)
-            if ($backlog->getGame() === $this) {
-                $backlog->setGame(null);
+            if ($rating->getGame() === $this) {
+                $rating->setGame(null);
             }
         }
 
@@ -192,29 +152,65 @@ class Game
     }
 
     /**
-     * @return Collection|ReleaseData[]
+     * @return Collection|Platform[]
      */
-    public function getReleaseData(): Collection
+    public function getPlatforms(): Collection
     {
-        return $this->releaseData;
+        return $this->platforms;
     }
 
-    public function addReleaseData(ReleaseData $releaseData): self
+    public function addPlatform(Platform $platform): self
     {
-        if (!$this->releaseData->contains($releaseData)) {
-            $this->releaseData[] = $releaseData;
-            $releaseData->setGame($this);
+        if (!$this->platforms->contains($platform)) {
+            $this->platforms[] = $platform;
         }
 
         return $this;
     }
 
-    public function removeReleaseData(ReleaseData $releaseData): self
+    public function removePlatform(Platform $platform): self
     {
-        if ($this->releaseData->removeElement($releaseData)) {
+        $this->platforms->removeElement($platform);
+
+        return $this;
+    }
+
+    public function getReleased(): ?\DateTimeInterface
+    {
+        return $this->released;
+    }
+
+    public function setReleased(?\DateTimeInterface $released): self
+    {
+        $this->released = $released;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserGameStatus[]
+     */
+    public function getUserGameStatuses(): Collection
+    {
+        return $this->userGameStatuses;
+    }
+
+    public function addUserGameStatus(UserGameStatus $userGameStatus): self
+    {
+        if (!$this->userGameStatuses->contains($userGameStatus)) {
+            $this->userGameStatuses[] = $userGameStatus;
+            $userGameStatus->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserGameStatus(UserGameStatus $userGameStatus): self
+    {
+        if ($this->userGameStatuses->removeElement($userGameStatus)) {
             // set the owning side to null (unless already changed)
-            if ($releaseData->getGame() === $this) {
-                $releaseData->setGame(null);
+            if ($userGameStatus->getGame() === $this) {
+                $userGameStatus->setGame(null);
             }
         }
 
