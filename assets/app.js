@@ -1,8 +1,7 @@
-import './styles/app.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "./src/styles/app.scss"
 import {BrowserRouter as Router} from "react-router-dom";
 import React from 'react';
-import App from "./src/App";
+import App from "./src/components/App";
 import ReactDOM from 'react-dom';
 
 ReactDOM.render(

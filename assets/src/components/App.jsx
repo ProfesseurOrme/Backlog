@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {Route, Switch,Redirect} from 'react-router-dom';
-import NavbarDefault from "./Assets/NavbarDefault";
+import Navbar from "./Navbar";
 import Home from "./Home/Home";
 import Login from "./Authentication/Login";
-import FooterDefault from "./Assets/FooterDefault";
-import AuthService from "../api/Auth/AuthService";
-import DataService  from "../api/Auth/DataService";
+import Footer from "./Footer";
+import AuthService from "../helpers/AuthService";
+import DataService  from "../helpers/DataService";
 import Register from "./Authentication/Register";
 import Game from "./Game/Game";
 
@@ -40,7 +40,7 @@ const App = () => {
 
     return (
         <>
-            <NavbarDefault user={user} logout={logout} />
+            <Navbar user={user} logout={logout} />
             <Switch>
                 <Route path="/" exact render={() => <Home user={user} />} />
                 <AuthenticatedRoutes path="/games" render={() => <Game user={user}/>} />
@@ -50,7 +50,7 @@ const App = () => {
 
                 <Route render={() => <Redirect to="/" />} />
             </Switch>
-            <FooterDefault />
+            <Footer />
         </>
     )
 }

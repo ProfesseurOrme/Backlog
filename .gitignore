@@ -26,4 +26,5 @@ yarn-error.log
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 
-/assets/api/config.js
+/assets/src/config/config.js
+.idea

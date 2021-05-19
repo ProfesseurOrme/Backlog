@@ -1,14 +1,10 @@
 import * as React from "react";
-import {Container, Row, Col, Button, Jumbotron} from "react-bootstrap";
-import {getUsers} from "../../api/ApiGames";
-import DataService from "../../api/Auth/DataService";
-import background from "../../img/background.jpg";
-import {Link} from "react-router-dom";
+import background from "../../img/background.svg";
 
 const Home = ({user}) => {
 
     return (
-        <main>
+        <>
             <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">
                 <div className="absolute top-0 w-full h-full bg-center bg-cover" style={{ backgroundImage: `url(${background})` }}>
                     <span id="blackOverlay" className="w-full h-full absolute opacity-75 bg-black">
@@ -37,7 +33,7 @@ const Home = ({user}) => {
                         <div className="w-full md:w-12/12 px-4 text-center">
                             <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
                                 <div className="px-4 py-5 flex-auto">
-                                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-purple-500">
+                                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-indigo-500">
                                         <i className="fas fa-retweet">
                                         </i>
                                     </div>
@@ -49,7 +45,7 @@ const Home = ({user}) => {
                     </div>
                 </div>
             </section>
-        </main>
+        </>
     )
 }
 

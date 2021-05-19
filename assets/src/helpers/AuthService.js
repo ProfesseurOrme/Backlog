@@ -1,5 +1,5 @@
 import axios from "axios";
-import {login, refreshToken, register} from "../ApiSecurity";
+import {login, refreshToken, register} from "../api/ApiSecurity";
 
 class AuthService {
 
@@ -48,6 +48,7 @@ class AuthService {
                         expired_token_date : this.setExpirationDate()
                     };
                     localStorage.setItem(key, JSON.stringify(newItem));
+                    console.log(item);
                     return newItem;
                 })
                 .catch(_ => {
@@ -56,6 +57,7 @@ class AuthService {
                 })
             ;
         }
+        console.log(item);
         return item;
     }
 

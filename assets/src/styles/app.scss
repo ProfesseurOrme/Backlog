@@ -1,15 +1,15 @@
-@import "~@fortawesome/fontawesome-free/css/all.min.css";
-@import '~notus-js/assets/styles/tailwind.css';
+@import "../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+@import '../../../node_modules/notus-js/assets/styles/tailwind.css';
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 // Variables
 :root {
-    --purple: #6B21A8;
+    --blue: #312E81;
     --font-family-titles : 'Press Start 2P', sans-serif;
 }
 
-%bg-purple-900 {
-    background-color: var(--purple);
+%bg-indigo-900 {
+    background-color: var(--blue);
 }
 
 //App
@@ -23,8 +23,8 @@ h1, h5, h6  {
 }
 
 button {
-    &.bg-purple-900 {
-        @extend %bg-purple-900;
+    &.bg-indigo-900 {
+        @extend %bg-indigo-900;
     }
 }
 
@@ -33,7 +33,7 @@ button {
 // Navbar
 
 nav {
-    @extend %bg-purple-900;
+    @extend %bg-indigo-900;
     font-family: var(--font-family-titles);
 }
 
@@ -46,7 +46,6 @@ nav {
 .dashboard__list {
     li {
         a {
-            @extend %bg-purple-900;
             font-family: var(--font-family-titles);
         }
     }

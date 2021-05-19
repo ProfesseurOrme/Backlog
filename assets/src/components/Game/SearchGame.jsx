@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import SearchGameList from "./SearchGameList";
-import {getGames} from "../../../api/ApiRawg";
+import {getGames} from "../../api/ApiRawg";
 
 const SearchGame = ({openTab, user, userGames}) => {
     const [search, setSearch] = React.useState("");
@@ -52,7 +52,7 @@ const SearchGame = ({openTab, user, userGames}) => {
                             <form onSubmit={handleSearch}>
                                 <div className="relative flex w-full flex-wrap items-stretch mb-3">
                                     <input type="text" placeholder="SearchGameList your game" className="input__search px-4 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border border-white outline-none focus:outline-none w-full pr-10" onChange={(event) => setSearch(event.target.value)}/>
-                                    <span className="z-10 h-full leading-normal font-normal absolute text-center text-purple-300 absolute bg-transparent rounded text-lg items-center justify-center w-8 right-0 pr-4 py-4">
+                                    <span className="z-10 h-full leading-normal font-normal absolute text-center text-indigo-300 absolute bg-transparent rounded text-lg items-center justify-center w-8 right-0 pr-4 py-4">
                                         <i className="fas fa-search">
                                         </i>
                                     </span>
@@ -76,7 +76,7 @@ const SearchGame = ({openTab, user, userGames}) => {
                                 {
                                     prev ?
                                         <button onClick={() => handleLoadPage(prev)}
-                                                className="bg-purple-900 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                className="bg-indigo-900 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                                 type="button">
                                             <i className="fas fa-angle-left">
                                             </i>
@@ -86,7 +86,7 @@ const SearchGame = ({openTab, user, userGames}) => {
                                 {
                                     next ?
                                         <button onClick={() => handleLoadPage(next)}
-                                                className="bg-purple-900 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                className="bg-indigo-900 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                                 type="button">
                                             Next
                                             <i className="fas fa-angle-right">

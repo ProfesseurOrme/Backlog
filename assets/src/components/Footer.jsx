@@ -1,6 +1,6 @@
 import React from "react";
 
-const FooterDefault = () => {
+const Footer = () => {
     return (
         <footer className="relative bg-blueGray-200 pt-8 pb-6">
             <div className="flex flex-wrap items-center md:justify-between justify-center">
@@ -15,4 +15,4 @@ const FooterDefault = () => {
     )
 }
 
-export default FooterDefault;
+export default Footer;
