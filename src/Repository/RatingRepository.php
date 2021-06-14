@@ -19,6 +19,21 @@ class RatingRepository extends ServiceEntityRepository
         parent::__construct($registry, Rating::class);
     }
 
+    public function findGameReview($gameUuid, $userId) {
+
+			return $this->createQueryBuilder("r")
+				->innerJoin("r.game", "g")
+				->addSelect("g")
+				->where("g.uuid = :uuid")
+				->innerJoin("r.user", "u")
+				->addSelect("u")
+				->where("u.id = :id")
+				->setParameters(["uuid" => $gameUuid, "id" => $userId])
+				->getQuery()
+				->getResult()
+			;
+		}
+
     // /**
     //  * @return Rating[] Returns an array of Rating objects
     //  */

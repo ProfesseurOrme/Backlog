@@ -57,7 +57,6 @@ class AuthService {
                 })
             ;
         }
-        console.log(item);
         return item;
     }
 

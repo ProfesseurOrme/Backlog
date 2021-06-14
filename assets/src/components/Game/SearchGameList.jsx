@@ -1,10 +1,14 @@
-import React from "react";
-import {updateGameUserStatus} from "../../api/ApiGames";
+import React, {useState, useEffect} from "react";
+import {Button, ButtonGroup, Card, Col, ToggleButton} from "react-bootstrap";
+import {FaCheck, FaPlusCircle, FaSpinner, FaTasks} from "react-icons/fa";
+import placeholderImage from "../../img/placeholder-image.png";
+import {setGameWithUser, updateGameUserStatus} from "../../api/ApiGames";
 import DataService from "../../helpers/DataService";
 
-const SearchGameList = ({game, user, userGames}) => {
+const SearchGameList = ({game, user, userGames, setLoadGames}) => {
 
-    const [userGame, setUserGame] = React.useState(null);
+    const [userGame, setUserGame] = useState(null);
+    const [stateValue, setStateValue] = useState("");
     const reformatDate = (date) => {
         if (date) {
             let dArr = date.split("-");
@@ -15,72 +19,79 @@ const SearchGameList = ({game, user, userGames}) => {
     }
 
     if (userGames) {
-        React.useEffect(() => {
+        useEffect(() => {
             let search = userGames.find(item => item.uuid === game.id.toString())
-            search ? setUserGame(search) : ""
-        }, [])
+            if(search) {
+                setStateValue(search.status.id);
+                setUserGame(search)
+            }
+        }, [userGames])
     }
 
-    const changeStatus = (statusId, gameUuid, gameSlug) => {
-        updateGameUserStatus(DataService.API_URL, DataService.tokenHeader(user.token), statusId, gameUuid, gameSlug)
-            .then(result => {
+    const handleAddGames = (data) => {
+        setGameWithUser(DataService.API_URL, DataService.tokenHeader(user.token), data)
+            .then(_ => {
+                setLoadGames(true);
             })
-        ;
     }
+
+    const handleChangeStatus = (statusId, gameUuid, gameSlug) => {
+        updateGameUserStatus(DataService.API_URL, DataService.tokenHeader(user.token), statusId, gameUuid, gameSlug)
+            .then(_ => {
+                setLoadGames(true);
+            })
+    }
+
 
     return (
-        <div className="w-full sm:w-1/12 md:w-1/2 xl:w-6/12 p-4">
-            <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
-                <div className="p-4">
-                    {game.platforms ? game.platforms.map(item => (
-                        <span key={item.platform.id}
-                              className="inline-block mx-1 px-2 py-1 leading-none bg-indigo-500 text-blueGray-100 rounded-full font-semibold uppercase tracking-wide text-xs">{item.platform.name}</span>
-                    )) : ""}
-                    <h4 className="mt-2 mb-2 font-bold">{game.name}</h4>
-                    <p className="text-sm"><strong>Release : </strong>{reformatDate(game.released)}</p>
-                    <p className="text-sm"><strong>API Game uuid: </strong> {game.id}</p>
-                </div>
-                <div className="p-4 border-t border-b text-xs text-gray-700 text-center">
+        <Col className="my-3">
+            <Card>
+                <Card.Img className="card-img-custom" variant="top"  src={game.background_image ? game.background_image : placeholderImage} />
+                <Card.Body>
+                    <Card.Title className="text-truncate">{game.name}</Card.Title>
+                    <Card.Text>{reformatDate(game.released)}</Card.Text>
+                    {/*
+                        <Card.Text>
+                            {game.platforms ? game.platforms.map(item => (
+                                <Badge key={item.uuid} pill bg="primary" className="px-1">
+                                    {item.name}
+                                </Badge>
+                            )) : ""}
+                        </Card.Text>
+                    */}
+                </Card.Body>
+                <Card.Footer className="text-center border-top-blue-grey border-top-lighten-5">
                     {
                         userGame ?
                             <>
-                                <button className={(userGame.status === 1 ? "bg-emerald-500 text-white" +
-                                    " active:bg-emerald-600 hover:bg-emerald-900" : "text-emerald-500 bg-transparent" +
-                                    " border border-solid border-emerald-500 hover:bg-emerald-500 hover:text-white" +
-                                    " active:bg-emerald-500") + " font-bold uppercase text-xs px-4 py-2 rounded-full" +
-                                " outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"}
-                                        type="button">
-                                    <i className="fas fa-check">
-                                    </i> Done
-                                </button>
-                                <button className={(userGame.status === 2 ? "bg-orange-500 text-white" +
-                                    " active:bg-orange-600 hover:bg-orange-900" : "text-orange-500 bg-transparent" +
-                                    " border border-solid border-orange-500 hover:bg-orange-500 hover:text-white active:bg-orange-500") + " font-bold uppercase text-xs px-4 py-2 rounded-full outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"}
-                                        type="button">
-                                    <i className="fas fa-spinner">
-                                    </i> In Progress
-                                </button>
-                                <button className={(userGame.status === 3 ? "bg-red-500 text-white active:bg-red-600" +
-                                    " hover:bg-red-900" : "text-red-500 bg-transparent border border-solid" +
-                                    " border-red-500 hover:bg-red-500 hover:text-white active:bg-red-500") + " font-bold uppercase text-xs px-4 py-2 rounded-full outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"}
-                                        type="button">
-                                    <i className="fas fa-tasks">
-                                    </i> To Do
-                                </button>
+                                <Button className={"mx-2"} disabled={userGame.status === 1} variant={userGame.status === 1 ? "danger" : "outline-danger"} onClick={userGame.status !== 1 ? ()=> handleChangeStatus(1, game.id, game.slug) : undefined} type="button">
+                                    <FaTasks />
+                                </Button>
+                                <Button className={"mx-2"} disabled={userGame.status === 2} variant={(userGame.status === 2) ? "warning" : "outline-warning"} onClick={userGame.status !== 2 ? ()=> handleChangeStatus(2, game.id, game.slug) : undefined} type="button">
+                                    <FaSpinner />
+                                </Button>
+                                <Button className={"mx-2"} disabled={userGame.status === 3} variant={(userGame.status === 3) ? "success" : "outline-success" } onClick={userGame.status !== 3 ? ()=> handleChangeStatus(3, game.id, game.slug) : undefined} type="button">
+                                    <FaCheck />
+                                </Button>
+
                             </>
                             :
-
-                            <button
-                                className="bg-indigo-500 hover:bg-indigo-900 text-white font-bold uppercase text-xs mx-1 px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                type="button">
-                                <i className="fas fa-plus-circle">
-                                </i> Add to collection
-                            </button>
+                            <Button variant="info" type="button" onClick={() => handleAddGames({
+                                name : game.name,
+                                slug : game.slug,
+                                uuid : game.id,
+                                released : game.released,
+                                metacritic: game.metacritic,
+                                ...game.platforms
+                            })}
+                            >
+                                <FaPlusCircle /> Add to collection
+                            </Button>
 
                     }
-                </div>
-            </div>
-        </div>
+                </Card.Footer>
+            </Card>
+        </Col>
     )
 
 }

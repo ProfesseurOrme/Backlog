@@ -1,46 +1,98 @@
-import React from "react";
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import AuthService from "../../helpers/AuthService";
 import DataService from "../../helpers/DataService";
 import background from "../../img/background.svg";
+import {getUser} from "../../api/ApiUser";
 
 const Register = () => {
 
-    const [error, setError] = React.useState({
-        username : "",
-        email: "",
-        name: "",
-        lastname: "",
-        password: ""
+    const [form, setForm] = useState({
+        fields: {
+            username: "",
+            email: "",
+            name: "",
+            lastname: "",
+            password : ""
+        },
+        errors: {
+            username: "",
+            email: "",
+            name: "",
+            lastname: "",
+            password : ""
+        }
     });
 
-    const [username, setUsername] = React.useState("");
-    const [name, setName] = React.useState("");
-    const [lastname, setLastname] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
-
     let history = useHistory();
+
+    const testEmail = {
+        regex : /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+        error : "Your email is not in the correct format"
+    };
+
+    const testPassword = {
+        regex : /^[0-9a-zA-Z]{8,}$/,
+        error: "Your password must contain at least 8 digits or letters"
+    };
 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = {
-            username : username,
-            email : email,
-            name: name,
-            lastname: lastname,
-            password : password
-        }
-        AuthService.register(DataService.API_URL, data)
+        AuthService.register(DataService.API_URL, form.fields)
             .then(result => {
                 history.push("/");
             })
-            .catch(error => {
-                //To Do
-            })
         ;
     }
+
+    const updateFormState = (field, value, error) => {
+        setForm(prevData => ({
+            fields : {
+                ...prevData.fields,
+                [field]: value
+            },
+            errors: {
+                ...prevData.errors,
+                [field]: error
+            }
+        }));
+    }
+
+    const handleUsername = async(field, value) => {
+        const searchUsername = await getUser(DataService.API_URL, {username : value})
+            .then(_ => {
+               return ""
+            })
+            .catch(error=> {
+                return error.response.data.message
+            })
+        updateFormState(field, value, searchUsername);
+    }
+
+    const handleField = (field, value, test) => {
+        updateFormState(field, value, (!test.regex.test(value) ? test.error : ""));
+    }
+
+    const handleChange = event => {
+        const { name, value } = event.target;
+
+        switch (name) {
+            case "username" : handleUsername(name, value);
+            break;
+            case "email" : handleField(name, value, testEmail);
+            break;
+            case "password": handleField(name, value, testPassword);
+            break;
+        }
+        setForm(prevData => ({
+            ...prevData
+            , fields: {
+                ...prevData.fields,
+                [name]: value
+            }
+        }));
+    };
 
     return (
         // { error ? <AlertDefault message={error} variant={'danger'} /> : "" }
@@ -62,7 +114,7 @@ const Register = () => {
                                         </div>
                                     </div>
                                     <form onSubmit={handleSubmit}>
-                                        <div className="relative w-full mb-3">
+                                        <div className="relative flex w-full flex-wrap items-stretch mb-3">
                                             <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                                    htmlFor="grid-password">Username</label>
                                             <input
@@ -70,10 +122,23 @@ const Register = () => {
                                                 type="username"
                                                 name="username"
                                                 placeholder="Enter your username"
-                                                value={username}
-                                                onChange={(event) => setUsername(event.target.value)}/>
+                                                value={form.fields.username}
+                                                onChange={handleChange}
+                                                required
+                                            />
+
+                                            { form.errors.username ?
+                                                <>
+                                                    <span className="form__error_icon z-10 h-full leading-snug font-normal absolute text-center text-red-500 absolute bg-transparent rounded text-base items-center justify-center w-8 right-0 pr-3 py-3">
+                                                        <i className="fas fa-times">
+                                                        </i>
+                                                    </span>
+                                                    <span className="py-1 text-xs text-red-500" id="passwordHelp">
+                                                        {form.errors.username}
+                                                    </span>
+                                                </>: ""}
                                         </div>
-                                        <div className="relative w-full mb-3">
+                                        <div className="relative flex w-full flex-wrap items-stretch mb-3">
                                             <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                                    htmlFor="grid-password">Email</label>
                                             <input
@@ -81,9 +146,20 @@ const Register = () => {
                                                 type="email"
                                                 name="email"
                                                 placeholder="Enter an email"
-                                                value={email}
-                                                onChange={(event) => setEmail(event.target.value)}
+                                                value={form.fields.email}
+                                                onChange={handleChange}
+                                                required
                                             />
+                                            { form.errors.email ?
+                                                <>
+                                                    <span className="form__error_icon z-10 h-full leading-snug font-normal absolute text-center text-red-500 absolute bg-transparent rounded text-base items-center justify-center w-8 right-0 pr-3 py-3">
+                                                        <i className="fas fa-times">
+                                                        </i>
+                                                    </span>
+                                                    <span className="py-1 text-xs text-red-500" id="passwordHelp">
+                                                        {form.errors.email}
+                                                    </span>
+                                                </>: ""}
                                         </div>
                                         <div className="relative w-full mb-3">
                                             <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -93,8 +169,9 @@ const Register = () => {
                                                 type="text"
                                                 name="name"
                                                 placeholder="Enter your firstname"
-                                                value={name}
-                                                onChange={(event) => setName(event.target.value)}
+                                                value={form.fields.name}
+                                                onChange={handleChange}
+                                                required
                                             />
                                         </div>
                                         <div className="relative w-full mb-3">
@@ -104,25 +181,39 @@ const Register = () => {
                                                 type="text"
                                                 name="lastname"
                                                 placeholder="Enter your lastname"
-                                                value={lastname}
-                                                onChange={(event) => setLastname(event.target.value)}
+                                                value={form.fields.lastname}
+                                                onChange={handleChange}
+                                                required
                                             />
                                         </div>
-                                        <div className="relative w-full mb-3">
+                                        <div className="relative flex w-full flex-wrap items-stretch mb-3">
                                             <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">Password</label>
                                             <input
                                                 className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 type="password"
                                                 name="password"
                                                 placeholder="Enter a password"
-                                                value={password}
-                                                onChange={(event) => setPassword(event.target.value)}
+                                                value={form.fields.password}
+                                                onChange={handleChange}
+                                                required
                                             />
+                                            { form.errors.password ?
+                                                <>
+                                                    <span className="form__error_icon z-10 h-full leading-snug font-normal absolute text-center text-red-500 absolute bg-transparent rounded text-base items-center justify-center w-8 right-0 pr-3 py-3">
+                                                        <i className="fas fa-times">
+                                                        </i>
+                                                    </span>
+                                                    <span className="py-1 text-xs text-red-500" id="passwordHelp">
+                                                        {form.errors.password}
+                                                    </span>
+                                                </>: ""}
                                         </div>
                                         <div className="text-center mt-6">
                                             <button
                                                 className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                                                type="submit">Register
+                                                type="submit"
+                                            >
+                                                Register
                                             </button>
                                         </div>
                                     </form>

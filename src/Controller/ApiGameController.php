@@ -7,7 +7,6 @@ use App\Entity\Status;
 use App\Entity\UserGameStatus;
 use App\Services\GameChecker\GameChecker;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,13 +46,23 @@ class ApiGameController extends AbstractApiController
 		{
 			$data= $this->getUser()->getUserGameStatuses();
 			$games = [];
+			$platforms = [];
+
 			foreach ($data as $item) {
+				foreach ($item->getGame()->getPlatforms() as $platform) {
+					$platforms[] = [
+						"name" => $platform->getName(),
+						"uuid" => $platform->getUuid()
+					];
+				}
 				$games[] = [
 					"name" => $item->getGame()->getName(),
 					"slug" => $item->getGame()->getSlug(),
 					"uuid" => $item->getGame()->getUuid(),
-					"status" => intval($item->getStatus()->getId())
+					"status" => intval($item->getStatus()->getId()),
+					"platforms" => $platforms
 				];
+				$platforms = [];
 			}
 
 			return $this->respond($games);
@@ -70,7 +79,7 @@ class ApiGameController extends AbstractApiController
 
 			$this->gameChecker->addThisGameToUser($game, $this->getUser());
 
-			return $this->respondCreated("Game added !");
+			return $this->respondWithCode(Response::HTTP_CREATED, "UserGame added !");
 		}
 
 		/**
@@ -87,6 +96,6 @@ class ApiGameController extends AbstractApiController
 			$game->setStatus($status);
 			$this->entityManager->flush();
 
-			return $this->respondUpdated("Status updated !");
+			return $this->respondWithCode(Response::HTTP_OK, "Status updated !");
 		}
 }

@@ -10,9 +10,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 abstract class AbstractApiController extends AbstractController
 {
-		public $apiKey = "";
-
-		protected $statusCode = 200;
+		private $statusCode = 200;
 
 		protected $serializer;
 
@@ -21,12 +19,12 @@ abstract class AbstractApiController extends AbstractController
 			$this->serializer = $serializer;
 		}
 
-		public function getStatutsCode() : int
+		private function getStatusCode() : int
 		{
 			return $this->statusCode;
 		}
 
-		public function setStatusCode($statusCode): AbstractApiController
+		private function setStatusCode($statusCode): AbstractApiController
 		{
 			$this->statusCode = $statusCode;
 
@@ -45,15 +43,20 @@ abstract class AbstractApiController extends AbstractController
 
 		public function respond($data): Response
 		{
-			return new Response($this->serializeData($data),$this->getStatutsCode(), ["Content-Type" => "application/json", "Access-Control-Allow-Origin" => "*"]);
+			return new Response($this->serializeData($data),$this->getStatusCode(), ["Content-Type" => "application/json", "Access-Control-Allow-Origin" => "*"]);
 		}
 
 		public function respondWithErrors($errors): Response
 		{
 			return $this->respond([
-				'code' => $this->getStatutsCode(),
+				'code' => $this->getStatusCode(),
 				'error' => $errors
 			]);
+		}
+
+		public function respondWithCode($code, $message) : Response
+		{
+			return $this->setStatusCode($code)->respond(["code" => $code, "message" => $message]);
 		}
 
 		public function respondCreated($message): Response

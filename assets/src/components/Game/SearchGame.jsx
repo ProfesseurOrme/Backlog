@@ -1,16 +1,18 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
+import {Col, Row, Form, Button} from "react-bootstrap";
+import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
 import SearchGameList from "./SearchGameList";
 import {getGames} from "../../api/ApiRawg";
 
-const SearchGame = ({openTab, user, userGames}) => {
-    const [search, setSearch] = React.useState("");
-    const [searchedGames, setSearchedGames] = React.useState([]);
-    const [nbResults, setNbResults] = React.useState(0);
-    const [next, setNext] = React.useState("");
-    const [prev, setPrev] = React.useState("");
-    const [error, setError] = React.useState("");
-    const [loaded, setLoaded] = React.useState(false);
+const SearchGame = ({user, userGames, setLoadGames}) => {
+    const [search, setSearch] = useState("");
+    const [searchedGames, setSearchedGames] = useState([]);
+    const [nbResults, setNbResults] = useState(0);
+    const [next, setNext] = useState("");
+    const [prev, setPrev] = useState("");
+    const [error, setError] = useState("");
+    const [loaded, setLoaded] = useState(false);
 
     const handleSearch = (event) => {
         event.preventDefault();
@@ -22,9 +24,14 @@ const SearchGame = ({openTab, user, userGames}) => {
                     setNbResults(result.data.count);
                     setSearchedGames(result.data.results);
                     setLoaded(true);
+                    if(result.data.count === 0) {
+                        setError("No results for your search. Try again !")
+                    } else {
+                        setError("");
+                    }
                 })
                 .catch(error => {
-                    setError(error.message);
+                    //to do
                 })
             ;
         }
@@ -43,62 +50,76 @@ const SearchGame = ({openTab, user, userGames}) => {
         ;
     }
 
-    return (
-        <div className={"flex flex-wrap " + (openTab === 2 ? "block" : "hidden")} id="link2">
-            <div className="w-full md:w-12/12 px-4 text-center">
-                <div className="relative flex flex-col min-w-0 break-words w-full">
-                    <div className="px-3 py-4 flex-auto">
-                        <div className="relative flex flex-col min-w-0 break-words w-full">
-                            <form onSubmit={handleSearch}>
-                                <div className="relative flex w-full flex-wrap items-stretch mb-3">
-                                    <input type="text" placeholder="SearchGameList your game" className="input__search px-4 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border border-white outline-none focus:outline-none w-full pr-10" onChange={(event) => setSearch(event.target.value)}/>
-                                    <span className="z-10 h-full leading-normal font-normal absolute text-center text-indigo-300 absolute bg-transparent rounded text-lg items-center justify-center w-8 right-0 pr-4 py-4">
-                                        <i className="fas fa-search">
-                                        </i>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            { searchedGames ?
-                <>
-                    <div className="flex flex-wrap block">
-                        {searchedGames.map(game => (
-                            game ? <SearchGameList key={game.id} game={game} userGames={userGames ? userGames : null} user={user} /> : ""
-                        ))}
-                    </div>
+    const getResultResearch = _ => {
+        if(nbResults > 1) {
+            return "There are " + nbResults + " games that have been found";
+        } else {
+            return "There is 1 games that have been found";
+        }
+    }
 
-                    { (next || prev)  ?
-                        <div className="w-full lg:w-12/12 px-4">
-                            <div className="text-center mt-6">
-                                {
-                                    prev ?
-                                        <button onClick={() => handleLoadPage(prev)}
-                                                className="bg-indigo-900 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                                type="button">
-                                            <i className="fas fa-angle-left">
-                                            </i>
-                                            Prev
-                                        </button> : ""
-                                }
-                                {
-                                    next ?
-                                        <button onClick={() => handleLoadPage(next)}
-                                                className="bg-indigo-900 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                                type="button">
-                                            Next
-                                            <i className="fas fa-angle-right">
-                                            </i>
-                                        </button> : ""
-                                }
-                            </div>
-                        </div>
-                        : "" }
-                </>
+    return (
+        <>
+            <Row className="my-3">
+                <Col>
+                    <form onSubmit={handleSearch}>
+                        <Form.Control size="lg" type="text" placeholder="Search your game" onChange={(event) => setSearch(event.target.value)} />
+                    </form>
+                </Col>
+            </Row>
+            {
+                nbResults ?
+                    <Row className="my-3">
+                        <Col>
+                            <h3>{getResultResearch()}</h3>
+                        </Col>
+                    </Row>
+                    :
+                    ""
+            }
+            {
+                error ?
+                    <Row className="my-3">
+                        <Col>
+                            <h3>{error}</h3>
+                        </Col>
+                    </Row>
+                    :
+                    ""
+            }
+            <Row className="g-4" sm={1} md={2} lg={3}>
+                { searchedGames ?
+                    <>
+                        {searchedGames.map(game => (
+                            game ? <SearchGameList key={game.id} game={game} setLoadGames={setLoadGames} userGames={userGames ? userGames : null} user={user} /> : ""
+                        ))}
+
+                    </>
+                    : ""
+                }
+            </Row>
+            { searchedGames && (next || prev)  ?
+                <Row>
+                    <Col md={12} className="text-center">
+                        { prev ?
+
+                            <Button className="mx-2" variant="primary" onClick={() => handleLoadPage(prev)} type="button">
+                                <FaAngleLeft /> Prev
+                            </Button>
+                            :
+                            ""
+                        }
+                        { next ?
+                            <Button className="mx-2" variant="primary" onClick={() => handleLoadPage(next)} type="button">
+                                Next <FaAngleRight />
+                            </Button>
+                            :
+                            ""
+                        }
+                    </Col>
+                </Row>
                 : "" }
-        </div>
+        </>
     )
 }
 
