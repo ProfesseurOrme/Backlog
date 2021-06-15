@@ -6,6 +6,7 @@ class AuthService {
     setExpirationDate = () => {
         let date = new Date();
         date.setHours(date.getHours() + 1);
+        //date.setMinutes(date.getMinutes() + 1);
         return  date;
     }
 
@@ -30,7 +31,7 @@ class AuthService {
         const itemStr = localStorage.getItem(key);
 
         if (!itemStr) {
-            return null
+            throw null
         }
 
         const item = JSON.parse(itemStr)
@@ -38,8 +39,7 @@ class AuthService {
         const now = new Date();
 
         if (now.getTime() > pastDate) {
-
-            await refreshToken(domain, {"refresh_token" : item.refresh_token})
+            return await refreshToken(domain, {"refresh_token" : item.refresh_token})
                 .then(result => {
                     const newItem = {
                         ...item,
@@ -48,7 +48,6 @@ class AuthService {
                         expired_token_date : this.setExpirationDate()
                     };
                     localStorage.setItem(key, JSON.stringify(newItem));
-                    console.log(item);
                     return newItem;
                 })
                 .catch(_ => {
@@ -56,8 +55,9 @@ class AuthService {
                     throw null;
                 })
             ;
+        } else {
+            return item;
         }
-        return item;
     }
 
     logout = () => {

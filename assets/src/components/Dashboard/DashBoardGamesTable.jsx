@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react";
 import {Card, Table} from "react-bootstrap";
 import ReactPaginate from "react-paginate";
-import DashboardGamesLine from "./DashboardGamesLine";
+import DashboardGamesTableRow from "./DashboardGamesTableRow";
 
-const DashBoardGames =({title, games}) => {
+const DashBoardGamesTable =({title, games, handleShowModal, setGameInfoUuid}) => {
 
     const [pagination, setPagination] = useState({
         data: games,
         offset: 0,
-        numberPerPage: 4,
+        numberPerPage: 8,
         pageCount: 0,
         currentData: []
     });
@@ -31,7 +31,7 @@ const DashBoardGames =({title, games}) => {
     return (
         <Card className="my-3">
             <Card.Header>
-                <Card.Title>{title}</Card.Title>
+                <Card.Text>{title}</Card.Text>
             </Card.Header>
             <Card.Body className="p-0">
                 <Table responsive>
@@ -52,7 +52,7 @@ const DashBoardGames =({title, games}) => {
                     {
                         games.length > 0 ?
                             pagination.currentData && pagination.currentData.map(game => (
-                                <DashboardGamesLine key={game.uuid} game={game} />
+                                <DashboardGamesTableRow handleShowModal={handleShowModal} setGameInfoUuid={setGameInfoUuid} key={game.uuid} game={game} />
                             ))
                             :
                             <tr>
@@ -82,10 +82,11 @@ const DashBoardGames =({title, games}) => {
                             onPageChange={handlePageClick}
                         />
                     </Card.Footer>
-                        : ""
+                    :
+                    ""
             }
         </Card>
     )
 }
 
-export default DashBoardGames;
+export default DashBoardGamesTable;

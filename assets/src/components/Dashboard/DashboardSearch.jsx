@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import axios from "axios";
 import {Col, Row, Form, Button} from "react-bootstrap";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
-import SearchGameList from "./SearchGameList";
+import DashboardSearchResult from "./DashboardSearchResult";
 import {getGames} from "../../api/ApiRawg";
 
-const SearchGame = ({user, userGames, setLoadGames}) => {
+const DashboardSearch = ({user, userGames, setLoadGames}) => {
     const [search, setSearch] = useState("");
     const [searchedGames, setSearchedGames] = useState([]);
     const [nbResults, setNbResults] = useState(0);
@@ -20,7 +20,7 @@ const SearchGame = ({user, userGames, setLoadGames}) => {
         if(search.length > 3) {
             getGames(slug)
                 .then(result => {
-                    (result.data.next) ? setNext(result.data.next) : null;
+                    (result.data.next) ? setNext(result.data.next) : null
                     setNbResults(result.data.count);
                     setSearchedGames(result.data.results);
                     setLoaded(true);
@@ -91,7 +91,7 @@ const SearchGame = ({user, userGames, setLoadGames}) => {
                 { searchedGames ?
                     <>
                         {searchedGames.map(game => (
-                            game ? <SearchGameList key={game.id} game={game} setLoadGames={setLoadGames} userGames={userGames ? userGames : null} user={user} /> : ""
+                            game ? <DashboardSearchResult key={game.id} game={game} setLoadGames={setLoadGames} userGames={userGames ? userGames : null} user={user} /> : ""
                         ))}
 
                     </>
@@ -123,4 +123,4 @@ const SearchGame = ({user, userGames, setLoadGames}) => {
     )
 }
 
-export default SearchGame;
+export default DashboardSearch;

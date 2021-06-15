@@ -1,9 +1,9 @@
 import React from "react";
-import {Button} from "react-bootstrap";
+import {Badge, Button} from "react-bootstrap";
 import {FaSearch} from "react-icons/fa";
 import {NavLink} from "react-router-dom";
 
-const DashboardGamesLine = ({game}) => {
+const DashboardGamesTableRow = ({game, handleShowModal, setGameInfoUuid}) => {
     return (
         <tr>
             <td style={{width: "30%"}} className="text-truncate">
@@ -11,13 +11,15 @@ const DashboardGamesLine = ({game}) => {
             </td>
             <td style={{width: "60%"}}>
                 {game.platforms ? game.platforms.map(item => (
-                          item.name + " "
+                    <Badge key={item.uuid} pill variant="primary" className={"mx-1"}>
+                        {item.name}
+                    </Badge>
                 )) : ""}
             </td>
             <td style={{width: "10%"}} className={"text-center"}>
-                <Button as={NavLink} to={{
-                    pathname : "/game/"+game.uuid+"/"+game.slug,
-                    aboutProps : (game) ? game : null
+                <Button onClick={() => {
+                    handleShowModal();
+                    setGameInfoUuid(game.uuid);
                 }}>
                     <FaSearch />
                 </Button>
@@ -26,4 +28,4 @@ const DashboardGamesLine = ({game}) => {
     )
 }
 
-export default DashboardGamesLine;
+export default DashboardGamesTableRow;

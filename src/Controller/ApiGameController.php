@@ -79,7 +79,7 @@ class ApiGameController extends AbstractApiController
 
 			$this->gameChecker->addThisGameToUser($game, $this->getUser());
 
-			return $this->respondWithCode(Response::HTTP_CREATED, "UserGame added !");
+			return $this->respondWithCode(Response::HTTP_CREATED, "Game added !");
 		}
 
 		/**

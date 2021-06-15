@@ -2,21 +2,14 @@ import React, {useState, useEffect} from "react";
 import {Button, ButtonGroup, Card, Col, ToggleButton} from "react-bootstrap";
 import {FaCheck, FaPlusCircle, FaSpinner, FaTasks} from "react-icons/fa";
 import placeholderImage from "../../img/placeholder-image.png";
+import {reformatDate} from "../../helpers/MiscService";
 import {setGameWithUser, updateGameUserStatus} from "../../api/ApiGames";
 import DataService from "../../helpers/DataService";
 
-const SearchGameList = ({game, user, userGames, setLoadGames}) => {
+const DashboardSearchResult = ({game, user, userGames, setLoadGames}) => {
 
     const [userGame, setUserGame] = useState(null);
     const [stateValue, setStateValue] = useState("");
-    const reformatDate = (date) => {
-        if (date) {
-            let dArr = date.split("-");
-            return dArr[2] + "/" + dArr[1] + "/" + dArr[0];
-        } else {
-            return "TBA";
-        }
-    }
 
     if (userGames) {
         useEffect(() => {
@@ -42,14 +35,13 @@ const SearchGameList = ({game, user, userGames, setLoadGames}) => {
             })
     }
 
-
     return (
         <Col className="my-3">
             <Card>
                 <Card.Img className="card-img-custom" variant="top"  src={game.background_image ? game.background_image : placeholderImage} />
                 <Card.Body>
                     <Card.Title className="text-truncate">{game.name}</Card.Title>
-                    <Card.Text>{reformatDate(game.released)}</Card.Text>
+                    <Card.Text><strong>Release : </strong>{reformatDate(game.released)}</Card.Text>
                     {/*
                         <Card.Text>
                             {game.platforms ? game.platforms.map(item => (
@@ -73,21 +65,27 @@ const SearchGameList = ({game, user, userGames, setLoadGames}) => {
                                 <Button className={"mx-2"} disabled={userGame.status === 3} variant={(userGame.status === 3) ? "success" : "outline-success" } onClick={userGame.status !== 3 ? ()=> handleChangeStatus(3, game.id, game.slug) : undefined} type="button">
                                     <FaCheck />
                                 </Button>
-
                             </>
                             :
-                            <Button variant="info" type="button" onClick={() => handleAddGames({
-                                name : game.name,
-                                slug : game.slug,
-                                uuid : game.id,
-                                released : game.released,
-                                metacritic: game.metacritic,
-                                ...game.platforms
-                            })}
+                            <Button variant="info" type="button" onClick={(event) => {
+                                let platformsGame = [];
+                                game.platforms.map(item =>(
+                                    platformsGame.push({
+                                        "uuid" : item.platform.id,
+                                        "name" : item.platform.name
+                                    })
+                                ))
+                                handleAddGames({
+                                    name: game.name,
+                                    slug: game.slug,
+                                    uuid: game.id,
+                                    released: game.released,
+                                    metacritic: game.metacritic,
+                                    platforms : platformsGame}
+                                )}}
                             >
                                 <FaPlusCircle /> Add to collection
                             </Button>
-
                     }
                 </Card.Footer>
             </Card>
@@ -96,4 +94,4 @@ const SearchGameList = ({game, user, userGames, setLoadGames}) => {
 
 }
 
-export default SearchGameList;
+export default DashboardSearchResult;

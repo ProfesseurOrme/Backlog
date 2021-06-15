@@ -26,6 +26,7 @@ class DataChecker {
 				$this->entityManager->flush();
 			}
 			catch (UniqueConstraintViolationException $exception) {
+
 			}
 			return $this->getEntry($data->getUuid(), get_class($data));
 		}

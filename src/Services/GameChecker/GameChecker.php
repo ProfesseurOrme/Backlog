@@ -8,6 +8,7 @@
 	use App\Entity\User;
 	use App\Entity\UserGameStatus;
 	use App\Services\Checker\DataChecker;
+	use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 	use Doctrine\ORM\EntityManagerInterface;
 
 	class GameChecker
@@ -34,7 +35,6 @@
 			foreach ($platforms as $item) {
 				$platform = $this->dataChecker->tryPersistAndFetchData($item);
 				$game->addPlatform($platform);
-				$this->entityManager->flush();
 			}
 
 			$status = $this->entityManager->getRepository(Status::class)->find(1);

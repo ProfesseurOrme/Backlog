@@ -20,6 +20,11 @@ body {
 }
 
 .card {
+    .card-title {
+        font-family: var(--font-family-title);
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+    }
     border: none;
     border-radius: 0;
     box-shadow: 0 10px 40px 0 rgb(62 57 107 / 7%), 0 2px 9px 0 rgb(62 57 107 / 6%);
@@ -77,8 +82,37 @@ body {
     }
 }
 
+.modal-custom {
+    width: 90vw;
+    max-width: 90vw;
+    margin: 1.75rem auto;
+    .modal-content {
+        border: none;
+        .modal-header {
+            button.close {
+                span[aria-hidden="true"] {
+                    font-size: 2.5rem;
+                }
+            }
+        }
+    }
+}
+
+.media {
+    img {
+        height: auto;
+        width: 20%;
+        object-fit: cover;
+        border-radius: 1%;
+    }
+}
+
+.dropdown-item-danger {
+    color: #dc3545;
+}
+
 //Home
 
 // Navbar
 
-// UserGame
+// Dashboard

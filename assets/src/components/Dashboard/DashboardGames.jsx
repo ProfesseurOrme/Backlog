@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
 import {Card} from "react-bootstrap";
-import DashBoardGames from "./DashBoardGames";
+import DashBoardGamesTable from "./DashBoardGamesTable";
 
-const Dashboard = ({userGames}) => {
+const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
 
     const [state, setState] = useState({
         toDo: [],
@@ -30,24 +30,22 @@ const Dashboard = ({userGames}) => {
         }
     }, [userGames]);
 
-    console.log(state)
-
     return (
         <>
             {state.inProgress.length > 0 ?
-                <DashBoardGames title={"In Progress"} games={(state.inProgress.length > 0) ? state.inProgress : undefined} />
+                <DashBoardGamesTable title={"In Progress"} handleShowModal={handleShowModal} setGameInfoUuid={setGameInfoUuid} games={(state.inProgress.length > 0) ? state.inProgress : undefined} />
                 :
                 ""
             }
 
             {state.toDo.length > 0 ?
-                <DashBoardGames title={"To Do"} games={(state.toDo.length > 0) ? state.toDo : undefined} />
+                <DashBoardGamesTable title={"To Do"} handleShowModal={handleShowModal} setGameInfoUuid={setGameInfoUuid} games={(state.toDo.length > 0) ? state.toDo : undefined} />
                 :
                 ""
             }
 
             {state.finished.length > 0 ?
-                <DashBoardGames title={"Finished"} games={(state.finished.length > 0) ? state.finished : undefined} />
+                <DashBoardGamesTable title={"Finished"} handleShowModal={handleShowModal} setGameInfoUuid={setGameInfoUuid} games={(state.finished.length > 0) ? state.finished : undefined} />
                 :
                 ""
             }
@@ -55,4 +53,4 @@ const Dashboard = ({userGames}) => {
     )
 }
 
-export default Dashboard;
+export default DashboardGames;
