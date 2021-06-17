@@ -6,11 +6,13 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\Rating;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @Route("/api/rating", name="api_rating")
+ * @Route("/api", name="api_rating")
  */
 class ApiRatingController extends AbstractApiController
 {
@@ -26,20 +28,32 @@ class ApiRatingController extends AbstractApiController
 	}
 
 	/**
-	 * @Route("/reviews/games/{uuid}", name="_add", methods={"POST"})
+	 * @Route("/games/{uuid}/reviews/", name="_add", methods={"POST"})
 	 */
-	public function setGameRating(Game $game)
+	public function setGameRating(Request $request, Game $game) : Response
 	{
-		dd($game);
+		$rating = $this->deserializeData($request->getContent(),  Rating::class)
+			->setAddedAt(new \DateTime())
+			->setGame($game)
+			->setUser($this->getUser())
+		;
+		$this->entityManager->persist($rating);
+		$this->entityManager->flush();
+
+			return $this->respondCreated("You have rated this game");
 	}
 
 	/**
-	 * @Route("/reviews/games/{uuid}", name="_get", methods={"GET"})
+	 * @Route("/games/{uuid}/reviews/", name="_get", methods={"GET"})
 	 */
 	public function getGameRating(Game $game) {
 
-		$review = $this->entityManager->getRepository(Rating::class)->findGameReview($game->getUuid(), $this->getUser());
+		$rating = $this->entityManager->getRepository(Rating::class)->findGameRating($game->getUuid(), $this->getUser());
 
-		dd($review);
+		if($rating) {
+			return $this->respond(["id" => $rating->getId(),"rating" => $rating->getRating(), "addedAt" => $rating->getAddedAt()]);
+		} else {
+			return $this->respondNotFound("You did not rate this game");
+		}
 	}
 }

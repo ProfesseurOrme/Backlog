@@ -65,7 +65,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="user")
      */
-    private $backlogs;
+    private $ratings;
 
     /**
      * @ORM\OneToMany(targetEntity=UserGameStatus::class, mappedBy="user")
@@ -74,7 +74,7 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->backlogs = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
         $this->userGameStatuses = new ArrayCollection();
     }
 
@@ -215,29 +215,29 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Backlog[]
+     * @return Collection|Rating[]
      */
-    public function getBacklogs(): Collection
+    public function getRatings(): Collection
     {
-        return $this->backlogs;
+        return $this->ratings;
     }
 
-    public function addBacklog(Backlog $backlog): self
+    public function addRating(Rating $rating): self
     {
-        if (!$this->backlogs->contains($backlog)) {
-            $this->backlogs[] = $backlog;
-            $backlog->setUser($this);
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeBacklog(Backlog $backlog): self
+    public function removeRating(Rating $rating): self
     {
-        if ($this->backlogs->removeElement($backlog)) {
+        if ($this->ratings->removeElement($rating)) {
             // set the owning side to null (unless already changed)
-            if ($backlog->getUser() === $this) {
-                $backlog->setUser(null);
+            if ($rating->getUser() === $this) {
+                $rating->setUser(null);
             }
         }
 

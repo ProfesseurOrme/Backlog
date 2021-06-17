@@ -4,7 +4,7 @@ A Single Page Application for manage a video game backlog. Made with Symfony / R
 
 Made for educational purposes.
 
-##Environment used during development
+# Environment used during development
 * [Symfony 5.2.3](https://symfony.com/doc/current/setup.html) 
 * [Composer 2.0.9](https://getcomposer.org/doc/00-intro.md)
 * MAMP 6 (985)

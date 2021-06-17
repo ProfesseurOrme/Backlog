@@ -18,14 +18,9 @@ class Rating
     private $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $rating;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
 
     /**
      * @ORM\Column(type="datetime")
@@ -33,19 +28,13 @@ class Rating
     private $addedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="backlogs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $status;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="backlogs")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="ratings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="backlogs")
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="ratings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $game;
@@ -68,18 +57,6 @@ class Rating
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
     public function getAddedAt(): ?\DateTimeInterface
     {
         return $this->addedAt;
@@ -88,18 +65,6 @@ class Rating
     public function setAddedAt(\DateTimeInterface $addedAt): self
     {
         $this->addedAt = $addedAt;
-
-        return $this;
-    }
-
-    public function getStatus(): ?Status
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?Status $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }

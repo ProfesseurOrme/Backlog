@@ -3,7 +3,7 @@ import {Card, Table} from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import DashboardGamesTableRow from "./DashboardGamesTableRow";
 
-const DashBoardGamesTable =({title, games, handleShowModal, setGameInfoUuid}) => {
+const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUuid}) => {
 
     const [pagination, setPagination] = useState({
         data: games,

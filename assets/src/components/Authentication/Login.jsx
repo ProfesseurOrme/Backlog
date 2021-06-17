@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Card, Col, Form, Row} from "react-bootstrap";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import AuthService from "../../helpers/AuthService";
 import DataService from "../../helpers/DataService";
 import background from "../../img/background.svg";
@@ -75,11 +75,18 @@ const Login = ({setUser}) => {
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
-                                <Button variant="primary" type="submit">
-                                    Submit
-                                </Button>
+                                <div className="d-flex justify-content-center">
+                                    <Button variant="primary" type="submit">
+                                        Submit
+                                    </Button>
+                                </div>
                             </Form>
                         </Card.Body>
+                        <Card.Footer>
+                            <p className={"text-body text-center"}>
+                                <Link to="/register" >You don't have an account ? click here !</Link>
+                            </p>
+                        </Card.Footer>
                     </Card>
                 </Col>
             </Row>

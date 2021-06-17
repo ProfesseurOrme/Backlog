@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Tab, Row, Col, Nav, Card, DropdownButton, Dropdown, ButtonGroup} from "react-bootstrap";
+import {Tab, Row, Col, Nav, Card, DropdownButton, Dropdown, ButtonGroup, Toast} from "react-bootstrap";
 import {BiSearchAlt2} from "react-icons/bi";
 import {RiGamepadLine} from "react-icons/ri";
 import {FiLogOut} from "react-icons/fi";
@@ -22,10 +22,10 @@ const Dashboard = ({user, logout}) => {
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        if (user) {
-            getGames(DataService.API_URL, DataService.tokenHeader(user.token))
-            setLoadGames(false);
-        }
+        isCancelled.current = false;
+        getGames(DataService.API_URL, DataService.tokenHeader(user.token))
+        setLoadGames(false);
+
         return () => {
             isCancelled.current = true;
         };
@@ -48,7 +48,7 @@ const Dashboard = ({user, logout}) => {
     return (
         <>
             {
-                gameInfoUuid ? <Game handleCloseModal={handleClose} gameInfoUuid={gameInfoUuid} setGameInfoUuid={setGameInfoUuid} showModal={show} /> : ""
+                gameInfoUuid ? <Game user={user} handleCloseModal={handleClose} gameInfoUuid={gameInfoUuid} setGameInfoUuid={setGameInfoUuid} showModal={show} /> : ""
             }
             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
                 <Row>
@@ -77,7 +77,9 @@ const Dashboard = ({user, logout}) => {
                         </Card>
                     </Col>
                 </Row>
-                    { loaded ?
+                { loaded ?
+                    <>
+
                         <Row className={"justify-content-md-center"}>
                             <Col lg={10} md={12} sm={12}>
                                 <Tab.Content>
@@ -105,9 +107,10 @@ const Dashboard = ({user, logout}) => {
                                 </Tab.Content>
                             </Col>
                         </Row>
-                        :
-                        <></>
-                    }
+                    </>
+                    :
+                    <></>
+                }
             </Tab.Container>
         </>
     )
