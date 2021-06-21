@@ -3,11 +3,12 @@ import {Tab, Row, Col, Nav, Card, DropdownButton, Dropdown, ButtonGroup, Toast} 
 import {BiSearchAlt2} from "react-icons/bi";
 import {RiGamepadLine} from "react-icons/ri";
 import {FiLogOut} from "react-icons/fi";
+import Account from "../Account/Account";
 import Game from "../Game/Game";
 import DashboardGames from "./DashboardGames";
 import DashboardSearch from "./DashboardSearch";
 import DataService from "../../helpers/DataService";
-import {getGamesPerUsers} from "../../api/ApiGames";
+import {getGamesPerUsers, setGameWithUser, updateGameUserStatus} from "../../api/ApiGames";
 
 const Dashboard = ({user, logout}) => {
     const isCancelled = React.useRef(false);
@@ -25,7 +26,6 @@ const Dashboard = ({user, logout}) => {
         isCancelled.current = false;
         getGames(DataService.API_URL, DataService.tokenHeader(user.token))
         setLoadGames(false);
-
         return () => {
             isCancelled.current = true;
         };
@@ -45,10 +45,42 @@ const Dashboard = ({user, logout}) => {
         ;
     }
 
+    const handleChangeStatus = (statusId, gameUuid, gameSlug) => {
+        updateGameUserStatus(DataService.API_URL, DataService.tokenHeader(user.token), statusId, gameUuid, gameSlug)
+            .then(_ => {
+                setLoadGames(true);
+            })
+    }
+
+    const handleAddGame = (data) => {
+        setGameWithUser(DataService.API_URL, DataService.tokenHeader(user.token), data)
+            .then(_ => {
+                setLoadGames(true);
+            })
+    }
+
+    const findGame = (games, uuid) => {
+        console.log([games, uuid]);
+        const result = games.find(game => game.uuid === uuid)
+        return result ? result : undefined
+    }
+
     return (
         <>
             {
-                gameInfoUuid ? <Game user={user} handleCloseModal={handleClose} gameInfoUuid={gameInfoUuid} setGameInfoUuid={setGameInfoUuid} showModal={show} /> : ""
+                gameInfoUuid ?
+                    <Game
+                        user={user}
+                        handleCloseModal={handleClose}
+                        game={findGame(userGames, gameInfoUuid)}
+                        gameInfoUuid={gameInfoUuid}
+                        setGameInfoUuid={setGameInfoUuid}
+                        showModal={show}
+                        handleChangeStatus={handleChangeStatus}
+                        handleAddGame={handleAddGame}
+                    />
+                    :
+                    ""
             }
             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
                 <Row>
@@ -79,7 +111,6 @@ const Dashboard = ({user, logout}) => {
                 </Row>
                 { loaded ?
                     <>
-
                         <Row className={"justify-content-md-center"}>
                             <Col lg={10} md={12} sm={12}>
                                 <Tab.Content>
@@ -89,20 +120,25 @@ const Dashboard = ({user, logout}) => {
                                             userGames={userGames ? userGames : null}
                                             handleShowModal={handleShow}
                                             setGameInfoUuid={setGameInfoUuid}
+                                            handleChangeStatus={handleChangeStatus}
                                         />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="second">
                                         <DashboardSearch
+                                            handleChangeStatus={handleChangeStatus}
+                                            handleAddGame={handleAddGame}
                                             id="link2"
                                             user={user}
-                                            userGames={userGames ? userGames : null}
                                             setLoadGames={setLoadGames}
+                                            userGames={userGames ? userGames : null}
+                                            handleShowModal={handleShow}
+                                            setGameInfoUuid={setGameInfoUuid}
                                         />
                                     </Tab.Pane>
                                 </Tab.Content>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="third">
-
+                                        <Account user={user}/>
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Col>

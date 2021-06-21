@@ -1,61 +1,106 @@
 import React, {useState} from "react";
 import axios from "axios";
-import {Col, Row, Form, Button} from "react-bootstrap";
+import {Col, Row, Form, Button, InputGroup, Spinner} from "react-bootstrap";
+import {ImCross} from "react-icons/im";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
+import {delay} from "../../helpers/DelayService";
 import DashboardSearchResult from "./DashboardSearchResult";
 import {getGames} from "../../api/ApiRawg";
 
-const DashboardSearch = ({user, userGames, setLoadGames}) => {
-    const [search, setSearch] = useState("");
-    const [searchedGames, setSearchedGames] = useState([]);
-    const [nbResults, setNbResults] = useState(0);
-    const [next, setNext] = useState("");
-    const [prev, setPrev] = useState("");
-    const [error, setError] = useState("");
-    const [loaded, setLoaded] = useState(false);
+const initialState  = {
+    search : "",
+    searchedGames : [],
+    nbResults: 0,
+    next : "",
+    previous: "",
+    error: "",
+    loaded : true
+}
 
-    const handleSearch = (event) => {
+const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, handleShowModal, setGameInfoUuid, handleAddGame}) => {
+
+    const [searchState, setSearchState] = useState(initialState);
+
+    const handleSearch = async(event) => {
         event.preventDefault();
-        let slug = search.split(' ').join('-').toLowerCase();
-        if(search.length > 3) {
+        setSearchState(prevState => ({
+            ...prevState,
+            loaded: false
+        }));
+
+        let slug = searchState.search.split(' ').join('-').toLowerCase();
+
+        if(slug.length > 3) {
             getGames(slug)
                 .then(result => {
-                    (result.data.next) ? setNext(result.data.next) : null
-                    setNbResults(result.data.count);
-                    setSearchedGames(result.data.results);
-                    setLoaded(true);
+                    setSearchState(prevState => ({
+                        ...prevState,
+                        next: (result.data.next) ? setSearchState(prevState => ({...prevState, next: result.data.next})) : "",
+                        nbResults : result.data.count,
+                        searchedGames : result.data.results
+                    }))
                     if(result.data.count === 0) {
-                        setError("No results for your search. Try again !")
+                        setSearchState(prevState => ({
+                            ...prevState,
+                            error: "No results for your search. Try again !"
+                        }))
                     } else {
-                        setError("");
+                        setSearchState(prevState => ({
+                            ...prevState,
+                            error: ""
+                        }))
                     }
                 })
                 .catch(error => {
                     //to do
                 })
             ;
+            await delay(1000);
+            setSearchState(prevState => ({
+                ...prevState,
+                loaded: true
+            }));
         }
     }
 
-    const handleLoadPage = (url) => {
+    const handleLoadPage = async(url) => {
+        setSearchState(prevState => ({
+            ...prevState,
+            loaded: false
+        }));
         axios.get(url)
             .then(result => {
-                (result.data.next) ? setNext(result.data.next) : null;
-                (result.data.previous) ? setPrev(result.data.previous) : null;
-                setSearchedGames(result.data.results);
+                setSearchState(prevState => ({
+                    ...prevState,
+                    next: (result.data.next) ? result.data.next : "",
+                    previous: (result.data.previous) ? result.data.previous : "",
+                    searchedGames: result.data.results
+                }))
             })
             .catch(error => {
-                setError(error.message);
+                setSearchState(prevState => ({
+                    ...prevState,
+                    error: error.message
+                }))
             })
         ;
+        await delay(1000);
+        setSearchState(prevState => ({
+            ...prevState,
+            loaded: true
+        }));
     }
 
     const getResultResearch = _ => {
-        if(nbResults > 1) {
-            return "There are " + nbResults + " games that have been found";
+        if(searchState.nbResults > 1) {
+            return "There are " + searchState.nbResults + " games that have been found";
         } else {
             return "There is 1 games that have been found";
         }
+    }
+
+    const resetResults = _ => {
+        setSearchState(initialState);
     }
 
     return (
@@ -63,62 +108,104 @@ const DashboardSearch = ({user, userGames, setLoadGames}) => {
             <Row className="my-3">
                 <Col>
                     <form onSubmit={handleSearch}>
-                        <Form.Control size="lg" type="text" placeholder="Search your game" onChange={(event) => setSearch(event.target.value)} />
+                        <InputGroup>
+                            <Form.Control
+                                size="lg"
+                                type="text"
+                                placeholder="Search your game"
+                                onChange={(event) => setSearchState(prevState => ({...prevState, search :event.target.value}))}
+                            />
+                            {
+                                searchState.nbResults ?
+                                    <Button
+                                        id="button-addon"
+                                        onClick={() => resetResults()}
+                                    >
+                                        <ImCross />
+                                    </Button>
+                                    :
+                                    ""
+                            }
+                        </InputGroup>
                     </form>
                 </Col>
             </Row>
             {
-                nbResults ?
-                    <Row className="my-3">
-                        <Col>
-                            <h3>{getResultResearch()}</h3>
-                        </Col>
-                    </Row>
-                    :
-                    ""
-            }
-            {
-                error ?
-                    <Row className="my-3">
-                        <Col>
-                            <h3>{error}</h3>
-                        </Col>
-                    </Row>
-                    :
-                    ""
-            }
-            <Row className="g-4" sm={1} md={2} lg={3}>
-                { searchedGames ?
+                searchState.loaded ?
                     <>
-                        {searchedGames.map(game => (
-                            game ? <DashboardSearchResult key={game.id} game={game} setLoadGames={setLoadGames} userGames={userGames ? userGames : null} user={user} /> : ""
-                        ))}
+                        {
+                            searchState.nbResults ?
+                                <Row className="my-3">
+                                    <Col>
+                                        <h3>{getResultResearch()}</h3>
+                                    </Col>
+                                </Row>
+                                :
+                                ""
+                        }
+                        {
+                            searchState.error ?
+                                <Row className="my-3">
+                                    <Col>
+                                        <h3>{searchState.error}</h3>
+                                    </Col>
+                                </Row>
+                                :
+                                ""
+                        }
+                        <Row className="g-4 justify-content-center" sm={1} md={2} lg={3}>
+                            { searchState.searchedGames ?
+                                <>
+                                    {searchState.searchedGames.map(game => (
+                                        game ? <DashboardSearchResult
+                                                    handleChangeStatus={handleChangeStatus}
+                                                    handleAddGame={handleAddGame}
+                                                    setLoadGames={setLoadGames}
+                                                    key={game.id}
+                                                    game={game}
+                                                    userGames={userGames ? userGames : null}
+                                                    user={user}
+                                                    handleShowModal={handleShowModal}
+                                                    setGameInfoUuid={setGameInfoUuid}
+                                                />
+                                            :
+                                                ""
+                                    ))}
 
+                                </>
+                                : ""
+                            }
+                        </Row>
+                        { searchState.searchedGames && (searchState.next || searchState.previous)  ?
+                            <Row>
+                                <Col md={12} className="text-center">
+                                    { searchState.previous ?
+
+                                        <Button className="mx-2" variant="primary" onClick={() => handleLoadPage(searchState.previous)} type="button">
+                                            <FaAngleLeft /> Prev
+                                        </Button>
+                                        :
+                                        ""
+                                    }
+                                    { searchState.next ?
+                                        <Button className="mx-2" variant="primary" onClick={() => handleLoadPage(searchState.next)} type="button">
+                                            Next <FaAngleRight />
+                                        </Button>
+                                        :
+                                        ""
+                                    }
+                                </Col>
+                            </Row>
+                            : ""
+                        }
                     </>
-                    : ""
-                }
-            </Row>
-            { searchedGames && (next || prev)  ?
-                <Row>
-                    <Col md={12} className="text-center">
-                        { prev ?
-
-                            <Button className="mx-2" variant="primary" onClick={() => handleLoadPage(prev)} type="button">
-                                <FaAngleLeft /> Prev
-                            </Button>
-                            :
-                            ""
-                        }
-                        { next ?
-                            <Button className="mx-2" variant="primary" onClick={() => handleLoadPage(next)} type="button">
-                                Next <FaAngleRight />
-                            </Button>
-                            :
-                            ""
-                        }
-                    </Col>
-                </Row>
-                : "" }
+                    :
+                    <Row>
+                        <Col className={"text-center"}>
+                            <Spinner animation="border" variant="primary" />
+                        </Col>
+                    </Row>
+            }
         </>
     )
 }

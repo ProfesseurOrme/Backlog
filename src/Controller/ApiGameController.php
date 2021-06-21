@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\Rating;
 use App\Entity\Status;
 use App\Entity\UserGameStatus;
 use App\Services\GameChecker\GameChecker;
@@ -17,7 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Class GameController
  * @package App\Controller
- * @Route("/api", name="api_")
+ * @Route("/api/games/", name="api_game")
  */
 class ApiGameController extends AbstractApiController
 {
@@ -39,7 +40,7 @@ class ApiGameController extends AbstractApiController
 		}
 
 		/**
-		* @Route("/games", name="get_games", methods={"GET"})
+		* @Route("", name="_get", methods={"GET"})
 	  * @return Response
 		*/
 		public function getGames(): Response
@@ -69,7 +70,7 @@ class ApiGameController extends AbstractApiController
 		}
 
 		/**
-		* @Route("/games", name="add_game", methods={"POST"})
+		* @Route("", name="_add", methods={"POST"})
 		* @param Request $request
 		* @return Response
 		*/
@@ -83,7 +84,7 @@ class ApiGameController extends AbstractApiController
 		}
 
 		/**
-		* @Route("/games/{uuid}-{slug}/status/{id}", name="change_game_status", methods={"PUT"})
+		* @Route("{uuid}-{slug}/status/{id}", name="_get_status_update", methods={"PUT"})
 		* @ParamConverter("game", options={"mapping": {"uuid": "uuid", "slug": "slug"}})
 		* @param Game $game
 		* @param Status $status
@@ -98,4 +99,55 @@ class ApiGameController extends AbstractApiController
 
 			return $this->respondWithCode(Response::HTTP_OK, "Status updated !");
 		}
+
+	/**
+	 * @Route("{uuid}/ratings/", name="_rating_get", methods={"GET"})
+	 */
+	public function getGameRating(Game $game) : Response
+	{
+
+		$rating = $this->entityManager->getRepository(Rating::class)->findGameRating($game->getUuid(), $this->getUser());
+
+		if($rating) {
+			return $this->respond(["id" => $rating->getId(),"rating" => $rating->getRating(), "addedAt" => $rating->getAddedAt()]);
+		} else {
+			return $this->respondNotFound("You did not rate this game");
+		}
+	}
+
+	/**
+	 * @Route("{uuid}/ratings/", name="_get_rating_add", methods={"POST"})
+	 */
+	public function setGameRating(Request $request, Game $game) : Response
+	{
+		$rating = $this->deserializeData($request->getContent(),  Rating::class)
+			->setAddedAt(new \DateTime())
+			->setGame($game)
+			->setUser($this->getUser())
+		;
+		$this->entityManager->persist($rating);
+		$this->entityManager->flush();
+
+		return $this->respondCreated("You have rated this game");
+	}
+
+	/**
+	 * @Route("{uuid}/ratings/{id}", name="_get_rating_update", methods={"PUT"})
+	 * @ParamConverter("game", options={"mapping": {"uuid": "uuid"}})
+	 */
+	public function updateGameRating(Request $request, Game $game, Rating $rating) : Response
+	{
+		if($rating) {
+
+			$newRating = $this->deserializeData($request->getContent(),  Rating::class);
+
+			$rating->setRating($newRating->getRating());
+
+			$this->entityManager->flush();
+
+			return $this->respondUpdated("You have updated the game's rating");
+		} else {
+			return $this->respondNotFound("You have not rated this game. Please try again");
+		}
+	}
 }

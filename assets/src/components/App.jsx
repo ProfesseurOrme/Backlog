@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Container} from "react-bootstrap";
-import {Route, Switch, Redirect, useLocation} from 'react-router-dom';
-import Game from "./Game/Game";
+import {Route, Switch, Redirect} from 'react-router-dom';
 import Login from "./Authentication/Login";
 import Footer from "./Footer";
 import AuthService from "../helpers/AuthService";
@@ -13,7 +12,6 @@ const App = () => {
 
     const [user, setUser] = useState(null);
     const [loaded, setLoaded] = useState(false);
-    const location = useLocation();
 
     useEffect(() => {
 
@@ -36,13 +34,6 @@ const App = () => {
         setUser(null);
     }
 
-    const NotAuthenticatedRoutes = (props) => {
-        return (!user) ? <Route {...props} /> : <Redirect to="/" /> ;
-    }
-    const AuthenticatedRoutes = (props) => {
-        return (user) ? <Route {...props} user={user} /> : <Redirect to="/"/>;
-    }
-
     return (
         <>
             { loaded ?
@@ -52,23 +43,25 @@ const App = () => {
                             <>
                                 <Container fluid className="min-vh-100 h-100">
                                     <Switch>
-                                        <AuthenticatedRoutes path="/game/:uuid/:slug" component={Game} />
-                                        <AuthenticatedRoutes path="/" render={() => <Dashboard logout={logout} user={user}/>} />
-                                        <AuthenticatedRoutes path="/logout" />
-                                        <AuthenticatedRoutes path="/game/:uuid/:slug" render={() => <Game />} />
+                                        <Route path="/" render={() => <Dashboard logout={logout} user={user}/>} />
+                                        <Route path="/logout" />
+                                        <Route />
                                         <Route render={() => <Redirect to="/" />} />
                                     </Switch>
                                 </Container>
                                 <Footer />
                             </>
                             :
-                            <Container fluid className="min-vh-100">
-                                <Switch>
-                                    <NotAuthenticatedRoutes path="/register" component={Register} />
-                                    <NotAuthenticatedRoutes exact path="/login" render={() => <Login setUser={setUser}/>} />
-                                    <Route render={() => <Redirect to="/login" />} />
-                                </Switch>
-                            </Container>
+                            <>
+                                <Container fluid className="min-vh-100">
+                                    <Switch>
+                                        <Route path="/register" component={Register} />
+                                        <Route exact path="/login" render={() => <Login setUser={setUser}/>} />
+                                        <Route render={() => <Redirect to="/login" />} />
+                                    </Switch>
+                                </Container>
+                                <Footer />
+                            </>
                     }
                 </>
                 :

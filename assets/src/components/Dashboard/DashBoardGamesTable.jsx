@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Card, Table} from "react-bootstrap";
+import {FaCheck, FaSpinner, FaTasks} from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import DashboardGamesTableRow from "./DashboardGamesTableRow";
 
@@ -28,13 +29,36 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
         setPagination({ ...pagination, offset })
     }
 
+    const titleColor = (title) => {
+        let color, icon;
+        switch (title) {
+            case "In Progress":
+                icon = <FaSpinner />;
+                color = "text-warning";
+            break;
+            case "To Do":
+                icon= <FaTasks />
+                color = "text-danger";
+            break;
+            case "Finished" :
+                icon= <FaCheck />;
+                color = "text-success";
+            break;
+        }
+
+        return {
+            icon : icon,
+            color: color
+        };
+    }
+
     return (
         <Card className="my-3">
             <Card.Header>
-                <Card.Text>{title}</Card.Text>
+                <Card.Text className={titleColor(title).color + " h5"}>{title} {titleColor(title).icon}</Card.Text>
             </Card.Header>
             <Card.Body className="p-0">
-                <Table responsive>
+                <Table responsive hover>
                     <thead>
                         <tr>
                             <th>
@@ -64,7 +88,7 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
             </Card.Body>
             {
                 pagination.pageCount > 1 ?
-                    <Card.Footer className="text-center">
+                    <Card.Footer className="d-flex justify-content-center">
                         <ReactPaginate
                             containerClassName="pagination"
                             breakClassName="page-item"

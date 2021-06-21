@@ -117,8 +117,6 @@ const Register = () => {
         }));
     };
 
-    console.log(form);
-
     return (
         <>
             <Row className={"h-100"}>

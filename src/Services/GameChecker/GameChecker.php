@@ -37,6 +37,15 @@
 				$game->addPlatform($platform);
 			}
 
+			/* Gérer exception Unique
+			foreach ($items as $item) {
+				try {
+
+				} catch (UniqueConstraintViolationException $e) {
+					continue;
+				}
+			} */
+
 			$status = $this->entityManager->getRepository(Status::class)->find(1);
 
 			$userGameStatus = new UserGameStatus();

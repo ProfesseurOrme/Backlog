@@ -18,7 +18,7 @@ class Rating
     private $id;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float", scale=1, nullable=true)
      */
     private $rating;
 
@@ -45,14 +45,14 @@ class Rating
         return $this->id;
     }
 
-    public function getRating(): ?int
+    public function getRating(): ?float
     {
-        return $this->rating;
+        return (float)$this->rating;
     }
 
-    public function setRating(?int $rating): self
+    public function setRating(?float $rating): self
     {
-        $this->rating = $rating;
+        $this->rating = (float)$rating;
 
         return $this;
     }
