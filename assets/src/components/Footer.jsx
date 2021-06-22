@@ -6,7 +6,7 @@ const Footer = () => {
         <Container>
             <Row>
                 <Col className={"text-center"}>
-                    <p>Created by Matthieu G. - <a href="https://github.com/ProfesseurOrme/Backlog">Repository Github</a>.</p>
+                    <p>Created by Matthieu G. - <a href={"https://github.com/ProfesseurOrme/Backlog"}>Repository Github</a>.</p>
                 </Col>
             </Row>
         </Container>

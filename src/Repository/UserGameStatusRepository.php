@@ -19,7 +19,7 @@ class UserGameStatusRepository extends ServiceEntityRepository
         parent::__construct($registry, UserGameStatus::class);
     }
 
-    public function getGamePerUser($idGame, $idUser)
+    public function findGamePerUser($idGame, $idUser)
 		{
 			return $this->createQueryBuilder("u")
 				->innerJoin("u.game", "g")
@@ -33,4 +33,28 @@ class UserGameStatusRepository extends ServiceEntityRepository
 				->getSingleResult()
 			;
 		}
+
+		public function findGameStatisticsPerStatus($statusId, $gameUuid) {
+    	return $this->createQueryBuilder("u")
+				->select("count(u.id) as cnt")
+				->innerJoin("u.game", "g")
+				->where("g.uuid = :uuid")
+				->innerJoin("u.status", "s")
+				->andWhere("s.id = :id")
+				->setParameters(["uuid" => $gameUuid, "id" => $statusId])
+				->getQuery()
+				->getSingleScalarResult()
+			;
+		}
+
+	public function findNbPlayers($gameUuid) {
+		return $this->createQueryBuilder("u")
+			->select("count(u.id) as cnt")
+			->innerJoin("u.game", "g")
+			->where("g.uuid = :uuid")
+			->setParameter("uuid" , $gameUuid)
+			->getQuery()
+			->getSingleScalarResult()
+			;
+	}
 }

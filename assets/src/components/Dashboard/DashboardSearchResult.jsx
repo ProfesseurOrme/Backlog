@@ -22,14 +22,14 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
     }
 
     return (
-        <Col className="my-3">
+        <Col className={"my-3"}>
             <Card>
-                <Card.Img className="card-img-custom" variant="top"  src={game.background_image ? game.background_image : placeholderImage} />
+                <Card.Img className={"card-img-custom"} variant={"top"}  src={game.background_image ? game.background_image : placeholderImage} />
                 <Card.Body>
-                    <Card.Title className="text-truncate">{game.name}</Card.Title>
+                    <Card.Title className={"text-truncate"}>{game.name}</Card.Title>
                     <Card.Text><strong>Release : </strong>{reformatDate(game.released)}</Card.Text>
                 </Card.Body>
-                <Card.Footer className="text-center border-top-blue-grey border-top-lighten-5">
+                <Card.Footer className={"text-center border-top-blue-grey border-top-lighten-5"}>
                     {
                         userGame ?
                             <>
@@ -40,7 +40,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                     </Tooltip>
                                     }
                                 >
-                                    <Button className={"mx-2"} disabled={userGame.status === 1} variant={userGame.status === 1 ? "danger" : "outline-danger"} onClick={userGame.status !== 1 ? ()=> handleChangeStatus(1, game.id, game.slug) : undefined} type="button">
+                                    <Button className={"mx-2"} disabled={userGame.status === 1} variant={userGame.status === 1 ? "danger" : "outline-danger"} onClick={userGame.status !== 1 ? ()=> handleChangeStatus(1, game.id, game.slug) : undefined} type={"button"}>
                                         <FaTasks />
                                     </Button>
                                 </OverlayTrigger>
@@ -51,7 +51,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                     </Tooltip>
                                     }
                                 >
-                                    <Button className={"mx-2"} disabled={userGame.status === 2} variant={(userGame.status === 2) ? "warning" : "outline-warning"} onClick={userGame.status !== 2 ? ()=> handleChangeStatus(2, game.id, game.slug) : undefined} type="button">
+                                    <Button className={"mx-2"} disabled={userGame.status === 2} variant={(userGame.status === 2) ? "warning" : "outline-warning"} onClick={userGame.status !== 2 ? ()=> handleChangeStatus(2, game.id, game.slug) : undefined} type={"button"}>
                                         <FaSpinner />
                                     </Button>
                                 </OverlayTrigger>
@@ -62,28 +62,30 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                     </Tooltip>
                                     }
                                 >
-                                    <Button className={"mx-2"} disabled={userGame.status === 3} variant={(userGame.status === 3) ? "success" : "outline-success" } onClick={userGame.status !== 3 ? ()=> handleChangeStatus(3, game.id, game.slug) : undefined} type="button">
+                                    <Button className={"mx-2"} disabled={userGame.status === 3} variant={(userGame.status === 3) ? "success" : "outline-success" } onClick={userGame.status !== 3 ? ()=> handleChangeStatus(3, game.id, game.slug) : undefined} type={"button"}>
                                        <FaCheck />
                                     </Button>
                                 </OverlayTrigger>
                             </>
                             :
-                            <Button variant="info" className={"mx-1"} type="button" onClick={(event) => {
-                                let platformsGame = [];
-                                game.platforms.map(item =>(
-                                    platformsGame.push({
-                                        "uuid" : item.platform.id,
-                                        "name" : item.platform.name
+                            <Button
+                                variant={"info"} className={"mx-1"} type={"button"}
+                                onClick={(event) => {
+                                    let platformsGame = [];
+                                    game.platforms.map(item =>(
+                                        platformsGame.push({
+                                            "uuid" : item.platform.id,
+                                            "name" : item.platform.name
+                                        })
+                                    ))
+                                    handleAddGame({
+                                        name: game.name,
+                                        slug: game.slug,
+                                        uuid: game.id,
+                                        released: game.released,
+                                        platforms : platformsGame
                                     })
-                                ))
-                                handleAddGame({
-                                    name: game.name,
-                                    slug: game.slug,
-                                    uuid: game.id,
-                                    released: game.released,
-                                    metacritic: game.metacritic,
-                                    platforms : platformsGame}
-                                )}}
+                                }}
                             >
                                 <FaPlusCircle /> Add to collection
                             </Button>

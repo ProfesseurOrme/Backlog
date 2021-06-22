@@ -6,7 +6,7 @@ const DashboardGamesTableRow = ({game, handleShowModal, setGameInfoUuid}) => {
 
     return (
         <tr>
-            <td style={{width: "30%"}} className="cell-truncate">
+            <td style={{width: "30%"}} className={"cell-truncate"}>
                 {game.name}
             </td>
             <td style={{width: "60%"}} className={"cell-truncate"}>

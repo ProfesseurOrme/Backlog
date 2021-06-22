@@ -92,7 +92,8 @@ class ApiGameController extends AbstractApiController
 		*/
 		public function setGameStatus(Game $game, Status $status): Response
 		{
-			$game = $this->entityManager->getRepository(UserGameStatus::class)->getGamePerUser($game->getId(), $this->getUser()->getId());
+			$game = $this->entityManager->getRepository(UserGameStatus::class)->findGamePerUser($game->getId(), $this->getUser
+			()->getId());
 
 			$game->setStatus($status);
 			$this->entityManager->flush();
@@ -106,7 +107,7 @@ class ApiGameController extends AbstractApiController
 	public function getGameRating(Game $game) : Response
 	{
 
-		$rating = $this->entityManager->getRepository(Rating::class)->findGameRating($game->getUuid(), $this->getUser());
+		$rating = $this->entityManager->getRepository(Rating::class)->findGameRating($game->getUuid(), $this->getUser()->getId());
 
 		if($rating) {
 			return $this->respond(["id" => $rating->getId(),"rating" => $rating->getRating(), "addedAt" => $rating->getAddedAt()]);
@@ -149,5 +150,28 @@ class ApiGameController extends AbstractApiController
 		} else {
 			return $this->respondNotFound("You have not rated this game. Please try again");
 		}
+	}
+
+	/**
+	 * @Route("{uuid}/statistics/", name="_get_statistics", methods={"GET"})
+	 */
+	public function getGameStatistics(Game $game) :Response
+	{
+		$gameRepository = $this->entityManager->getRepository(UserGameStatus::class);
+		$nbPlayers = $gameRepository->findNbPlayers($game->getUuid());
+
+		$ratingRepository = $this->entityManager->getRepository(Rating::class);
+
+		$statistics = [
+			"rating" => $ratingRepository->findGameAverageRating($game->getUuid()),
+			"nb_players" => $nbPlayers ? $nbPlayers : "0",
+			"statistics" => [
+				"to_do" => $gameRepository->findGameStatisticsPerStatus(1, $game->getUuid()),
+				"in_progress" => $gameRepository->findGameStatisticsPerStatus(2, $game->getUuid()),
+				"finished" => $gameRepository->findGameStatisticsPerStatus(3, $game->getUuid())
+			]
+		];
+
+		return $this->respond($statistics);
 	}
 }

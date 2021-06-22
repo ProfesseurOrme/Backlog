@@ -53,7 +53,7 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
     }
 
     return (
-        <Card className="my-3">
+        <Card className={"my-3"}>
             <Card.Header>
                 <Card.Text className={titleColor(title).color + " h5"}>{title} {titleColor(title).icon}</Card.Text>
             </Card.Header>
@@ -88,18 +88,18 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
             </Card.Body>
             {
                 pagination.pageCount > 1 ?
-                    <Card.Footer className="d-flex justify-content-center">
+                    <Card.Footer className={"d-flex justify-content-center"}>
                         <ReactPaginate
-                            containerClassName="pagination"
-                            breakClassName="page-item"
-                            breakLinkClassName="page-link"
-                            pageClassName="page-item"
-                            previousClassName="page-item"
-                            nextClassName="page-item"
-                            pageLinkClassName="page-link"
-                            previousLinkClassName="page-link"
-                            nextLinkClassName="page-link"
-                            activeClassName="active"
+                            containerClassName={"pagination"}
+                            breakClassName={"page-item"}
+                            breakLinkClassName={"page-link"}
+                            pageClassName={"page-item"}
+                            previousClassName={"page-item"}
+                            nextClassName={"page-item"}
+                            pageLinkClassName={"page-link"}
+                            previousLinkClassName={"page-link"}
+                            nextLinkClassName={"page-link"}
+                            activeClassName={"active"}
                             pageCount={pagination.pageCount}
                             marginPagesDisplayed={2}
                             pageRangeDisplayed={5}

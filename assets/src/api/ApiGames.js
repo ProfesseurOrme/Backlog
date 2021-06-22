@@ -17,3 +17,9 @@ export const setGameWithUser = (domain, header, data) => {
         headers : header
     })
 }
+
+export const getGameStatistics = (domain, header, gameUuid) => {
+    return axios.get(domain + "/api/games/" + gameUuid + "/statistics/", {
+        headers : header
+    })
+}

@@ -1,20 +1,26 @@
 import React , {useState, useEffect} from "react";
-import {Badge, Button, Media, Modal, OverlayTrigger, Spinner, Tooltip} from "react-bootstrap";
+import {Badge, Button, Card, Col, Media, Modal, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
 import {BsStar, BsStarFill, BsStarHalf} from "react-icons/bs";
 import {FaCheck, FaGamepad, FaPlusCircle, FaReddit, FaSpinner, FaTasks} from "react-icons/fa";
 import ReactStars from "react-rating-stars-component/dist/react-stars";
+import {getGameStatistics} from "../../api/ApiGames";
 import {getRating, setRating, updateRating} from "../../api/ApiRating";
 import {reformatDate, splitArray} from "../../helpers/MiscService";
 import {delay} from "../../helpers/DelayService";
 import {getGame} from "../../api/ApiRawg";
 import DataService from "../../helpers/DataService";
+import placeholderImage from "../../img/placeholder-image.png";
+
+/**
+ * Note : Sometimes, RAWG API can remove some entries, so you have to use data from our API to display the desired modal
+ */
 
 const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInfoUuid, handleChangeStatus, handleAddGames}) => {
 
-    const [gameInfo, setGameInfo] = useState({});
-    const [userRating, setUserRating] = useState({});
-    const [error, setError] = useState();
+    const [gameInfo, setGameInfo] = useState(null);
+    const [userRating, setUserRating] = useState(null);
     const [loaded, setLoaded] = useState(false);
+    const [gameStatistics, setGameStatistics] = useState(null);
 
     useEffect(() => {
         if(showModal) {
@@ -24,13 +30,13 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
 
     const setGameInformations = async(uuid) => {
         setLoaded(false);
-        Promise.all([getGameInfo(uuid), getGameRating()])
+        Promise.all([getGameInfo(uuid), getGameRating(), GameStatistics(uuid)])
             .then(values => {
-                setGameInfo(values[0])
-                setUserRating(values[1])
+                values[0] ? setGameInfo(values[0]) : setGameInfo(null);
+                values[1] ? setUserRating(values[1]) : setUserRating(null);
+                values[2] ? setGameStatistics(values[2]) : setGameStatistics(null);
             })
         ;
-
         await delay(1000);
         setLoaded(true)
     }
@@ -38,6 +44,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
     const getGameInfo = (uuid) => {
         return getGame(uuid)
             .then(result => {
+                console.log(result);
                 return result.data
             })
             .catch(error => {
@@ -49,20 +56,28 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
     const getGameRating = () => {
         return getRating(DataService.API_URL, DataService.tokenHeader(user.token), gameInfoUuid)
             .then(result => {return result.data})
-            .catch(error => {});
+            .catch(error => {})
+            ;
+    }
+
+    const GameStatistics = (uuid) => {
+        return getGameStatistics(DataService.API_URL, DataService.tokenHeader(user.token), uuid)
+            .then(result => {return result.data})
+            .catch(error => {})
+            ;
     }
 
     const ratingSet = (rating) => {
         setRating(DataService.API_URL, DataService.tokenHeader(user.token), {rating: rating}, gameInfoUuid )
-            .then(result => console.log(result))
-            .catch(error => console.log(error))
+            .then(result => {})
+            .catch(error => {})
         ;
     };
 
     const ratingUpdate= (rating) => {
         updateRating(DataService.API_URL, DataService.tokenHeader(user.token), {...userRating, rating: rating}, gameInfoUuid )
-            .then(result => setUserRating(prevState => ({...prevState, rating : rating})))
-            .catch(error => console.log(error))
+            .then(_ => setUserRating(prevState => ({...prevState, rating : rating})))
+            .catch(error => {})
         ;
     };
 
@@ -76,31 +91,31 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                     setGameInfoUuid("");
                     handleCloseModal();
                 }}
-                backdrop="static"
+                backdrop={"static"}
                 keyboard={false}
-                dialogClassName="modal-custom"
+                dialogClassName={"modal-custom"}
                 centered
-                scrollable={true}
+                scrollable={false}
             >
                 { loaded ?
                     <>
                         <Modal.Header className={"border-bottom-0"} closeButton>
-                            <Modal.Title>{gameInfo.name}</Modal.Title>
+                            <Modal.Title>{game ? game.name : gameInfo.name}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Media>
-                                <img alt={"image : " + gameInfo.name} src={gameInfo.background_image} className={"mr-3"} />
-                                <Media.Body>
+                            <Media className={"media-data"}>
+                                <img alt={"image : " + (game ?  + game.name : gameInfo.name)} src={gameInfo && gameInfo.background_image ? gameInfo.background_image : placeholderImage } className={"mr-3"} />
+                                <Media.Body >
                                     <p className={"text-body"}>
-                                        <strong>Release date : </strong>{gameInfo.released ? reformatDate(gameInfo.released) : "TBA"}
+                                        <strong>Release date : </strong>{gameInfo && gameInfo.released ? reformatDate(gameInfo.released) : "TBA"}
                                     </p>
                                     <p className={"text-body"}>
-                                        <strong>Publishers :</strong> {typeof gameInfo.publishers !== 'undefined' && gameInfo.publishers.length > 0 ? splitArray(gameInfo.publishers) : "Not specified"}
+                                        <strong>Publishers :</strong> {gameInfo ? (typeof gameInfo.publishers !== 'undefined' && gameInfo.publishers.length > 0 ? splitArray(gameInfo.publishers) : "Not specified") : "Deleted from API"}
                                     </p>
                                     <p className={"text-body"}>
-                                        <strong>Developers :</strong> {typeof gameInfo.developers !== 'undefined' && gameInfo.developers.length > 0 ? splitArray(gameInfo.developers) : "Not specified"}
+                                        <strong>Developers :</strong> {gameInfo ? (typeof gameInfo.developers !== 'undefined' && gameInfo.developers.length > 0 ? splitArray(gameInfo.developers) : "Not specified") : "Deleted from API"}
                                     </p>
-                                    { gameInfo.reddit_url || gameInfo.metacritic_url ?
+                                    { gameInfo ?  (gameInfo.reddit_url || gameInfo.metacritic_url ?
                                         <p className={"text-body"}><strong>Medias :</strong>
                                             {gameInfo.reddit_url ?
                                                 <OverlayTrigger
@@ -136,20 +151,21 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             }
                                         </p>
                                         :
-                                        ""
+                                        "")
+                                        : ""
                                     }
                                     <p className={"text-body"}>
-                                        <strong>Platforms : </strong>{gameInfo.platforms ? gameInfo.platforms.map(item => (
-                                        <Badge key={item.platform.id} pill variant="primary" className={"mx-1"}>
+                                        <strong>Platforms : </strong>{gameInfo ? (gameInfo.platforms ? gameInfo.platforms.map(item => (
+                                        <Badge key={item.platform.id} pill variant={"primary"} className={"mx-1"}>
                                             {item.platform.name}
                                         </Badge>
-                                    )) : ""}
+                                    )) : "") : "Deleted from API"}
                                     </p>
 
                                     {
                                         game ?
                                             <>
-                                                <div className={"text-body"}><strong>Rate the game : {userRating ? userRating.rating + " /5" : ""} </strong></div>
+                                                <div className={"text-body"}><strong>Rate the game : {userRating ? userRating.rating + " /5" : ""} {gameStatistics.rating ? "(Average player rating : " + gameStatistics.rating + "/5 )" : ""}</strong></div>
                                                 <ReactStars
                                                     count={5}
                                                     onChange={userRating ? ratingUpdate : ratingSet}
@@ -158,7 +174,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                                     emptyIcon={<BsStar />}
                                                     halfIcon={<BsStarHalf />}
                                                     fullIcon={<BsStarFill/>}
-                                                    activeColor="#007bff"
+                                                    activeColor={"#007bff"}
                                                     value={userRating ? userRating.rating : 0}
                                                 />
                                             </>
@@ -167,6 +183,68 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                     }
                                 </Media.Body>
                             </Media>
+                            <Row>
+                                <Col>
+                                    <p className="h5 my-3">Who's playing now ? ({ gameStatistics ? gameStatistics.nb_players : "None"})</p>
+                                </Col>
+                            </Row>
+                            { gameStatistics ?
+                                <Row>
+                                    <Col sm={4}>
+                                        <Card border={"danger"} className={"card-stats"}>
+                                            <div className={"card-content"}>
+                                                <Card.Body className={"card-stats-body"}>
+                                                    <Media className={"d-flex"}>
+                                                        <div className={"align-self-center"}>
+                                                            <FaTasks className={"text-danger float-left"} />
+                                                        </div>
+                                                        <Media.Body className={"text-right"}>
+                                                            <h3>{gameStatistics.statistics.to_do}</h3>
+                                                            <span className={"text-danger"}>To do</span>
+                                                        </Media.Body>
+                                                    </Media>
+                                                </Card.Body>
+                                            </div>
+                                        </Card>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <Card border={"warning"} className={"card-stats"}>
+                                            <div className={"card-content"}>
+                                                <Card.Body className={"card-stats-body"}>
+                                                    <Media className={"d-flex"}>
+                                                        <div className={"align-self-center"}>
+                                                            <FaTasks className={"text-warning float-left"}/>
+                                                        </div>
+                                                        <Media.Body className={"text-right"}>
+                                                            <h3>{gameStatistics.statistics.in_progress}</h3>
+                                                            <span className={"text-warning"}>In progress</span>
+                                                        </Media.Body>
+                                                    </Media>
+                                                </Card.Body>
+                                            </div>
+                                        </Card>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <Card border={"success"} className={"card-stats"}>
+                                            <div className={"card-content"}>
+                                                <Card.Body className={"card-stats-body"}>
+                                                    <Media className={"d-flex"}>
+                                                        <div className={"align-self-center"}>
+                                                            <FaTasks className={"text-success float-left"}/>
+                                                        </div>
+                                                        <Media.Body className={"text-right"}>
+                                                            <h3>{gameStatistics.statistics.finished}</h3>
+                                                            <span className={"text-success"}>Finished</span>
+                                                        </Media.Body>
+                                                    </Media>
+                                                </Card.Body>
+                                            </div>
+                                        </Card>
+                                    </Col>
+                                </Row>
+                                :
+                                ""
+                            }
                         </Modal.Body>
                         <Modal.Footer>
                             {
@@ -179,7 +257,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             </Tooltip>
                                             }
                                         >
-                                            <Button className={"mx-2"} disabled={game.status === 1} variant={game.status === 1 ? "danger" : "outline-danger"} onClick={game.status !== 1 ? ()=> handleChangeStatus(1, game.uuid, game.slug) : undefined} type="button">
+                                            <Button className={"mx-2"} disabled={game.status === 1} variant={game.status === 1 ? "danger" : "outline-danger"} onClick={game.status !== 1 ? ()=> handleChangeStatus(1, game.uuid, game.slug) : undefined} type={"button"}>
                                                 <p className={"modal-footer-btn-label"}><FaTasks /></p>
                                             </Button>
                                         </OverlayTrigger>
@@ -190,7 +268,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             </Tooltip>
                                             }
                                         >
-                                            <Button className={"mx-2"} disabled={game.status === 2} variant={(game.status === 2) ? "warning" : "outline-warning"} onClick={game.status !== 2 ? ()=> handleChangeStatus(2, game.uuid, game.slug) : undefined} type="button">
+                                            <Button className={"mx-2"} disabled={game.status === 2} variant={(game.status === 2) ? "warning" : "outline-warning"} onClick={game.status !== 2 ? ()=> handleChangeStatus(2, game.uuid, game.slug) : undefined} type={"button"}>
                                                 <p className={"modal-footer-btn-label"}><span>In progress </span><FaSpinner /></p>
                                             </Button>
                                         </OverlayTrigger>
@@ -201,13 +279,13 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             </Tooltip>
                                             }
                                         >
-                                            <Button className={"mx-2"} disabled={game.status === 3} variant={(game.status === 3) ? "success" : "outline-success" } onClick={game.status !== 3 ? ()=> handleChangeStatus(3, game.uuid, game.slug) : undefined} type="button">
+                                            <Button className={"mx-2"} disabled={game.status === 3} variant={(game.status === 3) ? "success" : "outline-success" } onClick={game.status !== 3 ? ()=> handleChangeStatus(3, game.uuid, game.slug) : undefined} type={"button"}>
                                                 <p className={"modal-footer-btn-label"}><span>Done </span><FaCheck /></p>
                                             </Button>
                                         </OverlayTrigger>
                                     </>
                                     :
-                                    <Button variant="info" type="button" onClick={(event) => {
+                                    <Button variant={"info"} type={"button"} onClick={(event) => {
                                         let platformsGame = [];
                                         game.platforms.map(item =>(
                                             platformsGame.push({
@@ -231,7 +309,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                     </>
                     :
                     <Modal.Body className={"text-center"}>
-                        <Spinner animation="border" variant="primary" />
+                        <Spinner animation={"border"} variant={"primary"} />
                     </Modal.Body>
                 }
             </Modal>

@@ -121,7 +121,7 @@ const Register = () => {
         <>
             <Row className={"h-100"}>
                 <Col sm={12} className={"p-0"}>
-                    <Card className="mb-3">
+                    <Card className={"mb-3"}>
                         <Card.Header>
                             <Card.Title>Backlog.io</Card.Title>
                         </Card.Header>
@@ -130,91 +130,91 @@ const Register = () => {
             </Row>
             <Row className={"justify-content-md-center flex-grow-1"}>
                 <Col lg={6} md={8} sm={12}>
-                    <Card className="my-3">
+                    <Card className={"my-3"}>
                         <Card.Header>
                             <Card.Text>Sign In</Card.Text>
                         </Card.Header>
-                        <Card.Body className="p-4">
+                        <Card.Body className={"p-4"}>
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group className="mb-3" controlId="formBasicUsername">
+                                <Form.Group className={"mb-3"} controlId={"formBasicUsername"}>
                                     <Form.Label>Username</Form.Label>
                                     <Form.Control
-                                        type="username"
-                                        name="username"
-                                        placeholder="Enter your username"
+                                        type={"username"}
+                                        name={"username"}
+                                        placeholder={"Enter your username"}
                                         value={form.fields.username}
                                         onChange={handleChange}
                                         isInvalid={ !!form.errors.username }
                                     />
                                     {
                                         form.errors.username ?
-                                            <Form.Control.Feedback type="invalid">
+                                            <Form.Control.Feedback type={"invalid"}>
                                                 {form.errors.username}
                                             </Form.Control.Feedback>
                                             :
                                             ""
                                     }
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Group className={"mb-3"} controlId={"formBasicEmail"}>
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
-                                        type="email"
-                                        name="email"
-                                        placeholder="Enter your email"
+                                        type={"email"}
+                                        name={"email"}
+                                        placeholder={"Enter your email"}
                                         value={form.fields.email}
                                         onChange={handleChange}
                                         isInvalid={ !!form.errors.email }
                                     />
                                     {
                                         form.errors.email ?
-                                            <Form.Control.Feedback type="invalid">
+                                            <Form.Control.Feedback type={"invalid"}>
                                                 {form.errors.email}
                                             </Form.Control.Feedback>
                                                 :
                                             ""
                                     }
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="formBasicName">
+                                <Form.Group className={"mb-3"} controlId={"formBasicName"}>
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control
-                                        type="text"
-                                        name="name"
-                                        placeholder="Enter your name"
+                                        type={"text"}
+                                        name={"name"}
+                                        placeholder={"Enter your name"}
                                         value={form.fields.name}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="formBasicLastname">
+                                <Form.Group className={"mb-3"} controlId={"formBasicLastname"}>
                                     <Form.Label>Lastname</Form.Label>
                                     <Form.Control
-                                        type="text"
-                                        name="lastname"
-                                        placeholder="Enter your lastname"
+                                        type={"text"}
+                                        name={"lastname"}
+                                        placeholder={"Enter your lastname"}
                                         value={form.fields.lastname}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Group className={"mb-3"} controlId={"formBasicPassword"}>
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
-                                        type="password"
-                                        placeholder="Enter your password"
-                                        name="password"
+                                        type={"password"}
+                                        placeholder={"Enter your password"}
+                                        name={"password"}
                                         value={form.fields.password}
                                         onChange={handleChange}
                                         isInvalid={ !!form.errors.password}
                                     />
                                     {
                                         form.errors.password ?
-                                            <Form.Control.Feedback type="invalid">
+                                            <Form.Control.Feedback type={"invalid"}>
                                                 {form.errors.password}
                                             </Form.Control.Feedback>
                                                 :
                                             ""
                                     }
                                 </Form.Group>
-                                <div className="d-flex justify-content-center">
-                                    <Button variant="primary" type="submit" disabled={disabled}>
+                                <div className={"d-flex justify-content-center"}>
+                                    <Button variant={"primary"} type={"submit"} disabled={disabled}>
                                         Register
                                     </Button>
                                 </div>
@@ -222,7 +222,7 @@ const Register = () => {
                         </Card.Body>
                         <Card.Footer>
                             <p className={"text-body text-center"}>
-                                <Link to="/login" >You already have an account ? click here !</Link>
+                                <Link to={"/login"} >You already have an account ? click here !</Link>
                             </p>
                         </Card.Footer>
                     </Card>

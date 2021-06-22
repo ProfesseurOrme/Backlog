@@ -25,9 +25,23 @@ class RatingRepository extends ServiceEntityRepository
 				->innerJoin("r.game", "g")
 				->addSelect("g")
 				->where("g.uuid = :uuid")
-				->setParameter("uuid", $gameUuid)
+				->innerJoin("r.user", "u")
+				->addSelect("u")
+				->andWhere("u.id = :id")
+				->setParameters(["uuid" => $gameUuid,"id" => $userId])
 				->getQuery()
 				->getOneOrNullResult()
+			;
+		}
+
+		public function findGameAverageRating($gameUuid) {
+    	return $this->createQueryBuilder("r")
+				->select("avg(r.rating) as rtg")
+				->innerJoin("r.game", "g")
+				->where("g.uuid = :uuid")
+				->setParameter("uuid", $gameUuid)
+				->getQuery()
+				->getSingleScalarResult()
 			;
 		}
 

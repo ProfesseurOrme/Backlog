@@ -40,7 +40,7 @@ const Login = ({setUser}) => {
         <>
             <Row className={"h-100"}>
                 <Col sm={12} className={"p-0"}>
-                    <Card className="mb-3">
+                    <Card className={"mb-3"}>
                         <Card.Header>
                             <Card.Title>Backlog.io</Card.Title>
                         </Card.Header>
@@ -49,34 +49,34 @@ const Login = ({setUser}) => {
             </Row>
             <Row className={"justify-content-md-center flex-grow-1"}>
                 <Col lg={6} md={8} sm={12}>
-                    <Card className="my-3">
+                    <Card className={"my-3"}>
                         <Card.Header>
                             <Card.Text>Sign In</Card.Text>
                         </Card.Header>
-                        <Card.Body className="p-4">
+                        <Card.Body className={"p-4"}>
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Group className={"mb-3"} controlId={"formBasicEmail"}>
                                     <Form.Label>Username</Form.Label>
                                     <Form.Control
-                                        type="username"
-                                        name="username"
-                                        placeholder="Enter your username"
+                                        type={"username"}
+                                        name={"username"}
+                                        placeholder={"Enter your username"}
                                         value={data.username}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
-                                <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Group className={"mb-3"} controlId={"formBasicPassword"}>
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
-                                        type="password"
-                                        placeholder="Enter your password"
-                                        name="password"
+                                        type={"password"}
+                                        placeholder={"Enter your password"}
+                                        name={"password"}
                                         value={data.password}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
-                                <div className="d-flex justify-content-center">
-                                    <Button variant="primary" type="submit">
+                                <div className={"d-flex justify-content-center"}>
+                                    <Button variant={"primary"} type={"submit"}>
                                         Submit
                                     </Button>
                                 </div>
@@ -84,7 +84,7 @@ const Login = ({setUser}) => {
                         </Card.Body>
                         <Card.Footer>
                             <p className={"text-body text-center"}>
-                                <Link to="/register" >You don't have an account ? click here !</Link>
+                                <Link to={"/register"} >You don't have an account ? click here !</Link>
                             </p>
                         </Card.Footer>
                     </Card>

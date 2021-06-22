@@ -37,11 +37,6 @@ class Game
     private $slug;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $metacriticRank;
-
-    /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="game")
      */
     private $ratings;
@@ -105,18 +100,6 @@ class Game
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function getMetacriticRank(): ?int
-    {
-        return $this->metacriticRank;
-    }
-
-    public function setMetacriticRank(?int $metacriticRank): self
-    {
-        $this->metacriticRank = $metacriticRank;
 
         return $this;
     }

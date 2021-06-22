@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
-import {Col, Row, Form, Button, InputGroup, Spinner} from "react-bootstrap";
+import {Col, Row, Form, Button, InputGroup, Spinner, Tooltip, OverlayTrigger} from "react-bootstrap";
 import {ImCross} from "react-icons/im";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
 import {delay} from "../../helpers/DelayService";
@@ -117,12 +117,21 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
                             />
                             {
                                 searchState.nbResults ?
-                                    <Button
-                                        id="button-addon"
-                                        onClick={() => resetResults()}
+                                    <OverlayTrigger
+                                        placement={"bottom"}
+                                        overlay={<Tooltip id={"tooltip-bottom"}>
+                                            <strong>Reset search</strong>
+                                        </Tooltip>
+                                        }
                                     >
-                                        <ImCross />
-                                    </Button>
+                                        <Button
+                                            className={"mx-1"}
+                                            id="button-addon"
+                                            onClick={() => resetResults()}
+                                        >
+                                            <ImCross />
+                                        </Button>
+                                    </OverlayTrigger>
                                     :
                                     ""
                             }

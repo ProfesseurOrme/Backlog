@@ -19,7 +19,7 @@ const App = () => {
             .then(result => {
                 setUser(result);
             })
-            .catch(error => {
+            .catch(_ => {
                 setUser(null);
             })
             .finally(() => {
@@ -41,7 +41,7 @@ const App = () => {
                     {
                         user ?
                             <>
-                                <Container fluid className="min-vh-100 h-100">
+                                <Container fluid className="min-vh-100 d-flex h-100 flex-column">
                                     <Switch>
                                         <Route path="/" render={() => <Dashboard logout={logout} user={user}/>} />
                                         <Route path="/logout" />
