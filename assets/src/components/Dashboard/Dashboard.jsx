@@ -17,19 +17,12 @@ import {BiSearchAlt2} from "react-icons/bi";
 import {FaSearch} from "react-icons/fa";
 import {RiGamepadLine} from "react-icons/ri";
 import {FiLogOut} from "react-icons/fi";
-import {platformSelector} from "../../helpers/PlatformSelectService";
 import Account from "../Account/Account";
 import Game from "../Game/Game";
 import DashboardGames from "./DashboardGames";
 import DashboardSearch from "./DashboardSearch";
 import DataService from "../../helpers/DataService";
 import {getGamesPerUsers, setGameWithUser, updateGameUserStatus} from "../../api/ApiGames";
-
-const initialStateSort = {
-    name : "",
-    platform : "",
-    search : false
-}
 
 const Dashboard = ({user, logout}) => {
     const isCancelled = React.useRef(false);
@@ -39,7 +32,6 @@ const Dashboard = ({user, logout}) => {
     const [loadGames, setLoadGames] = useState(false);
     const [show, setShow] = useState(false);
     const [gameInfoUuid, setGameInfoUuid] = useState("");
-    const [sort, setSort] = useState(initialStateSort);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -60,7 +52,6 @@ const Dashboard = ({user, logout}) => {
                 if (!isCancelled.current) {
                     setUserGames(result.data);
                     setLoaded(true);
-                    console.log(platformSelector(result.data));
                 }
             })
             .catch(error => {
@@ -86,11 +77,6 @@ const Dashboard = ({user, logout}) => {
     const findGame = (games, uuid) => {
         const result = games.find(game => game.uuid === uuid)
         return result ? result : undefined
-    }
-
-    const handleSearchGame = (event) => {
-        event.preventDefault();
-        console.log(sort)
     }
 
     return (
@@ -139,75 +125,6 @@ const Dashboard = ({user, logout}) => {
                 </Row>
                 { loaded ?
                     <>
-                        { typeof userGames !== 'undefined' && userGames.length > 0 ?
-                            <Row className="my-3 justify-content-center">
-                                <Col md={10}>
-                                    <Card>
-                                        <Card.Body>
-                                            <Form onSubmit={handleSearchGame}>
-                                                <Form.Row>
-                                                    <Col md={5} sm={12} className={"my-1"}>
-                                                        <InputGroup>
-                                                            <Form.Control
-                                                                type={"text"}
-                                                                placeholder={"Search your games"}
-                                                                onChange={event => setSort(prevState => ({
-                                                                    ...prevState,
-                                                                    name: event.target.value
-                                                                }))}
-                                                                value={sort.name}
-                                                            />
-                                                            {/*
-                                                            searchState.nbResults ?
-                                                                <OverlayTrigger
-                                                                    placement={"bottom"}
-                                                                    overlay={<Tooltip id={"tooltip-bottom"}>
-                                                                        <strong>Reset search</strong>
-                                                                    </Tooltip>
-                                                                    }
-                                                                >
-                                                                    <Button
-                                                                        className={"mx-1"}
-                                                                        id="button-addon"
-                                                                        onClick={() => resetResults()}
-                                                                    >
-                                                                        <ImCross />
-                                                                    </Button>
-                                                                </OverlayTrigger>
-                                                                :
-                                                                ""
-                                                        */}
-                                                        </InputGroup>
-                                                    </Col>
-                                                    <Col md={5} sm={12} className={"my-1"}>
-                                                        <Form.Control
-                                                            as={"select"}
-                                                            className={"mr-sm-2"}
-                                                            id={"inlineFormCustomSelect"}
-                                                            custom
-                                                            value={sort.platform}
-                                                            onChange={event => setSort(prevState => ({
-                                                                ...prevState,
-                                                                platform: event.target.value
-                                                            }))}
-                                                        >
-                                                            <option value={""}>Choose...</option>
-                                                            <option value={"1"}>One</option>
-                                                            <option value={"2"}>Two</option>
-                                                            <option value={"3"}>Three</option>
-                                                        </Form.Control>
-                                                    </Col>
-                                                    <Col md={2} sm={12} className="my-1 justify-content-sm-center">
-                                                        <Button type="submit"><FaSearch/> Search</Button>
-                                                    </Col>
-                                                </Form.Row>
-                                            </Form>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            </Row>
-                            : ""
-                        }
                         <Row className={"justify-content-md-center"}>
                             <Col lg={10} md={12} sm={12}>
                                 <Tab.Content>

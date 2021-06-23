@@ -1,7 +1,7 @@
 import React , {useState, useEffect} from "react";
 import {Badge, Button, Card, Col, Media, Modal, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
 import {BsStar, BsStarFill, BsStarHalf} from "react-icons/bs";
-import {FaCheck, FaGamepad, FaPlusCircle, FaReddit, FaSpinner, FaTasks} from "react-icons/fa";
+import {FaAt, FaCheck, FaGamepad, FaPlusCircle, FaReddit, FaSpinner, FaTasks} from "react-icons/fa";
 import ReactStars from "react-rating-stars-component/dist/react-stars";
 import {getGameStatistics} from "../../api/ApiGames";
 import {getRating, setRating, updateRating} from "../../api/ApiRating";
@@ -32,6 +32,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
         setLoaded(false);
         Promise.all([getGameInfo(uuid), getGameRating(), GameStatistics(uuid)])
             .then(values => {
+                console.log(values[0])
                 values[0] ? setGameInfo(values[0]) : setGameInfo(null);
                 values[1] ? setUserRating(values[1]) : setUserRating(null);
                 values[2] ? setGameStatistics(values[2]) : setGameStatistics(null);
@@ -44,7 +45,6 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
     const getGameInfo = (uuid) => {
         return getGame(uuid)
             .then(result => {
-                console.log(result);
                 return result.data
             })
             .catch(error => {
@@ -117,11 +117,27 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                     </p>
                                     { gameInfo ?  (gameInfo.reddit_url || gameInfo.metacritic_url ?
                                         <p className={"text-body"}><strong>Medias :</strong>
+                                            {gameInfo.website ?
+                                                <OverlayTrigger
+                                                    placement={"bottom"}
+                                                    overlay={<Tooltip id={"tooltip-bottom"}>
+                                                        <strong>Official website</strong>.
+                                                    </Tooltip>
+                                                    }
+                                                >
+                                                    <a href={gameInfo.website} target={"_blank"}
+                                                       className={"text-body-icon primary mx-1"}>
+                                                        <FaAt size={30}/>
+                                                    </a>
+                                                </OverlayTrigger>
+                                                :
+                                                ""
+                                            }
                                             {gameInfo.reddit_url ?
                                                 <OverlayTrigger
                                                     placement={"bottom"}
                                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                                        <strong>See Reddit thread</strong>.
+                                                        <strong>Reddit thread</strong>.
                                                     </Tooltip>
                                                     }
                                                 >
@@ -137,7 +153,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                                 <OverlayTrigger
                                                     placement={"bottom"}
                                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                                        <strong>See on Metacritic website</strong>.
+                                                        <strong>Metacritic page</strong>.
                                                     </Tooltip>
                                                     }
                                                 >

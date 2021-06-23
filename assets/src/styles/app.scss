@@ -26,13 +26,11 @@ $grid-breakpoints: (
     font-size: calc(12px + (16 - 12) * (( 100vw - 300px) / (1600 - 300)));
 }
 
-body {
-    background-color: #F5F7FA;
+.fadeInCustom {
     animation: fadeInAnimation ease 1.5s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
 }
-
 @keyframes fadeInAnimation {
     0% {
         opacity: 0;
@@ -42,7 +40,14 @@ body {
     }
 }
 
+body {
+    @extend .fadeInCustom;
+}
+
 .card {
+    &.card-games {
+        @extend .fadeInCustom;
+    }
     &.border-warning {
         border-color: #ffc107!important;
     }

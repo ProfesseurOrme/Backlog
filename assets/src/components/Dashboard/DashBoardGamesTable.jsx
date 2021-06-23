@@ -4,7 +4,7 @@ import {FaCheck, FaSpinner, FaTasks} from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import DashboardGamesTableRow from "./DashboardGamesTableRow";
 
-const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUuid}) => {
+const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUuid, sortLoaded}) => {
 
     const [pagination, setPagination] = useState({
         data: games,
@@ -21,7 +21,7 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
             pageCount: prevState.data.length / prevState.numberPerPage,
             currentData: prevState.data.slice(pagination.offset, pagination.offset + pagination.numberPerPage)
         }))
-    }, [pagination.numberPerPage, pagination.offset, games]);
+    }, [pagination.numberPerPage, pagination.offset, games, pagination.data]);
 
     const handlePageClick = event => {
         const selected = event.selected;
@@ -53,7 +53,7 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
     }
 
     return (
-        <Card className={"my-3"}>
+        <Card className={"my-3 card-games"}>
             <Card.Header>
                 <Card.Text className={titleColor(title).color + " h5"}>{title} {titleColor(title).icon}</Card.Text>
             </Card.Header>

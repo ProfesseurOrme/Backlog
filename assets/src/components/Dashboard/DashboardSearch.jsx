@@ -4,6 +4,7 @@ import {Col, Row, Form, Button, InputGroup, Spinner, Tooltip, OverlayTrigger} fr
 import {ImCross} from "react-icons/im";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
 import {delay} from "../../helpers/DelayService";
+import PlatformSelectService from "../../helpers/PlatformSelectService";
 import DashboardSearchResult from "./DashboardSearchResult";
 import {getGames} from "../../api/ApiRawg";
 
@@ -28,7 +29,7 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
             loaded: false
         }));
 
-        let slug = searchState.search.split(' ').join('-').toLowerCase();
+        let slug = PlatformSelectService.createSlug(searchState);
 
         if(slug.length > 3) {
             getGames(slug)
