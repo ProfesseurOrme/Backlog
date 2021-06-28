@@ -4,7 +4,7 @@ import {Route, Switch, Redirect} from 'react-router-dom';
 import Login from "./Authentication/Login";
 import Footer from "./Footer";
 import AuthService from "../helpers/AuthService";
-import DataService  from "../helpers/DataService";
+import {urlBacklogApi} from "../helpers/UrlBacklogService";
 import Register from "./Authentication/Register";
 import Dashboard from "./Dashboard/Dashboard";
 
@@ -14,8 +14,7 @@ const App = () => {
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-
-        AuthService.checkUser(DataService.API_URL,"user")
+        AuthService.checkUser(urlBacklogApi(),"user")
             .then(result => {
                 setUser(result);
             })

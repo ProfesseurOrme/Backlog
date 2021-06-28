@@ -1,0 +1,76 @@
+{
+  "main": {
+    "title": "Backlog.io",
+    "tabs": {
+      "my_games": "Mes Jeux",
+      "search": "Rechercher",
+      "my_account": {
+        "label": "Mon compte",
+        "profil": "Mon profil",
+        "logout": "Se déconnecter"
+      }
+    },
+    "dashboard" : {
+      "missing_title": "Vous n'avez pas ajouter de jeu à votre catalogue",
+      "missing_text" : "Recherche-les via l'application et selectionnez-les",
+      "games" : {
+        "searchbar" : {
+          "input" : "Rechercher votre jeu",
+          "sort" : "Choisissez votre plateforme",
+          "submit" : "Rechercher",
+          "reset_label" : "Réinitialiser la recherche",
+          "error" : "Aucun résultat à votre recherche. Veuillez réessayer"
+        },
+        "status" : {
+          "titles" : {
+            "in_progress" : "En cours",
+            "to_do": "À faire",
+            "finished": "Terminés",
+            "results" : "Mes résultats"
+          },
+          "card" : {
+            "table" : {
+              "tags" : {
+                "name" : "Nom",
+                "platforms" : "Plateformes",
+                "action" : "Action",
+                "action_label" : "Afficher détails",
+                "empty" : "Il n'y a aucun jeu avec ce statut"
+              }
+            },
+            "btn_labels" : {
+              "in_progress" : "Changer pour \"En cours\"",
+              "to_do": "Changer pour \"À faire\"",
+              "finished": "Changer pour \"Terminé\""
+            },
+            "add" : "Ajouter à ma liste"
+          },
+          "modal" : {
+            "date" : "Date de sortie",
+            "publishers" : "Éditeurs",
+            "developers" : "Développeurs",
+            "medias" : {
+              "title" : "Medias",
+              "website_label" : "Aller sur le site officiel",
+              "metacritic_label" : "Fiche Metacritic",
+              "reddit_label" : "Thread Reddit"
+            },
+            "platforms": "Plateformes",
+            "rating" : {
+              "rate" : "Notez le jeu",
+              "average" : "Note moyenne obtenue : {{rate}}/5"
+            },
+            "now" : "Qui joue en ce moment"
+          }
+        }
+      }
+    },
+    "search": {
+      "bar" : {
+        "input" : "Rechercher un jeu",
+        "reset" : "Réinitialiser la recherche"
+      },
+      "results" : "Il y a {{nbGames}} jeux qui ont été trouvé"
+    }
+  }
+}

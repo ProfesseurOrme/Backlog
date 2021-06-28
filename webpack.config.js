@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const dotenv = require("dotenv");
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -41,6 +42,21 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+
+    .configureDefinePlugin(options => {
+       const env = dotenv.config({path:'assets/.env'});
+
+        if (env.error) {
+            throw env.error;
+        }
+
+        options['process.env'].SITE_KEY_CAPTCHA= JSON.stringify(env.parsed.SITE_KEY_CAPTCHA);
+        //unused for now. You can set to blank
+        options['process.env'].SECRET_KEY_CAPTCHA= JSON.stringify(env.parsed.SECRET_KEY_CAPTCHA);
+        options['process.env'].RAWG_API_KEY= JSON.stringify(env.parsed.RAWG_API_KEY);
+        options['process.env'].BACKLOG_API_URL_DEVELOPMENT= JSON.stringify(env.parsed.BACKLOG_API_URL_DEVELOPMENT);
+        options['process.env'].BACKLOG_API_URL_PRODUCTION= JSON.stringify(env.parsed.BACKLOG_API_URL_PRODUCTION);
+    })
 
     .configureBabel((config) => {
         config.plugins.push('@babel/plugin-proposal-class-properties');

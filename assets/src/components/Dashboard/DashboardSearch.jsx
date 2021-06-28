@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
 import {Col, Row, Form, Button, InputGroup, Spinner, Tooltip, OverlayTrigger} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {ImCross} from "react-icons/im";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
 import {delay} from "../../helpers/DelayService";
@@ -21,6 +22,7 @@ const initialState  = {
 const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, handleShowModal, setGameInfoUuid, handleAddGame}) => {
 
     const [searchState, setSearchState] = useState(initialState);
+    const [trans, i18n] = useTranslation();
 
     const handleSearch = async(event) => {
         event.preventDefault();
@@ -29,10 +31,10 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
             loaded: false
         }));
 
-        let slug = PlatformSelectService.createSlug(searchState);
+        let slug = PlatformSelectService.createSlug(searchState.search);
 
         if(slug.length > 3) {
-            getGames(slug)
+            await getGames(slug)
                 .then(result => {
                     setSearchState(prevState => ({
                         ...prevState,
@@ -43,7 +45,7 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
                     if(result.data.count === 0) {
                         setSearchState(prevState => ({
                             ...prevState,
-                            error: "No results for your search. Try again !"
+                            error: t("main.dashboard.games.searchbar.error")
                         }))
                     } else {
                         setSearchState(prevState => ({
@@ -94,9 +96,9 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
 
     const getResultResearch = _ => {
         if(searchState.nbResults > 1) {
-            return "There are " + searchState.nbResults + " games that have been found";
+            return trans("main.search.results", {nbGames : searchState.nbResults});
         } else {
-            return "There is 1 games that have been found";
+            return trans("main.search.results", {nbGames : "1"})
         }
     }
 
@@ -113,7 +115,7 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
                             <Form.Control
                                 size="lg"
                                 type="text"
-                                placeholder="Search your game"
+                                placeholder={trans("main.search.bar.input")}
                                 onChange={(event) => setSearchState(prevState => ({...prevState, search :event.target.value}))}
                             />
                             {
@@ -121,7 +123,7 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
                                     <OverlayTrigger
                                         placement={"bottom"}
                                         overlay={<Tooltip id={"tooltip-bottom"}>
-                                            <strong>Reset search</strong>
+                                            <strong>{trans("main.search.bar.reset")}</strong>
                                         </Tooltip>
                                         }
                                     >

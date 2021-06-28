@@ -1,19 +1,14 @@
-import axios from "axios";
+import ApiService from "../helpers/ApiService";
+import {urlBacklogApi} from "../helpers/UrlBacklogService";
 
-export const setRating = (domain, header, data, uuid) => {
-    return axios.post(domain + "/api/games/" + uuid + "/ratings/", data, {
-        headers : header
-    })
+export const getRating = (uuid) => {
+    return ApiService.get(urlBacklogApi() + "/api/games/" + uuid + "/ratings/", true);
 }
 
-export const getRating = (domain, header, uuid) => {
-    return axios.get(domain + "/api/games/" + uuid + "/ratings/" , {
-        headers : header
-    })
+export const setRating = (data, uuid) => {
+    return ApiService.post(urlBacklogApi() + "/api/games/" + uuid + "/ratings/" , data, true);
 }
 
-export const updateRating = (domain, header, data, uuid) => {
-    return axios.put(domain + "/api/games/" + uuid + "/ratings/" + data.id, data,{
-        headers : header
-    })
+export const updateRating = (data, uuid) => {
+    return ApiService.put(urlBacklogApi() + "/api/games/" + uuid + "/ratings/" + data.id, data, true);
 }

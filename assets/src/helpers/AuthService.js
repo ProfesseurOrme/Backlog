@@ -1,4 +1,3 @@
-import axios from "axios";
 import {login, refreshToken, register} from "../api/ApiSecurity";
 
 class AuthService {
@@ -10,8 +9,8 @@ class AuthService {
         return  date;
     }
 
-    login = async (domain,data) => {
-        return await login(domain,data)
+    login = async (data) => {
+        return await login(data)
             .then(result => {
                 data = {
                     ...result.data,
@@ -39,8 +38,9 @@ class AuthService {
         const now = new Date();
 
         if (now.getTime() > pastDate) {
-            return await refreshToken(domain, {"refresh_token" : item.refresh_token})
+            return await refreshToken({"refresh_token" : item.refresh_token})
                 .then(result => {
+                    console.log("Il est refresh");
                     const newItem = {
                         ...item,
                         token : result.data.token,
@@ -51,11 +51,13 @@ class AuthService {
                     return newItem;
                 })
                 .catch(_ => {
+                    console.log("Il n'est plus valide");
                     localStorage.removeItem(key);
                     throw null;
                 })
             ;
         } else {
+            console.log("Il est encore valide");
             return item;
         }
     }
@@ -64,8 +66,8 @@ class AuthService {
         localStorage.removeItem("user");
     }
 
-    register = async (domain, data) => {
-        return await register(domain, data);
+    register = async (data) => {
+        return await register(data);
     }
 
     getCurrentUser = () => {

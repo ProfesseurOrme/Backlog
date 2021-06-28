@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from "react";
-import {Button, ButtonGroup, Card, Col, OverlayTrigger, ToggleButton, Tooltip} from "react-bootstrap";
+import {Button, Card, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {FaCheck, FaPlusCircle, FaSearch, FaSpinner, FaTasks} from "react-icons/fa";
 import placeholderImage from "../../img/placeholder-image.png";
 import {reformatDate} from "../../helpers/MiscService";
-import {setGameWithUser, updateGameUserStatus} from "../../api/ApiGames";
-import DataService from "../../helpers/DataService";
 
 const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGame, handleShowModal, setGameInfoUuid}) => {
 
     const [userGame, setUserGame] = useState(null);
     const [stateValue, setStateValue] = useState("");
+    const [trans , i18n] = useTranslation();
 
     if (userGames) {
         useEffect(() => {
@@ -27,7 +27,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                 <Card.Img className={"card-img-custom"} variant={"top"}  src={game.background_image ? game.background_image : placeholderImage} />
                 <Card.Body>
                     <Card.Title className={"text-truncate"}>{game.name}</Card.Title>
-                    <Card.Text><strong>Release : </strong>{reformatDate(game.released)}</Card.Text>
+                    <Card.Text><strong>{trans("main.dashboard.games.status.modal.date")} : </strong>{reformatDate(game.released)}</Card.Text>
                 </Card.Body>
                 <Card.Footer className={"text-center border-top-blue-grey border-top-lighten-5"}>
                     {
@@ -36,7 +36,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                 <OverlayTrigger
                                     placement={"bottom"}
                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                        <strong>Set to "to do" !</strong>
+                                        <strong>{trans("main.dashboard.games.status.card.btn_labels.to_do")}</strong>
                                     </Tooltip>
                                     }
                                 >
@@ -47,7 +47,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                 <OverlayTrigger
                                     placement={"bottom"}
                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                        <strong>Set to "in progress" !</strong>
+                                        <strong>{trans("main.dashboard.games.status.card.btn_labels.in_progress")}</strong>
                                     </Tooltip>
                                     }
                                 >
@@ -58,7 +58,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                 <OverlayTrigger
                                     placement={"bottom"}
                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                        <strong>Set to "done" !</strong>
+                                        <strong>{trans("main.dashboard.games.status.card.btn_labels.finished")}</strong>
                                     </Tooltip>
                                     }
                                 >
@@ -87,13 +87,13 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                     })
                                 }}
                             >
-                                <FaPlusCircle /> Add to collection
+                                <FaPlusCircle /> {trans("main.dashboard.games.status.card.add")}
                             </Button>
                     }
                     <OverlayTrigger
                         placement={"bottom"}
                         overlay={<Tooltip id={"tooltip-bottom"}>
-                            <strong>Show details</strong>
+                            <strong>{trans("main.dashboard.games.status.card.table.tags.action_label")}</strong>
                         </Tooltip>
                         }
                     >

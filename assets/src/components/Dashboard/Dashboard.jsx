@@ -8,21 +8,19 @@ import {
     DropdownButton,
     Dropdown,
     ButtonGroup,
-    Jumbotron,
-    Button,
-    InputGroup,
-    Form
+    Jumbotron
 } from "react-bootstrap";
+import {useTranslation} from "react-i18next";
+import {SiEventbrite} from "react-icons/si";
+import {GiFrance} from "react-icons/gi";
 import {BiSearchAlt2} from "react-icons/bi";
-import {FaSearch} from "react-icons/fa";
 import {RiGamepadLine} from "react-icons/ri";
 import {FiLogOut} from "react-icons/fi";
 import Account from "../Account/Account";
 import Game from "../Game/Game";
 import DashboardGames from "./DashboardGames";
 import DashboardSearch from "./DashboardSearch";
-import DataService from "../../helpers/DataService";
-import {getGamesPerUsers, setGameWithUser, updateGameUserStatus} from "../../api/ApiGames";
+import {getGamesPerUser, setGameWithUser, updateGameUserStatus} from "../../api/ApiGames";
 
 const Dashboard = ({user, logout}) => {
     const isCancelled = React.useRef(false);
@@ -32,13 +30,17 @@ const Dashboard = ({user, logout}) => {
     const [loadGames, setLoadGames] = useState(false);
     const [show, setShow] = useState(false);
     const [gameInfoUuid, setGameInfoUuid] = useState("");
+    const [trans, i18n ] = useTranslation();
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    console.log(i18n.language)
+
     useEffect(() => {
+
         isCancelled.current = false;
-        getGames(DataService.API_URL, DataService.tokenHeader(user.token))
+        getGames();
         setLoadGames(false);
         return () => {
             isCancelled.current = true;
@@ -46,8 +48,8 @@ const Dashboard = ({user, logout}) => {
     }, [loadGames])
 
 
-    const getGames = (domain, header) => {
-        getGamesPerUsers(domain, header)
+    const getGames = () => {
+        getGamesPerUser()
             .then(result => {
                 if (!isCancelled.current) {
                     setUserGames(result.data);
@@ -61,14 +63,14 @@ const Dashboard = ({user, logout}) => {
     }
 
     const handleChangeStatus = (statusId, gameUuid, gameSlug) => {
-        updateGameUserStatus(DataService.API_URL, DataService.tokenHeader(user.token), statusId, gameUuid, gameSlug)
+        updateGameUserStatus(statusId, gameUuid, gameSlug)
             .then(_ => {
                 setLoadGames(true);
             })
     }
 
     const handleAddGame = (data) => {
-        setGameWithUser(DataService.API_URL, DataService.tokenHeader(user.token), data)
+        setGameWithUser(data)
             .then(_ => {
                 setLoadGames(true);
             })
@@ -101,22 +103,25 @@ const Dashboard = ({user, logout}) => {
                     <Col sm={12} className={"p-0"}>
                         <Card className="mb-3">
                             <Card.Header>
-                                <Card.Title>Backlog.io</Card.Title>
+                                <Card.Title>{trans("main.title")}</Card.Title>
                             </Card.Header>
                             <Card.Body>
                                 <Nav variant="pills" className="justify-content-around">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="first"><RiGamepadLine /> My Games</Nav.Link>
+                                        <Nav.Link eventKey="first"><RiGamepadLine /> {trans("main.tabs.my_games")}</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="second"><BiSearchAlt2 /> Search</Nav.Link>
+                                        <Nav.Link eventKey="second"><BiSearchAlt2 /> {trans("main.tabs.search")}</Nav.Link>
                                     </Nav.Item>
-                                    <DropdownButton as={ButtonGroup} title="My Account" id="bg-nested-dropdown">
+                                    <DropdownButton as={ButtonGroup} title={trans("main.tabs.my_account.label")} id="bg-nested-dropdown">
                                         <Dropdown.Header><strong>{user.data.user}</strong></Dropdown.Header>
                                         <Dropdown.Divider />
-                                        <Dropdown.Item eventKey="third">My Profil</Dropdown.Item>
+                                        <Dropdown.Item eventKey="third">{trans("main.tabs.my_account.profil")}</Dropdown.Item>
                                         <Dropdown.Divider />
-                                        <Dropdown.Item className={"dropdown-item-danger"} onClick={logout}><FiLogOut /> Logout</Dropdown.Item>
+                                        <Dropdown.Item className={"dropdown-item-primary"} onClick={() => {i18n.changeLanguage("fr")}}><GiFrance /> French</Dropdown.Item>
+                                        <Dropdown.Item className={"dropdown-item-warning"} onClick={() => {i18n.changeLanguage("en")}}><SiEventbrite /> English</Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item className={"dropdown-item-danger"} onClick={logout}><FiLogOut /> {trans("main.tabs.my_account.logout")}</Dropdown.Item>
                                     </DropdownButton>
                                 </Nav>
                             </Card.Body>
@@ -141,9 +146,9 @@ const Dashboard = ({user, logout}) => {
                                                 />
                                                 :
                                                 <Jumbotron>
-                                                    <h1>You haven't added a game to your catalog yet</h1>
+                                                    <h1>{trans("main.dashboard.missing_title")}</h1>
                                                     <p>
-                                                        Search through the app and add all your games !
+                                                        {trans("main.dashboard.missing_text")}
                                                     </p>
                                                 </Jumbotron>
                                         }

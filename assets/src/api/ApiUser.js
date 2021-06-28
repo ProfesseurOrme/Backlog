@@ -1,5 +1,6 @@
-import axios from "axios";
+import ApiService from "../helpers/ApiService";
+import {urlBacklogApi} from "../helpers/UrlBacklogService";
 
-export const getUser = (domain, data) => {
-    return axios.post(domain + "/api/users/check_user" ,data)
+export const getUser = (data) => {
+    return ApiService.post(urlBacklogApi() + "/api/users/check_user" ,data)
 }

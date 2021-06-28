@@ -1,5 +1,6 @@
 import React , {useState, useEffect} from "react";
 import {Badge, Button, Card, Col, Media, Modal, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {BsStar, BsStarFill, BsStarHalf} from "react-icons/bs";
 import {FaAt, FaCheck, FaGamepad, FaPlusCircle, FaReddit, FaSpinner, FaTasks} from "react-icons/fa";
 import ReactStars from "react-rating-stars-component/dist/react-stars";
@@ -8,7 +9,6 @@ import {getRating, setRating, updateRating} from "../../api/ApiRating";
 import {reformatDate, splitArray} from "../../helpers/MiscService";
 import {delay} from "../../helpers/DelayService";
 import {getGame} from "../../api/ApiRawg";
-import DataService from "../../helpers/DataService";
 import placeholderImage from "../../img/placeholder-image.png";
 
 /**
@@ -21,18 +21,19 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
     const [userRating, setUserRating] = useState(null);
     const [loaded, setLoaded] = useState(false);
     const [gameStatistics, setGameStatistics] = useState(null);
+    const [trans, i18n] = useTranslation();
 
     useEffect(() => {
         if(showModal) {
-            setGameInformations(gameInfoUuid);
+            setGameInformations(gameInfoUuid).then(() => {});
         }
     }, [gameInfoUuid]);
 
     const setGameInformations = async(uuid) => {
         setLoaded(false);
-        Promise.all([getGameInfo(uuid), getGameRating(), GameStatistics(uuid)])
+        await Promise.all([getGameInfo(uuid), getGameRating(uuid), getStatistics(uuid)])
             .then(values => {
-                console.log(values[0])
+                console.log(values);
                 values[0] ? setGameInfo(values[0]) : setGameInfo(null);
                 values[1] ? setUserRating(values[1]) : setUserRating(null);
                 values[2] ? setGameStatistics(values[2]) : setGameStatistics(null);
@@ -53,29 +54,30 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
             ;
     }
 
-    const getGameRating = () => {
-        return getRating(DataService.API_URL, DataService.tokenHeader(user.token), gameInfoUuid)
+    const getStatistics= (uuid) => {
+        return getGameStatistics(uuid)
             .then(result => {return result.data})
             .catch(error => {})
             ;
     }
 
-    const GameStatistics = (uuid) => {
-        return getGameStatistics(DataService.API_URL, DataService.tokenHeader(user.token), uuid)
-            .then(result => {return result.data})
+    const getGameRating = (uuid) => {
+        return getRating(uuid)
+            .then(result => {
+                return result.data;
+            })
             .catch(error => {})
-            ;
     }
 
-    const ratingSet = (rating) => {
-        setRating(DataService.API_URL, DataService.tokenHeader(user.token), {rating: rating}, gameInfoUuid )
+    const setGameRating = (rating) => {
+        setRating({rating: rating}, gameInfoUuid )
             .then(result => {})
             .catch(error => {})
         ;
     };
 
-    const ratingUpdate= (rating) => {
-        updateRating(DataService.API_URL, DataService.tokenHeader(user.token), {...userRating, rating: rating}, gameInfoUuid )
+    const updateGameRating = (rating) => {
+        updateRating({...userRating, rating: rating}, gameInfoUuid )
             .then(_ => setUserRating(prevState => ({...prevState, rating : rating})))
             .catch(error => {})
         ;
@@ -107,21 +109,21 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                 <img alt={"image : " + (game ?  + game.name : gameInfo.name)} src={gameInfo && gameInfo.background_image ? gameInfo.background_image : placeholderImage } className={"mr-3"} />
                                 <Media.Body >
                                     <p className={"text-body"}>
-                                        <strong>Release date : </strong>{gameInfo && gameInfo.released ? reformatDate(gameInfo.released) : "TBA"}
+                                        <strong>{trans("main.dashboard.games.status.modal.date")} : </strong>{gameInfo && gameInfo.released ? reformatDate(gameInfo.released) : "TBA"}
                                     </p>
                                     <p className={"text-body"}>
-                                        <strong>Publishers :</strong> {gameInfo ? (typeof gameInfo.publishers !== 'undefined' && gameInfo.publishers.length > 0 ? splitArray(gameInfo.publishers) : "Not specified") : "Deleted from API"}
+                                        <strong>{trans("main.dashboard.games.status.modal.publishers")} :</strong> {gameInfo ? (typeof gameInfo.publishers !== 'undefined' && gameInfo.publishers.length > 0 ? splitArray(gameInfo.publishers) : "Not specified") : "Deleted from API"}
                                     </p>
                                     <p className={"text-body"}>
-                                        <strong>Developers :</strong> {gameInfo ? (typeof gameInfo.developers !== 'undefined' && gameInfo.developers.length > 0 ? splitArray(gameInfo.developers) : "Not specified") : "Deleted from API"}
+                                        <strong>{trans("main.dashboard.games.status.modal.developers")} :</strong> {gameInfo ? (typeof gameInfo.developers !== 'undefined' && gameInfo.developers.length > 0 ? splitArray(gameInfo.developers) : "Not specified") : "Deleted from API"}
                                     </p>
                                     { gameInfo ?  (gameInfo.reddit_url || gameInfo.metacritic_url ?
-                                        <p className={"text-body"}><strong>Medias :</strong>
+                                        <p className={"text-body"}><strong>{trans("main.dashboard.games.status.modal.medias.title")} :</strong>
                                             {gameInfo.website ?
                                                 <OverlayTrigger
                                                     placement={"bottom"}
                                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                                        <strong>Official website</strong>.
+                                                        <strong>{trans("main.dashboard.games.status.modal.medias.website_label")}</strong>.
                                                     </Tooltip>
                                                     }
                                                 >
@@ -137,7 +139,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                                 <OverlayTrigger
                                                     placement={"bottom"}
                                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                                        <strong>Reddit thread</strong>.
+                                                        <strong>{trans("main.dashboard.games.status.modal.medias.reddit_label")}</strong>.
                                                     </Tooltip>
                                                     }
                                                 >
@@ -153,7 +155,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                                 <OverlayTrigger
                                                     placement={"bottom"}
                                                     overlay={<Tooltip id={"tooltip-bottom"}>
-                                                        <strong>Metacritic page</strong>.
+                                                        <strong>{trans("main.dashboard.games.status.modal.medias.metacritic_label")}</strong>.
                                                     </Tooltip>
                                                     }
                                                 >
@@ -171,7 +173,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                         : ""
                                     }
                                     <p className={"text-body"}>
-                                        <strong>Platforms : </strong>{gameInfo ? (gameInfo.platforms ? gameInfo.platforms.map(item => (
+                                        <strong>{trans("main.dashboard.games.status.modal.platforms")} : </strong>{gameInfo ? (gameInfo.platforms ? gameInfo.platforms.map(item => (
                                         <Badge key={item.platform.id} pill variant={"primary"} className={"mx-1"}>
                                             {item.platform.name}
                                         </Badge>
@@ -181,10 +183,10 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                     {
                                         game ?
                                             <>
-                                                <div className={"text-body"}><strong>Rate the game : {userRating ? userRating.rating + " /5" : ""} {gameStatistics.rating ? "(Average player rating : " + gameStatistics.rating + "/5 )" : ""}</strong></div>
+                                                <div className={"text-body"}><strong>{trans("main.dashboard.games.status.modal.rating.rate")} : {userRating ? userRating.rating + " /5" : ""} {gameStatistics.rating ? "(" + trans("main.dashboard.games.status.modal.rating.average" , {rate : gameStatistics.rating}) + ")" : ""}</strong></div>
                                                 <ReactStars
                                                     count={5}
-                                                    onChange={userRating ? ratingUpdate : ratingSet}
+                                                    onChange={userRating ? updateGameRating : setGameRating}
                                                     size={24}
                                                     isHalf={true}
                                                     emptyIcon={<BsStar />}
@@ -201,7 +203,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                             </Media>
                             <Row>
                                 <Col>
-                                    <p className="h5 my-3">Who's playing now ? ({ gameStatistics ? gameStatistics.nb_players : "None"})</p>
+                                    <p className="h5 my-3">{trans("main.dashboard.games.status.modal.now")} ({ gameStatistics ? gameStatistics.nb_players : "None"})</p>
                                 </Col>
                             </Row>
                             { gameStatistics ?
@@ -216,7 +218,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                                         </div>
                                                         <Media.Body className={"text-right"}>
                                                             <h3>{gameStatistics.statistics.to_do}</h3>
-                                                            <span className={"text-danger"}>To do</span>
+                                                            <span className={"text-danger"}>{trans("main.dashboard.games.status.titles.to_do")}</span>
                                                         </Media.Body>
                                                     </Media>
                                                 </Card.Body>
@@ -233,7 +235,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                                         </div>
                                                         <Media.Body className={"text-right"}>
                                                             <h3>{gameStatistics.statistics.in_progress}</h3>
-                                                            <span className={"text-warning"}>In progress</span>
+                                                            <span className={"text-warning"}>{trans("main.dashboard.games.status.titles.in_progress")}</span>
                                                         </Media.Body>
                                                     </Media>
                                                 </Card.Body>
@@ -250,7 +252,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                                         </div>
                                                         <Media.Body className={"text-right"}>
                                                             <h3>{gameStatistics.statistics.finished}</h3>
-                                                            <span className={"text-success"}>Finished</span>
+                                                            <span className={"text-success"}>{trans("main.dashboard.games.status.titles.finished")}</span>
                                                         </Media.Body>
                                                     </Media>
                                                 </Card.Body>
@@ -269,34 +271,34 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                         <OverlayTrigger
                                             placement={"bottom"}
                                             overlay={<Tooltip id={"tooltip-bottom"}>
-                                                <strong>Set to "to do" !</strong>.
+                                                <strong>{trans("main.dashboard.games.status.card.btn_labels.to_do")}</strong>.
                                             </Tooltip>
                                             }
                                         >
                                             <Button className={"mx-2"} disabled={game.status === 1} variant={game.status === 1 ? "danger" : "outline-danger"} onClick={game.status !== 1 ? ()=> handleChangeStatus(1, game.uuid, game.slug) : undefined} type={"button"}>
-                                                <p className={"modal-footer-btn-label"}><FaTasks /></p>
+                                                <p className={"modal-footer-btn-label"}><span>{trans("main.dashboard.games.status.titles.to_do")}</span> <FaTasks /></p>
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
                                             placement={"bottom"}
                                             overlay={<Tooltip id={"tooltip-bottom"}>
-                                                <strong>Set to "in progress" !</strong>.
+                                                <strong>{trans("main.dashboard.games.status.card.btn_labels.in_progress")}</strong>.
                                             </Tooltip>
                                             }
                                         >
                                             <Button className={"mx-2"} disabled={game.status === 2} variant={(game.status === 2) ? "warning" : "outline-warning"} onClick={game.status !== 2 ? ()=> handleChangeStatus(2, game.uuid, game.slug) : undefined} type={"button"}>
-                                                <p className={"modal-footer-btn-label"}><span>In progress </span><FaSpinner /></p>
+                                                <p className={"modal-footer-btn-label"}><span>{trans("main.dashboard.games.status.titles.in_progress")} </span><FaSpinner /></p>
                                             </Button>
                                         </OverlayTrigger>
                                         <OverlayTrigger
                                             placement={"bottom"}
                                             overlay={<Tooltip id={"tooltip-bottom"}>
-                                                <strong>Set to "done" !</strong>.
+                                                <strong>{trans("main.dashboard.games.status.card.btn_labels.finished")}</strong>.
                                             </Tooltip>
                                             }
                                         >
                                             <Button className={"mx-2"} disabled={game.status === 3} variant={(game.status === 3) ? "success" : "outline-success" } onClick={game.status !== 3 ? ()=> handleChangeStatus(3, game.uuid, game.slug) : undefined} type={"button"}>
-                                                <p className={"modal-footer-btn-label"}><span>Done </span><FaCheck /></p>
+                                                <p className={"modal-footer-btn-label"}><span>{trans("main.dashboard.games.status.titles.finished")} </span><FaCheck /></p>
                                             </Button>
                                         </OverlayTrigger>
                                     </>
@@ -318,7 +320,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             platforms : platformsGame}
                                         )}}
                                     >
-                                        <FaPlusCircle /> Add to collection
+                                        <FaPlusCircle /> {trans("main.dashboard.games.status.card.add")}
                                     </Button>
                             }
                         </Modal.Footer>

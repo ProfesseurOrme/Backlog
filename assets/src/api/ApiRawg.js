@@ -1,10 +1,10 @@
-import axios from "axios";
-import {apiKey} from "../config/config";
+import ApiService from "../helpers/ApiService";
+import {urlRAWGApi} from "../helpers/UrlBacklogService";
 
 export const getGames = (slug) => {
-    return axios.get("https://api.rawg.io/api/games?key=" + apiKey + "&search=" + slug +"&exclude_additions=true")
+    return ApiService.get(urlRAWGApi() + "/api/games?key=" + process.env.RAWG_API_KEY + "&search=" + slug + "&exclude_additions=true");
 }
 
 export const getGame = (uuid) => {
-    return axios.get("https://api.rawg.io/api/games/" + uuid + "?key=" + apiKey)
+    return ApiService.get(urlRAWGApi() + "/api/games/" + uuid + "?key=" + process.env.RAWG_API_KEY);
 }

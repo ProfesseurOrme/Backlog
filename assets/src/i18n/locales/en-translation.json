@@ -1,0 +1,76 @@
+{
+  "main": {
+    "title": "Backlog.io",
+    "tabs": {
+      "my_games": "My Games",
+      "search": "Search your games",
+      "my_account": {
+        "label": "My account",
+        "profil": "My profil ",
+        "logout": "Logout"
+      }
+    },
+    "dashboard" : {
+      "missing_title": "You did not add a game to your catalog",
+      "missing_text" : "Search them through the app and select it",
+      "games" : {
+        "searchbar" : {
+          "input" : "Search your games",
+          "sort" : "Choose your platform",
+          "submit" : "Search",
+          "reset_label" : "Reset search",
+          "error" : "No results for your search. Try again"
+        },
+        "status" : {
+          "titles" : {
+            "in_progress" : "In progress",
+            "to_do": "To do",
+            "finished": "Finished",
+            "results" : "Search results"
+          },
+          "card" : {
+            "table" : {
+              "tags" : {
+                "name" : "Name",
+                "platforms" : "Platforms",
+                "action" : "Action",
+                "action_label" : "Show details",
+                "empty" : "There is no game in this status"
+              }
+            },
+            "btn_labels" : {
+              "in_progress" : "Switch to \"In progress\"",
+              "to_do": "Switch to \"To do\"",
+              "finished": "Swtich to \"Finished\""
+            },
+            "add" : "Add to my list"
+          },
+          "modal" : {
+            "date" : "Release date",
+            "publishers" : "Publishers",
+            "developers" : "Developers",
+            "medias" : {
+              "title" : "Medias",
+              "website_label" : "Go to official website",
+              "metacritic_label" : "Metacritic page",
+              "reddit_label" : "Thread Reddit"
+            },
+            "platforms": "Platforms",
+            "rating" : {
+              "rate" : "Rate the game",
+              "average" : "Average player rating"
+            },
+            "now" : "Who's playing now"
+          }
+        }
+      }
+    },
+    "search": {
+      "bar" : {
+        "input" : "Search a game",
+        "reset" : "Reset search"
+      },
+      "results" : "There is {{nbGames}} games that have been found"
+    }
+  }
+}

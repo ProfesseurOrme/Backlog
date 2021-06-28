@@ -1,13 +1,15 @@
-import axios from "axios";
+import ApiService from "../helpers/ApiService";
+import {urlBacklogApi} from "../helpers/UrlBacklogService";
 
-export const login = (domain,data) => {
-    return axios.post(domain + "/api/login", data)
+export const login = (data) => {
+    console.log(data);
+    return ApiService.post(urlBacklogApi() + "/api/login", data);
 }
 
-export const refreshToken = (domain, data) => {
-    return axios.post(domain + "/api/token/refresh", data)
+export const refreshToken = (data) => {
+    return ApiService.post(urlBacklogApi() + "/api/token/refresh", data);
 }
 
-export const register = (domain, data) => {
-    return axios.post(domain + "/api/users/register", data);
+export const register = (data) => {
+    return ApiService.post(urlBacklogApi() + "/api/users/register", data);
 }

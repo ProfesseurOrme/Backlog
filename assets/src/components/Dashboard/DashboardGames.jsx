@@ -1,6 +1,7 @@
 import debounce from "@popperjs/core/lib/utils/debounce";
 import React, {useState, useEffect} from "react";
 import {Button, Card, Col, Form, InputGroup, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {FaSearch} from "react-icons/fa";
 import {ImCross} from "react-icons/im";
 import {delay} from "../../helpers/DelayService";
@@ -25,6 +26,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
         finished: []
     })
     const [sort, setSort] = useState(initialStateSort);
+    const [trans , i18n] = useTranslation();
 
     useEffect(() => {
         if(userGames) {
@@ -70,7 +72,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                                         <InputGroup>
                                             <Form.Control
                                                 type={"text"}
-                                                placeholder={"Search your games"}
+                                                placeholder={trans("main.dashboard.games.searchbar.input")}
                                                 onChange={event => setSort(prevState => ({
                                                     ...prevState,
                                                     name: event.target.value
@@ -82,7 +84,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                                                     <OverlayTrigger
                                                         placement={"bottom"}
                                                         overlay={<Tooltip id={"tooltip-bottom"}>
-                                                            <strong>Reset search</strong>
+                                                            <strong>{trans("main.dashboard.games.searchbar.reset_label")}</strong>
                                                         </Tooltip>
                                                         }
                                                     >
@@ -111,7 +113,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                                                 platform: event.target.value
                                             }))}
                                         >
-                                            <option value={""}>- Choose your platform -</option>
+                                            <option value={""}>- {trans("main.dashboard.games.searchbar.sort")} -</option>
                                             {
                                                 sort.option_select_platforms.map(item => (
                                                     <option key={item.uuid} value={item.name}>{item.name}</option>
@@ -121,7 +123,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                                         </Form.Control>
                                     </Col>
                                     <Col md={2} sm={12} className="my-1 justify-content-sm-center">
-                                        <Button type="submit"><FaSearch/> Search</Button>
+                                        <Button type="submit"><FaSearch/> {trans("main.dashboard.games.searchbar.submit")}</Button>
                                     </Col>
                                 </Form.Row>
                             </Form>
@@ -134,16 +136,20 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                     <>
                         {
                             typeof sort.games !== 'undefined' ?
-                            <DashBoardGamesTable
-                                key={4}
-                                title={"Search results  : " + sort.nbResults}
-                                handleShowModal={handleShowModal}
-                                setGameInfoUuid={setGameInfoUuid}
-                                games={sort.games}
-                                sortLoaded={sort.loaded}
-                            />
+                                <DashBoardGamesTable
+                                    key={4}
+                                    title={trans("main.dashboard.games.status.titles.results") + " : " + sort.nbResults}
+                                    handleShowModal={handleShowModal}
+                                    setGameInfoUuid={setGameInfoUuid}
+                                    games={sort.games}
+                                    sortLoaded={sort.loaded}
+                                />
                                 :
-                                "nada"
+                                <Row className="my-3">
+                                    <Col>
+                                        <h3>{trans("main.dashboard.games.searchbar.error")} !</h3>
+                                    </Col>
+                                </Row>
                         }
                     </>
                     :
@@ -151,7 +157,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                         {state.inProgress.length > 0 ?
                             <DashBoardGamesTable
                                 key={1}
-                                title={"In Progress"}
+                                title={trans("main.dashboard.games.status.titles.in_progress")}
                                 handleShowModal={handleShowModal}
                                 setGameInfoUuid={setGameInfoUuid}
                                 games={(state.inProgress.length > 0) ? state.inProgress : undefined}
@@ -162,7 +168,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                         {state.toDo.length > 0 ?
                             <DashBoardGamesTable
                                 key={2}
-                                title={"To Do"}
+                                title={trans("main.dashboard.games.status.titles.to_do")}
                                 handleShowModal={handleShowModal}
                                 setGameInfoUuid={setGameInfoUuid}
                                 games={(state.toDo.length > 0) ? state.toDo : undefined}
@@ -173,7 +179,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                         {state.finished.length > 0 ?
                             <DashBoardGamesTable
                                 key={3}
-                                title={"Finished"}
+                                title={trans("main.dashboard.games.status.titles.finished")}
                                 handleShowModal={handleShowModal}
                                 setGameInfoUuid={setGameInfoUuid}
                                 games={(state.finished.length > 0) ? state.finished : undefined}

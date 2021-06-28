@@ -1,25 +1,19 @@
-import axios from "axios";
+import ApiService from "../helpers/ApiService";
+import {urlBacklogApi} from "../helpers/UrlBacklogService";
 
-export const getGamesPerUsers = (domain, header) => {
-    return axios.get(domain + "/api/games/" , {
-        headers : header
-    })
+
+export const getGamesPerUser = () => {
+    return ApiService.get(urlBacklogApi() + "/api/games/", true);
 }
 
-export const updateGameUserStatus= (domain, header, statusId, gameUuid, gameSlug) => {
-    return axios.put(domain + "/api/games/" + gameUuid + "-" + gameSlug + "/status/" + statusId, {}, {
-        headers : header
-    })
+export const updateGameUserStatus = (statusId, gameUuid, gameSlug) => {
+    return ApiService.put(urlBacklogApi() + "/api/games/" + gameUuid + "-" + gameSlug + "/status/" + statusId, {}, true);
 }
 
-export const setGameWithUser = (domain, header, data) => {
-    return  axios.post(domain + "/api/games/", data, {
-        headers : header
-    })
+export const setGameWithUser = (data) => {
+    return ApiService.post(urlBacklogApi() + "/api/games/", data, true);
 }
 
-export const getGameStatistics = (domain, header, gameUuid) => {
-    return axios.get(domain + "/api/games/" + gameUuid + "/statistics/", {
-        headers : header
-    })
+export const getGameStatistics = (gameUuid) => {
+    return ApiService.get(urlBacklogApi() + "/api/games/" + gameUuid + "/statistics/", true);
 }

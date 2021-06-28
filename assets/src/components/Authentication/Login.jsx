@@ -2,8 +2,7 @@ import React, {useState} from "react";
 import {Button, Card, Col, Form, Row} from "react-bootstrap";
 import {Link, useHistory} from "react-router-dom";
 import AuthService from "../../helpers/AuthService";
-import DataService from "../../helpers/DataService";
-import background from "../../img/background.svg";
+import {urlBacklogApi} from "../../helpers/UrlBacklogService";
 
 const Login = ({setUser}) => {
 
@@ -18,7 +17,7 @@ const Login = ({setUser}) => {
     const handleSubmit = event => {
         event.preventDefault();
 
-        const loginResult = AuthService.login(DataService.API_URL, data)
+        AuthService.login(data)
             .then(result => {
                 setUser(result);
             }).catch(error => {

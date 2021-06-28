@@ -1,8 +1,11 @@
 import React from "react";
 import {Badge, Button, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {FaSearch} from "react-icons/fa";
 
 const DashboardGamesTableRow = ({game, handleShowModal, setGameInfoUuid}) => {
+
+    const [trans, i18n] = useTranslation();
 
     return (
         <tr>
@@ -20,7 +23,7 @@ const DashboardGamesTableRow = ({game, handleShowModal, setGameInfoUuid}) => {
                 <OverlayTrigger
                     placement={"bottom"}
                     overlay={<Tooltip id={"tooltip-bottom"}>
-                        <strong>Show details</strong>
+                        <strong>{trans("main.dashboard.games.status.card.table.tags.action_label")}</strong>
                     </Tooltip>
                     }
                 >

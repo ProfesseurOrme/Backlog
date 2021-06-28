@@ -2,12 +2,11 @@ import React, {useEffect, useState} from "react";
 import {Button, Card, Col, Form, Row} from "react-bootstrap";
 import {Link, useHistory} from "react-router-dom";
 import AuthService from "../../helpers/AuthService";
-import DataService from "../../helpers/DataService";
-import background from "../../img/background.svg";
+import {urlBacklogApi} from "../../helpers/UrlBacklogService";
 import {getUser} from "../../api/ApiUser";
+import ReCaptchaV2 from 'react-google-recaptcha';
 
 const Register = () => {
-
     const [form, setForm] = useState({
         fields: {
             username: "",
@@ -22,7 +21,8 @@ const Register = () => {
             name: "",
             lastname: "",
             password : ""
-        }
+        },
+        token: false
     });
 
     const [disabled, setDisabled] = useState(true);
@@ -30,12 +30,12 @@ const Register = () => {
     let history = useHistory();
 
     useEffect(() => {
-        if((form.fields.username && form.fields.email && form.fields.name && form.fields.lastname && form.fields.password) && (!form.errors.username && !form.errors.email && !form.errors.name && !form.errors.lastname && !form.errors.password)) {
+        if((form.fields.username && form.fields.email && form.fields.name && form.fields.lastname && form.fields.password && form.token) && (!form.errors.username && !form.errors.email && !form.errors.name && !form.errors.lastname && !form.errors.password)) {
             setDisabled(false)
         } else {
             setDisabled(true)
         }
-    },[form.fields.username,form.fields.email,form.fields.name,form.fields.lastname,form.fields.password,form.errors.username,form.errors.email,form.errors.name,form.errors.lastname,form.errors.password])
+    },[form.fields.username,form.fields.email,form.fields.name,form.fields.lastname,form.fields.password,form.errors.username,form.errors.email,form.errors.name,form.errors.lastname,form.errors.password, form.token])
 
 
     const testUsername = {
@@ -55,7 +55,7 @@ const Register = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        AuthService.register(DataService.API_URL, form.fields)
+        AuthService.register(form.fields)
             .then(result => {
                 history.push("/");
             })
@@ -79,7 +79,7 @@ const Register = () => {
 
         const testThisValue = test.regex.test(value)
         if(testThisValue){
-            const searchUsername = await getUser(DataService.API_URL, {username : value})
+            const searchUsername = await getUser(urlBacklogApi(), {username : value})
                 .then(_ => {
                     return ""
                 })
@@ -96,6 +96,14 @@ const Register = () => {
     const handleField = (field, value, test) => {
         updateFormState(field, value, (!test.regex.test(value) ? test.error : ""));
     }
+
+    /*
+    const handleToken = (token) => {
+        setForm((prevState ) => {
+            return {...prevState, token: true}
+        });
+    }
+    */
 
     const handleChange = event => {
         const { name, value } = event.target;
@@ -213,6 +221,14 @@ const Register = () => {
                                             ""
                                     }
                                 </Form.Group>
+                                <div className={"d-flex justify-content-center my-2"}>
+                                    {/*
+                                    <ReCaptchaV2
+                                        sitekey={process.env.SITE_KEY_CAPTCHA}
+                                        onChange={handleToken}
+                                    />
+                                    */}
+                                </div>
                                 <div className={"d-flex justify-content-center"}>
                                     <Button variant={"primary"} type={"submit"} disabled={disabled}>
                                         Register

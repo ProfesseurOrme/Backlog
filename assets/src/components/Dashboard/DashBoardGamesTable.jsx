@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Card, Table} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {FaCheck, FaSpinner, FaTasks} from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import DashboardGamesTableRow from "./DashboardGamesTableRow";
@@ -13,6 +14,7 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
         pageCount: 0,
         currentData: []
     });
+    const [trans, i18n] = useTranslation();
 
     useEffect(() => {
         setPagination((prevState) => ({
@@ -32,15 +34,15 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
     const titleColor = (title) => {
         let color, icon;
         switch (title) {
-            case "In Progress":
+            case trans("main.dashboard.games.status.titles.in_progress"):
                 icon = <FaSpinner />;
                 color = "text-warning";
             break;
-            case "To Do":
+            case trans("main.dashboard.games.status.titles.to_do"):
                 icon= <FaTasks />
                 color = "text-danger";
             break;
-            case "Finished" :
+            case trans("main.dashboard.games.status.titles.finished"):
                 icon= <FaCheck />;
                 color = "text-success";
             break;
@@ -62,13 +64,13 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
                     <thead>
                         <tr>
                             <th>
-                                Name
+                                {trans("main.dashboard.games.status.card.table.tags.name")}
                             </th>
                             <th>
-                                Platforms
+                                {trans("main.dashboard.games.status.card.table.tags.platforms")}
                             </th>
                             <th>
-                                Action
+                                {trans("main.dashboard.games.status.card.table.tags.action")}
                             </th>
                         </tr>
                     </thead>
@@ -80,7 +82,7 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
                             ))
                             :
                             <tr>
-                                <td>There is no game in this status</td>
+                                <td>{trans("main.dashboard.games.status.card.table.tags.empty")}</td>
                             </tr>
                     }
                     </tbody>
