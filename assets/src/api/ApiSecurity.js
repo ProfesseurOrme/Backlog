@@ -1,15 +1,14 @@
 import ApiService from "../helpers/ApiService";
 import {urlBacklogApi} from "../helpers/UrlBacklogService";
 
-export const login = (data) => {
-    console.log(data);
-    return ApiService.post(urlBacklogApi() + "/api/login", data);
+export const login = (locale, data) => {
+    return ApiService.post(urlBacklogApi(locale) + "/api/login", data);
 }
 
-export const refreshToken = (data) => {
-    return ApiService.post(urlBacklogApi() + "/api/token/refresh", data);
+export const refreshToken = (locale, data) => {
+    return ApiService.post(urlBacklogApi(false) + "/api/token/refresh", data);
 }
 
-export const register = (data) => {
-    return ApiService.post(urlBacklogApi() + "/api/users/register", data);
+export const register = (locale, data) => {
+    return ApiService.post(urlBacklogApi(locale) + "/api/users/register", data);
 }

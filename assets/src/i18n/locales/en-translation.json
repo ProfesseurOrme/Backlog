@@ -60,7 +60,8 @@
               "rate" : "Rate the game",
               "average" : "Average player rating"
             },
-            "now" : "Who's playing now"
+            "now" : "Who's playing now",
+            "none": "No player"
           }
         }
       }
@@ -72,5 +73,41 @@
       },
       "results" : "There is {{nbGames}} games that have been found"
     }
+  },
+  "login": {
+    "signin" : "Sign in",
+    "inputs" : {
+      "username_label" : "Username",
+      "username_placeholder":"Enter your username",
+      "password_label": "Password",
+      "password_placeholder" : "Enter your password",
+      "submit" : "Submit",
+      "account" : "You already have an account ? click here"
+    }
+  },
+  "register" : {
+    "title" : "Register",
+    "inputs" : {
+      "username_label" : "Username",
+      "username_placeholder":"Enter a username",
+      "email_label" : "Email",
+      "email_placeholder":"Enter an email",
+      "name_label" : "Name",
+      "name_placeholder":"Enter a name",
+      "lastname_label" : "Lastname",
+      "lastname_placeholder":"Enter a lastname",
+      "password_label" : "Password",
+      "password_placeholder":"Enter a password",
+      "submit" : "Submit",
+      "account" : "You don't have an account ? Click here"
+    },
+    "errors" : {
+      "username" : "Your username must contain at least 4 digits or letters",
+      "email" : "Your email is not in the correct format (ex: this@mail.com)",
+      "password" : "Your password must contain at least 8 digits or letters"
+    }
+  },
+  "admin" : {
+    "title" : "Admin dashboard"
   }
 }

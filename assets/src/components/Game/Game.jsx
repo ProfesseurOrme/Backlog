@@ -33,7 +33,6 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
         setLoaded(false);
         await Promise.all([getGameInfo(uuid), getGameRating(uuid), getStatistics(uuid)])
             .then(values => {
-                console.log(values);
                 values[0] ? setGameInfo(values[0]) : setGameInfo(null);
                 values[1] ? setUserRating(values[1]) : setUserRating(null);
                 values[2] ? setGameStatistics(values[2]) : setGameStatistics(null);
@@ -55,14 +54,14 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
     }
 
     const getStatistics= (uuid) => {
-        return getGameStatistics(uuid)
+        return getGameStatistics(i18n.language, uuid)
             .then(result => {return result.data})
             .catch(error => {})
             ;
     }
 
     const getGameRating = (uuid) => {
-        return getRating(uuid)
+        return getRating(i18n.language, uuid)
             .then(result => {
                 return result.data;
             })
@@ -70,14 +69,14 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
     }
 
     const setGameRating = (rating) => {
-        setRating({rating: rating}, gameInfoUuid )
+        setRating(i18n.language, {rating: rating}, gameInfoUuid )
             .then(result => {})
             .catch(error => {})
         ;
     };
 
     const updateGameRating = (rating) => {
-        updateRating({...userRating, rating: rating}, gameInfoUuid )
+        updateRating(i18n.language, {...userRating, rating: rating}, gameInfoUuid )
             .then(_ => setUserRating(prevState => ({...prevState, rating : rating})))
             .catch(error => {})
         ;
@@ -203,7 +202,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                             </Media>
                             <Row>
                                 <Col>
-                                    <p className="h5 my-3">{trans("main.dashboard.games.status.modal.now")} ({ gameStatistics ? gameStatistics.nb_players : "None"})</p>
+                                    <p className="h5 my-3">{trans("main.dashboard.games.status.modal.now")} : { gameStatistics ? gameStatistics.nb_players : trans("main.dashboard.games.status.modal.none")}</p>
                                 </Col>
                             </Row>
                             { gameStatistics ?

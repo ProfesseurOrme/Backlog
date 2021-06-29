@@ -1,0 +1,23 @@
+game:
+  add: Jeu ajouté à la bibliothèque
+  status:
+    updated: Status mis à jour
+  rating:
+    updated: Vous avez modifié la note du jeu
+    error: Vous n'avez pas noté le jeu
+    success: Vous avec bien noté le jeu
+user:
+  register:
+    username:
+      available: Le nom d'utilisateur est disponible
+      taken: Le nom d'utilisateur est déjà pris. Veuillez réessayer
+    error: Les données envoyées sont incorrects. Veuillez réessayer
+    created: L'utilisateur a bien été créé
+token:
+    expired: Le token est expiré ! Veuillez vous re-authentifier
+    missing: Aucun token détecté. Veuillez vous connecter pour utiliser cette ressource
+    invalid: Le token n'est pas valide ! Veuillez réessayer
+validator:
+    error: Erreur ! Des données sont incorrects ou manquantes. Veuillez réessayer
+data:
+    missing: L'entrée demandée n'est pas disponible. Veuillez recommencer

@@ -21,6 +21,10 @@ i18n
         resources,
         lng: "fr",
         fallbackLng: "en",
+        whitelist: ["en", "fr"],
+        detection : {
+            checkWhiteList : true
+        },
         interpolation : {
             escapeValue : false
         }

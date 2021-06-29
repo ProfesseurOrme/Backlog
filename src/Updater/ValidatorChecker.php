@@ -7,16 +7,19 @@
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class ValidatorChecker
 {
 	private $validator;
 	private $serializer;
+	private $translator;
 
-	public function __construct(ValidatorInterface $validator, SerializerInterface $serializer)
+	public function __construct(ValidatorInterface $validator, SerializerInterface $serializer, TranslatorInterface $translator)
 	{
 		$this->validator = $validator;
 		$this->serializer = $serializer;
+		$this->translator = $translator;
 	}
 
 	public function verifyData($data)
@@ -27,7 +30,7 @@ abstract class ValidatorChecker
 
 			$dataError = [
 				"code" => Response::HTTP_BAD_REQUEST,
-				"error" => 'Error: Some data are incorrect or missing. Try Again.',
+				"error" => $this->translator->trans("validator.error"),
 			];
 			$messages = [];
 			foreach ($errors as $violation) {

@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {Container} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {Route, Switch, Redirect} from 'react-router-dom';
 import Login from "./Authentication/Login";
 import Footer from "./Footer";
 import AuthService from "../helpers/AuthService";
-import {urlBacklogApi} from "../helpers/UrlBacklogService";
 import Register from "./Authentication/Register";
 import Dashboard from "./Dashboard/Dashboard";
 
@@ -12,9 +12,10 @@ const App = () => {
 
     const [user, setUser] = useState(null);
     const [loaded, setLoaded] = useState(false);
+    const [trans, i18n] = useTranslation();
 
     useEffect(() => {
-        AuthService.checkUser(urlBacklogApi(),"user")
+        AuthService.checkUser(i18n.language,"user")
             .then(result => {
                 setUser(result);
             })

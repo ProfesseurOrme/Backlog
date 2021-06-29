@@ -9,8 +9,8 @@ class AuthService {
         return  date;
     }
 
-    login = async (data) => {
-        return await login(data)
+    login = async (locale, data) => {
+        return await login(locale, data)
             .then(result => {
                 data = {
                     ...result.data,
@@ -26,7 +26,7 @@ class AuthService {
         ;
     }
 
-    checkUser = async (domain, key) => {
+    checkUser = async (locale, key) => {
         const itemStr = localStorage.getItem(key);
 
         if (!itemStr) {
@@ -38,9 +38,8 @@ class AuthService {
         const now = new Date();
 
         if (now.getTime() > pastDate) {
-            return await refreshToken({"refresh_token" : item.refresh_token})
+            return await refreshToken(locale,{"refresh_token" : item.refresh_token})
                 .then(result => {
-                    console.log("Il est refresh");
                     const newItem = {
                         ...item,
                         token : result.data.token,
@@ -51,13 +50,11 @@ class AuthService {
                     return newItem;
                 })
                 .catch(_ => {
-                    console.log("Il n'est plus valide");
                     localStorage.removeItem(key);
                     throw null;
                 })
             ;
         } else {
-            console.log("Il est encore valide");
             return item;
         }
     }
@@ -66,8 +63,8 @@ class AuthService {
         localStorage.removeItem("user");
     }
 
-    register = async (data) => {
-        return await register(data);
+    register = async (locale, data) => {
+        return await register(locale, data);
     }
 
     getCurrentUser = () => {

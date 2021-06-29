@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -13,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiSecurityController
 {
 	/**
-	 * @Route("/api/login", name="app_login", methods={"POST"})
+	 * @Route("{_locale}/api/login", name="app_login", methods={"POST"}, requirements={"_locale" : "en|fr"})
 	 */
 	public function login()
 	{

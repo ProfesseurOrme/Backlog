@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Col, Form, Row} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 import {Link, useHistory} from "react-router-dom";
 import AuthService from "../../helpers/AuthService";
 import {urlBacklogApi} from "../../helpers/UrlBacklogService";
 import {getUser} from "../../api/ApiUser";
-import ReCaptchaV2 from 'react-google-recaptcha';
 
 const Register = () => {
     const [form, setForm] = useState({
@@ -26,6 +26,7 @@ const Register = () => {
     });
 
     const [disabled, setDisabled] = useState(true);
+    const [trans, i18n] = useTranslation();
 
     let history = useHistory();
 
@@ -40,22 +41,22 @@ const Register = () => {
 
     const testUsername = {
         regex : /^[0-9a-zA-Z]{4,}$/,
-        error: "Your username must contain at least 4 digits or letters"
+        error: trans("main.register.errors.username")
     }
 
     const testEmail = {
         regex : /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-        error : "Your email is not in the correct format"
+        error : trans("main.register.errors.email")
     };
 
     const testPassword = {
         regex : /^[0-9a-zA-Z]{8,}$/,
-        error: "Your password must contain at least 8 digits or letters"
+        error: trans("main.register.errors.password")
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        AuthService.register(form.fields)
+        AuthService.register(i18n.language, form.fields)
             .then(result => {
                 history.push("/");
             })
@@ -79,7 +80,7 @@ const Register = () => {
 
         const testThisValue = test.regex.test(value)
         if(testThisValue){
-            const searchUsername = await getUser(urlBacklogApi(), {username : value})
+            const searchUsername = await getUser(urlBacklogApi(i18n.language), {username : value})
                 .then(_ => {
                     return ""
                 })
@@ -131,7 +132,7 @@ const Register = () => {
                 <Col sm={12} className={"p-0"}>
                     <Card className={"mb-3"}>
                         <Card.Header>
-                            <Card.Title>Backlog.io</Card.Title>
+                            <Card.Title>{trans("main.title")}</Card.Title>
                         </Card.Header>
                     </Card>
                 </Col>
@@ -140,16 +141,16 @@ const Register = () => {
                 <Col lg={6} md={8} sm={12}>
                     <Card className={"my-3"}>
                         <Card.Header>
-                            <Card.Text>Sign In</Card.Text>
+                            <Card.Text>{trans("main.register.title")}</Card.Text>
                         </Card.Header>
                         <Card.Body className={"p-4"}>
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group className={"mb-3"} controlId={"formBasicUsername"}>
-                                    <Form.Label>Username</Form.Label>
+                                    <Form.Label>{trans("main.register.inputs.username_label")}</Form.Label>
                                     <Form.Control
                                         type={"username"}
                                         name={"username"}
-                                        placeholder={"Enter your username"}
+                                        placeholder={trans("main.register.inputs.username_placeholder")}
                                         value={form.fields.username}
                                         onChange={handleChange}
                                         isInvalid={ !!form.errors.username }
@@ -164,11 +165,11 @@ const Register = () => {
                                     }
                                 </Form.Group>
                                 <Form.Group className={"mb-3"} controlId={"formBasicEmail"}>
-                                    <Form.Label>Email</Form.Label>
+                                    <Form.Label>{trans("main.register.inputs.email_label")}</Form.Label>
                                     <Form.Control
                                         type={"email"}
                                         name={"email"}
-                                        placeholder={"Enter your email"}
+                                        placeholder={trans("main.register.inputs.email_placeholder")}
                                         value={form.fields.email}
                                         onChange={handleChange}
                                         isInvalid={ !!form.errors.email }
@@ -183,30 +184,30 @@ const Register = () => {
                                     }
                                 </Form.Group>
                                 <Form.Group className={"mb-3"} controlId={"formBasicName"}>
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>{trans("main.register.inputs.name_label")}</Form.Label>
                                     <Form.Control
                                         type={"text"}
                                         name={"name"}
-                                        placeholder={"Enter your name"}
+                                        placeholder={trans("main.register.inputs.name_placeholder")}
                                         value={form.fields.name}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
                                 <Form.Group className={"mb-3"} controlId={"formBasicLastname"}>
-                                    <Form.Label>Lastname</Form.Label>
+                                    <Form.Label>{trans("main.register.inputs.lastname_label")}</Form.Label>
                                     <Form.Control
                                         type={"text"}
                                         name={"lastname"}
-                                        placeholder={"Enter your lastname"}
+                                        placeholder={trans("main.register.inputs.lastname_placeholder")}
                                         value={form.fields.lastname}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
                                 <Form.Group className={"mb-3"} controlId={"formBasicPassword"}>
-                                    <Form.Label>Password</Form.Label>
+                                    <Form.Label>{trans("main.register.inputs.password_label")}</Form.Label>
                                     <Form.Control
                                         type={"password"}
-                                        placeholder={"Enter your password"}
+                                        placeholder={trans("main.register.inputs.password_placeholder")}
                                         name={"password"}
                                         value={form.fields.password}
                                         onChange={handleChange}
@@ -231,14 +232,14 @@ const Register = () => {
                                 </div>
                                 <div className={"d-flex justify-content-center"}>
                                     <Button variant={"primary"} type={"submit"} disabled={disabled}>
-                                        Register
+                                        {trans("main.register.inputs.submit")}
                                     </Button>
                                 </div>
                             </Form>
                         </Card.Body>
                         <Card.Footer>
                             <p className={"text-body text-center"}>
-                                <Link to={"/login"} >You already have an account ? click here !</Link>
+                                <Link to={"/login"} >{trans("main.register.inputs.account")}</Link>
                             </p>
                         </Card.Footer>
                     </Card>

@@ -108,8 +108,8 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
 
     return (
         <>
-            <Row className="my-3">
-                <Col>
+            <Row className="my-3 justify-content-center">
+                <Col lg={10} md={12} sm={12}>
                     <form onSubmit={handleSearch}>
                         <InputGroup>
                             <Form.Control

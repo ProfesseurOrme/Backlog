@@ -60,7 +60,8 @@
               "rate" : "Notez le jeu",
               "average" : "Note moyenne obtenue : {{rate}}/5"
             },
-            "now" : "Qui joue en ce moment"
+            "now" : "Qui joue en ce moment",
+            "none": "Aucun joueur"
           }
         }
       }
@@ -71,6 +72,42 @@
         "reset" : "Réinitialiser la recherche"
       },
       "results" : "Il y a {{nbGames}} jeux qui ont été trouvé"
+    },
+    "login": {
+      "title" : "S'identifier",
+      "inputs" : {
+        "username_label" : "Nom d'utilisateur",
+        "username_placeholder":"Entrez votre nom d'utilisateur",
+        "password_label": "Mot de passe",
+        "password_placeholder" : "Entrez votre mot de passe",
+        "submit" : "Se connecter",
+        "account" : "Vous avez déjà un compte ? Cliquez ici"
+      }
+    },
+    "register" : {
+      "title" : "S'enregistrer",
+      "inputs" : {
+        "username_label" : "Nom d'utilisateur",
+        "username_placeholder":"Entrez un nom d'utilisateur",
+        "email_label" : "Nom d'utilisateur",
+        "email_placeholder":"Entrez un nom d'utilisateur",
+        "name_label" : "Prénom",
+        "name_placeholder":"Entrez un prénom",
+        "lastname_label" : "Nom",
+        "lastname_placeholder":"Entrez un nom",
+        "password_label" : "Mot de passe",
+        "password_placeholder":"Entrez un mot de passe",
+        "submit" : "S'enregistrer",
+        "account" : "Vous n'avez pas de compte ? Cliquez ici"
+      },
+      "errors" : {
+        "username" : "Un nom d'utilisateur doit contenir au moins 4 lettres ou chiffres",
+        "email" : "Votre mail n'est pas dans le bon format (ex: martin@mail.com)",
+        "password" : "Votre mot de passe doit contenir au moins 8 lettres ou chiffres"
+      }
+    },
+    "admin" : {
+      "title" : "Tableau d'administration"
     }
   }
 }

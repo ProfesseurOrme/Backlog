@@ -9,9 +9,17 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTFailureEventInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JWTErrorListener
 {
+	protected $translation;
+
+	public function __construct(TranslatorInterface $translation)
+	{
+		$this->translation = $translation;
+	}
+
 	public function onJWTError(JWTFailureEventInterface $failureEvent)
 	{
 		$response = $failureEvent->getResponse();
@@ -22,7 +30,7 @@ class JWTErrorListener
 		{
 			$dataResponse = [
 				"status"  => $response->getStatusCode(),
-				"message" => "Your token has expired! Please re-authenticate"
+				"message" => $this->translation->trans("token.expired")
 			];
 		}
 		else if ($failureEvent instanceof JWTNotFoundEvent)
@@ -30,7 +38,7 @@ class JWTErrorListener
 
 			$dataResponse = [
 				"status"  => $response->getStatusCode(),
-				"message" => "No connection token detected. Please login to use this resource",
+				"message" => $this->translation->trans("token.missing")
 			];
 
 		}
@@ -38,7 +46,7 @@ class JWTErrorListener
 		{
 			$dataResponse = [
 				"status"  => $response->getStatusCode(),
-				"message" => "Token not valid! Please enter it again or login",
+				"message" => $this->translation->trans("token.invalid"),
 			];
 		}
 

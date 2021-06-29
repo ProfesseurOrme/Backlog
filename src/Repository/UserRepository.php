@@ -36,10 +36,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function getGamesPerUser($id) {
-    	return $this->createQueryBuilder("u")
-				->where("u.id = :id")
-				->setParameters(["id" => $id])
-			;
+    public function getUserWithoutRole() {
+    	//to do
 		}
 }

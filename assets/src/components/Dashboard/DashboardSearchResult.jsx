@@ -26,7 +26,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
             <Card>
                 <Card.Img className={"card-img-custom"} variant={"top"}  src={game.background_image ? game.background_image : placeholderImage} />
                 <Card.Body>
-                    <Card.Title className={"text-truncate"}>{game.name}</Card.Title>
+                    <div className={"card-title text-truncate"}>{game.name}</div>
                     <Card.Text><strong>{trans("main.dashboard.games.status.modal.date")} : </strong>{reformatDate(game.released)}</Card.Text>
                 </Card.Body>
                 <Card.Footer className={"text-center border-top-blue-grey border-top-lighten-5"}>

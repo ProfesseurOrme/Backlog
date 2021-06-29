@@ -1,0 +1,23 @@
+game:
+    add: Game added
+    status:
+        updated: Status updated
+    rating:
+        updated: You have updated the game's rating
+        error: You did not rate this game
+        success: You have rated this game
+user:
+    register:
+        username:
+            available: Username is available
+            taken: Username is already taken. Try again
+        error: The data sent is incorrect. Please try again
+        created: User has been created
+token:
+    expired: Your token has expired ! Please re-authenticate
+    missing: No connection token detected. Please login to use this ressource
+    invalid: Token not valid ! Please enter it again or login
+validator:
+    error: Error, some data are incorrect or missing. Try again
+data:
+    missing: The requested data is not available. Try again

@@ -1,10 +1,8 @@
-import debounce from "@popperjs/core/lib/utils/debounce";
 import React, {useState, useEffect} from "react";
 import {Button, Card, Col, Form, InputGroup, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {FaSearch} from "react-icons/fa";
 import {ImCross} from "react-icons/im";
-import {delay} from "../../helpers/DelayService";
 import DashBoardGamesTable from "./DashBoardGamesTable";
 import PlatformSelectService from "../../helpers/PlatformSelectService";
 
@@ -55,15 +53,17 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
 
     const handleSearchGame = (event) => {
         event.preventDefault();
-        setSort(prevState => ({...prevState, loaded: false}));
-        const results = PlatformSelectService.searchByNameAndPlatform(sort.name, sort.platform, userGames);
-        setSort(prevState => ({...prevState, search:true, loaded: true, nbResults: results.nbResults, games: results.games}));
+        if(sort.name || sort.platform) {
+            setSort(prevState => ({...prevState, loaded: false}));
+            const results = PlatformSelectService.searchByNameAndPlatform(sort.name, sort.platform, userGames);
+            setSort(prevState => ({...prevState, search:true, loaded: true, nbResults: results.nbResults, games: results.games}));
+        }
     }
 
     return (
         <>
             <Row className="my-3 justify-content-center">
-                <Col>
+                <Col lg={10} md={12} sm={12}>
                     <Card>
                         <Card.Body>
                             <Form onSubmit={handleSearchGame}>
@@ -133,63 +133,66 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
             </Row>
             {
                 sort.search ?
-                    <>
-                        {
-                            typeof sort.games !== 'undefined' ?
+                    <Row>
+                        <Col>
+                            {
+                                typeof sort.games !== 'undefined' ?
+                                    <DashBoardGamesTable
+                                        key={4}
+                                        title={trans("main.dashboard.games.status.titles.results") + " : " + sort.nbResults}
+                                        handleShowModal={handleShowModal}
+                                        setGameInfoUuid={setGameInfoUuid}
+                                        games={sort.games}
+                                        sortLoaded={sort.loaded}
+                                    />
+                                    :
+                                    <Row className="my-3">
+                                        <Col>
+                                            <h3>{trans("main.dashboard.games.searchbar.error")} !</h3>
+                                        </Col>
+                                    </Row>
+                            }
+                        </Col>
+                    </Row>
+                    :
+                    <Row>
+                        <Col>
+                            {state.inProgress.length > 0 ?
                                 <DashBoardGamesTable
-                                    key={4}
-                                    title={trans("main.dashboard.games.status.titles.results") + " : " + sort.nbResults}
+                                    key={1}
+                                    title={trans("main.dashboard.games.status.titles.in_progress")}
                                     handleShowModal={handleShowModal}
                                     setGameInfoUuid={setGameInfoUuid}
-                                    games={sort.games}
-                                    sortLoaded={sort.loaded}
+                                    games={(state.inProgress.length > 0) ? state.inProgress : undefined}
                                 />
                                 :
-                                <Row className="my-3">
-                                    <Col>
-                                        <h3>{trans("main.dashboard.games.searchbar.error")} !</h3>
-                                    </Col>
-                                </Row>
-                        }
-                    </>
-                    :
-                    <>
-                        {state.inProgress.length > 0 ?
-                            <DashBoardGamesTable
-                                key={1}
-                                title={trans("main.dashboard.games.status.titles.in_progress")}
-                                handleShowModal={handleShowModal}
-                                setGameInfoUuid={setGameInfoUuid}
-                                games={(state.inProgress.length > 0) ? state.inProgress : undefined}
-                            />
-                            :
-                            ""
-                        }
-                        {state.toDo.length > 0 ?
-                            <DashBoardGamesTable
-                                key={2}
-                                title={trans("main.dashboard.games.status.titles.to_do")}
-                                handleShowModal={handleShowModal}
-                                setGameInfoUuid={setGameInfoUuid}
-                                games={(state.toDo.length > 0) ? state.toDo : undefined}
-                            />
-                            :
-                            ""
-                        }
-                        {state.finished.length > 0 ?
-                            <DashBoardGamesTable
-                                key={3}
-                                title={trans("main.dashboard.games.status.titles.finished")}
-                                handleShowModal={handleShowModal}
-                                setGameInfoUuid={setGameInfoUuid}
-                                games={(state.finished.length > 0) ? state.finished : undefined}
-                            />
-                            :
-                            ""
-                        }
-                    </>
+                                ""
+                            }
+                            {state.toDo.length > 0 ?
+                                <DashBoardGamesTable
+                                    key={2}
+                                    title={trans("main.dashboard.games.status.titles.to_do")}
+                                    handleShowModal={handleShowModal}
+                                    setGameInfoUuid={setGameInfoUuid}
+                                    games={(state.toDo.length > 0) ? state.toDo : undefined}
+                                />
+                                :
+                                ""
+                            }
+                            {state.finished.length > 0 ?
+                                <DashBoardGamesTable
+                                    key={3}
+                                    title={trans("main.dashboard.games.status.titles.finished")}
+                                    handleShowModal={handleShowModal}
+                                    setGameInfoUuid={setGameInfoUuid}
+                                    games={(state.finished.length > 0) ? state.finished : undefined}
+                                />
+                                :
+                                ""
+                            }
+                        </Col>
+                    </Row>
             }
-
         </>
     )
 }

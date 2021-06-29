@@ -11,32 +11,38 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class GameController
  * @package App\Controller
- * @Route("/api/games/", name="api_game")
+ * @Route("{_locale}/api/games/", name="api_game", requirements={"_locale" : "en|fr"})
  */
 class ApiGameController extends AbstractApiController
 {
-		public $normalizer;
-		public $gameChecker;
-		public $entityManager;
+		protected $normalizer;
+		protected $gameChecker;
+		protected $entityManager;
+		protected $translation;
 
 		public function __construct(
 			SerializerInterface $serializer,
 			NormalizerInterface $normalizer,
 			GameChecker $gameChecker,
-			EntityManagerInterface $entityManager
+			EntityManagerInterface $entityManager,
+			TranslatorInterface $translation
 		)
 		{
 			parent::__construct($serializer);
 			$this->normalizer = $normalizer;
 			$this->gameChecker = $gameChecker;
 			$this->entityManager = $entityManager;
+			$this->translation = $translation;
 		}
 
 		/**
@@ -80,7 +86,7 @@ class ApiGameController extends AbstractApiController
 
 			$this->gameChecker->addThisGameToUser($game, $this->getUser());
 
-			return $this->respondWithCode(Response::HTTP_CREATED, "Game added !");
+			return $this->respondWithCode(Response::HTTP_CREATED, $this->translation->trans("game.add"));
 		}
 
 		/**
@@ -98,7 +104,7 @@ class ApiGameController extends AbstractApiController
 			$game->setStatus($status);
 			$this->entityManager->flush();
 
-			return $this->respondWithCode(Response::HTTP_OK, "Status updated !");
+			return $this->respondWithCode(Response::HTTP_OK, $this->translation->trans("game.status.updated"));
 		}
 
 	/**
@@ -112,7 +118,7 @@ class ApiGameController extends AbstractApiController
 		if($rating) {
 			return $this->respond(["id" => $rating->getId(),"rating" => $rating->getRating(), "addedAt" => $rating->getAddedAt()]);
 		} else {
-			return $this->respondNotFound("You did not rate this game");
+			return $this->respondNotFound($this->translation->trans("game.rating.error"));
 		}
 	}
 
@@ -129,7 +135,7 @@ class ApiGameController extends AbstractApiController
 		$this->entityManager->persist($rating);
 		$this->entityManager->flush();
 
-		return $this->respondCreated("You have rated this game");
+		return $this->respondCreated($this->translation->trans("game.rating.success"));
 	}
 
 	/**
@@ -146,9 +152,9 @@ class ApiGameController extends AbstractApiController
 
 			$this->entityManager->flush();
 
-			return $this->respondUpdated("You have updated the game's rating");
+			return $this->respondUpdated($this->translation->trans("game.rating.updated"));
 		} else {
-			return $this->respondNotFound("You have not rated this game. Please try again");
+			return $this->respondNotFound($this->translation->trans("game.rating.error"));
 		}
 	}
 

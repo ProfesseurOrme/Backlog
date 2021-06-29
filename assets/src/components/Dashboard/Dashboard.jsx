@@ -17,6 +17,7 @@ import {BiSearchAlt2} from "react-icons/bi";
 import {RiGamepadLine} from "react-icons/ri";
 import {FiLogOut} from "react-icons/fi";
 import Account from "../Account/Account";
+import Admin from "../Admin/Admin";
 import Game from "../Game/Game";
 import DashboardGames from "./DashboardGames";
 import DashboardSearch from "./DashboardSearch";
@@ -35,8 +36,6 @@ const Dashboard = ({user, logout}) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    console.log(i18n.language)
-
     useEffect(() => {
 
         isCancelled.current = false;
@@ -49,7 +48,7 @@ const Dashboard = ({user, logout}) => {
 
 
     const getGames = () => {
-        getGamesPerUser()
+        getGamesPerUser(i18n.language)
             .then(result => {
                 if (!isCancelled.current) {
                     setUserGames(result.data);
@@ -63,14 +62,14 @@ const Dashboard = ({user, logout}) => {
     }
 
     const handleChangeStatus = (statusId, gameUuid, gameSlug) => {
-        updateGameUserStatus(statusId, gameUuid, gameSlug)
+        updateGameUserStatus(i18n.language, statusId, gameUuid, gameSlug)
             .then(_ => {
                 setLoadGames(true);
             })
     }
 
     const handleAddGame = (data) => {
-        setGameWithUser(data)
+        setGameWithUser(i18n.language, data)
             .then(_ => {
                 setLoadGames(true);
             })
@@ -117,6 +116,16 @@ const Dashboard = ({user, logout}) => {
                                         <Dropdown.Header><strong>{user.data.user}</strong></Dropdown.Header>
                                         <Dropdown.Divider />
                                         <Dropdown.Item eventKey="third">{trans("main.tabs.my_account.profil")}</Dropdown.Item>
+                                        {
+                                            user.data.roles[0] === "ROLE_ADMIN" ?
+                                                <>
+                                                    <Dropdown.Divider />
+                                                    <Dropdown.Item eventKey="fourth">{trans("main.admin.title")}</Dropdown.Item>
+                                                </>
+                                                :
+                                                ""
+                                        }
+
                                         <Dropdown.Divider />
                                         <Dropdown.Item className={"dropdown-item-primary"} onClick={() => {i18n.changeLanguage("fr")}}><GiFrance /> French</Dropdown.Item>
                                         <Dropdown.Item className={"dropdown-item-warning"} onClick={() => {i18n.changeLanguage("en")}}><SiEventbrite /> English</Dropdown.Item>
@@ -131,7 +140,7 @@ const Dashboard = ({user, logout}) => {
                 { loaded ?
                     <>
                         <Row className={"justify-content-md-center"}>
-                            <Col lg={10} md={12} sm={12}>
+                            <Col>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="first">
                                         {
@@ -171,6 +180,14 @@ const Dashboard = ({user, logout}) => {
                                         <Account user={user}/>
                                     </Tab.Pane>
                                 </Tab.Content>
+                                {
+                                    user.data.roles[0] === "ROLE_ADMIN" ?
+                                        <Tab.Pane eventKey="fourth">
+                                            <Admin user={user} />
+                                        </Tab.Pane>
+                                        :
+                                        ""
+                                }
                             </Col>
                         </Row>
                     </>
