@@ -18,4 +18,18 @@ class GameRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Game::class);
     }
+
+    public function findUserGames($username, $id) {
+    	return $this->createQueryBuilder("g")
+				->innerJoin("g.userGameStatuses" , "ugs")
+				->addSelect("ugs")
+				->innerJoin("ugs.user" , "u")
+				->addSelect("u")
+				->where("u.username = :username")
+				->andWhere("u.id = :id")
+				->setParameters(["username" => $username, "id" => $id])
+				->getQuery()
+				->getResult()
+			;
+		}
 }

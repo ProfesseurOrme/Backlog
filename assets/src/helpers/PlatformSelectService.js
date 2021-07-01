@@ -23,28 +23,32 @@ class PlatformSelectService {
         return PlatformSelectService.prototype.sortValues(results);
     }
 
-    static searchByNameAndPlatform = (name, option, games) => {
+    static searchByNameAndPlatform = (name, option, datas) => {
 
         let firstResult = [], finalResult = [];
         if(name) {
-            games.forEach(game => {
-                (game.slug.includes(this.createSlug(name))) ? firstResult.push(game) : "";
+            datas.forEach(data => {
+                if("slug" in data) {
+                    (data.slug.includes(this.createSlug(name))) ? firstResult.push(data) : "";
+                }else {
+                    (data.username.includes(name)) ? firstResult.push(data) : "";
+                }
             })
         } else {
-            firstResult = games;
+            firstResult = datas;
         }
 
         if(option) {
-            firstResult.forEach(game => {
-                game.platforms.forEach(platform => {
-                    (option === platform.name) ? finalResult.push(game) : "";
+            firstResult.forEach(data => {
+                data.platforms.forEach(platform => {
+                    (option === platform.name) ? finalResult.push(data) : "";
                 })
             })
         } else {
             finalResult = firstResult;
         }
 
-        return (finalResult.length >= 1) ? {nbResults : finalResult.length, games :PlatformSelectService.prototype.sortValues(finalResult)} : [];
+        return (finalResult.length >= 1) ? {nbResults : finalResult.length, datas :PlatformSelectService.prototype.sortValues(finalResult)} : [];
     }
 }
 

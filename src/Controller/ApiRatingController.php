@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("{_locale}/api/ratings/", name="api_rating")

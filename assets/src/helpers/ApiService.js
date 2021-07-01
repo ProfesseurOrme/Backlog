@@ -24,7 +24,7 @@ class ApiService {
     }
 
     async put(url, data, headers) {
-        return axios.post(url, data, headers ? await this.config() : {})
+        return axios.put(url, data, headers ? await this.config() : {})
     }
 
     async delete(url, headers){

@@ -8,14 +8,13 @@ use App\Entity\Status;
 use App\Entity\UserGameStatus;
 use App\Services\GameChecker\GameChecker;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface as JMS;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\SerializerInterface as SFSerializer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -25,21 +24,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ApiGameController extends AbstractApiController
 {
-		protected $normalizer;
 		protected $gameChecker;
 		protected $entityManager;
 		protected $translation;
 
 		public function __construct(
-			SerializerInterface $serializer,
-			NormalizerInterface $normalizer,
+			JMS $serializer,
+			SFSerializer $sfSerializer,
 			GameChecker $gameChecker,
 			EntityManagerInterface $entityManager,
 			TranslatorInterface $translation
 		)
 		{
-			parent::__construct($serializer);
-			$this->normalizer = $normalizer;
+			parent::__construct($serializer, $sfSerializer);
 			$this->gameChecker = $gameChecker;
 			$this->entityManager = $entityManager;
 			$this->translation = $translation;
@@ -51,28 +48,9 @@ class ApiGameController extends AbstractApiController
 		*/
 		public function getGames(): Response
 		{
-			$data= $this->getUser()->getUserGameStatuses();
-			$games = [];
-			$platforms = [];
+			$games = $this->entityManager->getRepository(Game::class)->findUserGames($this->getUser()->getUsername(), $this->getUser()->getId());
 
-			foreach ($data as $item) {
-				foreach ($item->getGame()->getPlatforms() as $platform) {
-					$platforms[] = [
-						"name" => $platform->getName(),
-						"uuid" => $platform->getUuid()
-					];
-				}
-				$games[] = [
-					"name" => $item->getGame()->getName(),
-					"slug" => $item->getGame()->getSlug(),
-					"uuid" => $item->getGame()->getUuid(),
-					"status" => intval($item->getStatus()->getId()),
-					"platforms" => $platforms
-				];
-				$platforms = [];
-			}
-
-			return $this->respond($games);
+			return $this->respond($games, SerializationContext::create()->setGroups(["user_games"]));
 		}
 
 		/**
@@ -90,16 +68,15 @@ class ApiGameController extends AbstractApiController
 		}
 
 		/**
-		* @Route("{uuid}-{slug}/status/{id}", name="_get_status_update", methods={"PUT"})
-		* @ParamConverter("game", options={"mapping": {"uuid": "uuid", "slug": "slug"}})
+		* @Route("{uuid}/status/{id}", name="_get_status_update", methods={"PUT"})
+		* @ParamConverter("game", options={"mapping": {"uuid": "uuid"}})
 		* @param Game $game
 		* @param Status $status
 		* @return Response
 		*/
 		public function setGameStatus(Game $game, Status $status): Response
 		{
-			$game = $this->entityManager->getRepository(UserGameStatus::class)->findGamePerUser($game->getId(), $this->getUser
-			()->getId());
+			$game = $this->entityManager->getRepository(UserGameStatus::class)->findGamePerUser($game->getId(), $this->getUser()->getId());
 
 			$game->setStatus($status);
 			$this->entityManager->flush();

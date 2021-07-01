@@ -4,12 +4,12 @@ import ReactPaginate from "react-paginate";
 import {useTranslation} from "react-i18next";
 import AdminTableRow from "./AdminTableRow";
 
-const AdminTable = ({users}) => {
+const AdminTable = ({users, title}) => {
 
     const [pagination, setPagination] = useState({
         data: users,
         offset: 0,
-        numberPerPage: 8,
+        numberPerPage: 20,
         pageCount: 0,
         currentData: []
     });
@@ -33,7 +33,7 @@ const AdminTable = ({users}) => {
     return (
         <Card className={"my-3 card-games"}>
             <Card.Header>
-                <Card.Text className={"h5"}>Admin dashboard</Card.Text>
+                <Card.Text className={"h5"}>{title}</Card.Text>
             </Card.Header>
             <Card.Body className="p-0">
                 <Table responsive hover>

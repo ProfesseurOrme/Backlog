@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserGameStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserGameStatusRepository::class)
@@ -20,6 +21,7 @@ class UserGameStatus
     /**
      * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="userGameStatuses")
      * @ORM\JoinColumn(nullable=false)
+		 * @Groups({"user_games"})
      */
     private $status;
 

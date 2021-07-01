@@ -6,6 +6,7 @@ use App\Repository\PlatformRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PlatformRepository::class)
@@ -21,11 +22,13 @@ class Platform
 
     /**
      * @ORM\Column(type="string", length=255)
+		 * @Groups({"user_games"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", length=255, unique=true)
+		 * @Groups({"user_games"})
      */
     private $uuid;
 

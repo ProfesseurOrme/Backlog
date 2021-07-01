@@ -10,7 +10,7 @@ const initialStateSort = {
     name : "",
     platform : "",
     nbResults: 0,
-    games : [],
+    datas : [],
     option_select_platforms : [],
     loaded: false,
     search : false
@@ -34,7 +34,7 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                 finished: []
             })
             userGames.forEach((item) => {
-                switch (item.status) {
+                switch (item.user_game_statuses[0].status.id) {
                     case 1 : setState(prevState => ({...prevState, toDo : [...prevState.toDo, item]}))
                         break;
                     case 2 : setState(prevState => ({...prevState, inProgress : [...prevState.inProgress, item]}))
@@ -56,7 +56,8 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
         if(sort.name || sort.platform) {
             setSort(prevState => ({...prevState, loaded: false}));
             const results = PlatformSelectService.searchByNameAndPlatform(sort.name, sort.platform, userGames);
-            setSort(prevState => ({...prevState, search:true, loaded: true, nbResults: results.nbResults, games: results.games}));
+            console.log(results);
+            setSort(prevState => ({...prevState, search:true, loaded: true, nbResults: results.nbResults, datas: results.datas}));
         }
     }
 
@@ -136,13 +137,13 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
                     <Row>
                         <Col>
                             {
-                                typeof sort.games !== 'undefined' ?
+                                sort.nbResults > 0 ?
                                     <DashBoardGamesTable
                                         key={4}
                                         title={trans("main.dashboard.games.status.titles.results") + " : " + sort.nbResults}
                                         handleShowModal={handleShowModal}
                                         setGameInfoUuid={setGameInfoUuid}
-                                        games={sort.games}
+                                        games={sort.datas}
                                         sortLoaded={sort.loaded}
                                     />
                                     :

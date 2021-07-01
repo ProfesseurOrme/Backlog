@@ -3,20 +3,23 @@
 
 namespace App\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface as JMS;
+use Symfony\Component\Serializer\SerializerInterface as SFSerializer;
+
 
 abstract class AbstractApiController extends AbstractController
 {
 		private $statusCode = 200;
 
 		protected $serializer;
+		protected $sfSerializer;
 
-		public function __construct(SerializerInterface $serializer)
+		public function __construct(JMS $serializer, SFSerializer $sfSerializer)
 		{
 			$this->serializer = $serializer;
+			$this->sfSerializer = $sfSerializer;
 		}
 
 		private function getStatusCode() : int
@@ -31,19 +34,20 @@ abstract class AbstractApiController extends AbstractController
 			return $this;
 		}
 
-		public function serializeData($data) : string
+		public function serializeData($data, $groups = null) : string
 		{
-			return $this->serializer->serialize($data, "json");
+			return $this->serializer->serialize($data, "json", $groups);
 		}
 
 		public function deserializeData(string $data, string $classname)
 		{
-			return $this->serializer->deserialize($data, $classname, "json");
+			return $this->sfSerializer->deserialize($data, $classname, "json");
 		}
 
-		public function respond($data): Response
+		public function respond($data, $groups = null): Response
 		{
-			return new Response($this->serializeData($data),$this->getStatusCode(), ["Content-Type" => "application/json", "Access-Control-Allow-Origin" => "*"]);
+			return new Response($this->serializeData($data, $groups),$this->getStatusCode(), ["Content-Type" => "application/json",
+				"Access-Control-Allow-Origin" => "*"]);
 		}
 
 		public function respondWithErrors($errors): Response

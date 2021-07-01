@@ -8,13 +8,14 @@
 	use Symfony\Component\HttpKernel\Exception\HttpException;
 	use Symfony\Component\Serializer\SerializerInterface;
 	use Symfony\Component\Validator\Validator\ValidatorInterface;
+	use Symfony\Contracts\Translation\TranslatorInterface;
 
 	class Updater extends ValidatorChecker {
 		private $entityManager;
 
 		public function __construct(ValidatorInterface $validator, SerializerInterface $serializer,EntityManagerInterface
-		$entityManager) {
-			parent::__construct($validator,$serializer);
+		$entityManager, TranslatorInterface $translator) {
+			parent::__construct($validator,$serializer, $translator);
 			$this->entityManager = $entityManager;
 		}
 

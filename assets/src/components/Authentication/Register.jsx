@@ -22,7 +22,7 @@ const Register = () => {
             lastname: "",
             password : ""
         },
-        token: false
+        token: true
     });
 
     const [disabled, setDisabled] = useState(true);
@@ -80,7 +80,7 @@ const Register = () => {
 
         const testThisValue = test.regex.test(value)
         if(testThisValue){
-            const searchUsername = await getUser(urlBacklogApi(i18n.language), {username : value})
+            const searchUsername = await getUser(i18n.language, {username : value})
                 .then(_ => {
                     return ""
                 })

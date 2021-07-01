@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GameRepository::class)
@@ -22,17 +23,20 @@ class Game
 
     /**
      * @ORM\Column(type="integer", length=255, unique=true)
+		 * @Groups({"user_games"})
      */
     private $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
+		 * @Groups({"user_games"})
      */
     private $name;
 
     /**
 		 * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(type="string", length=255)
+		 * @Groups({"user_games"})
      */
     private $slug;
 
@@ -43,16 +47,19 @@ class Game
 
     /**
      * @ORM\ManyToMany(targetEntity=Platform::class, inversedBy="games", cascade={"persist"})
+		 * @Groups({"user_games"})
      */
     private $platforms;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+		 * @Groups({"user_games"})
      */
     private $released;
 
     /**
      * @ORM\OneToMany(targetEntity=UserGameStatus::class, mappedBy="game")
+		 * @Groups({"user_games"})
      */
     private $userGameStatuses;
 

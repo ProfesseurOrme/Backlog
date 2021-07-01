@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -18,11 +19,13 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+		 * @Groups({"get_user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+		 * @Groups({"get_user"})
      */
     private $username;
 
@@ -39,26 +42,31 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+		 * @Groups({"get_user"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+		 * @Groups({"get_user"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+		 * @Groups({"get_user"})
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
+		 * @Groups({"get_user"})
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
+		 * @Groups({"get_user"})
      */
     private $lastActivity;
 

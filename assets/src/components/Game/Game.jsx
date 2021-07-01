@@ -274,7 +274,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             </Tooltip>
                                             }
                                         >
-                                            <Button className={"mx-2"} disabled={game.status === 1} variant={game.status === 1 ? "danger" : "outline-danger"} onClick={game.status !== 1 ? ()=> handleChangeStatus(1, game.uuid, game.slug) : undefined} type={"button"}>
+                                            <Button className={"mx-2"} disabled={game.user_game_statuses[0].status.id === 1} variant={game.user_game_statuses[0].status.id === 1 ? "danger" : "outline-danger"} onClick={game.user_game_statuses[0].status.id !== 1 ? ()=> handleChangeStatus(1, game.uuid) : undefined} type={"button"}>
                                                 <p className={"modal-footer-btn-label"}><span>{trans("main.dashboard.games.status.titles.to_do")}</span> <FaTasks /></p>
                                             </Button>
                                         </OverlayTrigger>
@@ -285,7 +285,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             </Tooltip>
                                             }
                                         >
-                                            <Button className={"mx-2"} disabled={game.status === 2} variant={(game.status === 2) ? "warning" : "outline-warning"} onClick={game.status !== 2 ? ()=> handleChangeStatus(2, game.uuid, game.slug) : undefined} type={"button"}>
+                                            <Button className={"mx-2"} disabled={game.user_game_statuses[0].status.id === 2} variant={(game.user_game_statuses[0].status.id === 2) ? "warning" : "outline-warning"} onClick={game.user_game_statuses[0].status.id !== 2 ? ()=> handleChangeStatus(2, game.uuid) : undefined} type={"button"}>
                                                 <p className={"modal-footer-btn-label"}><span>{trans("main.dashboard.games.status.titles.in_progress")} </span><FaSpinner /></p>
                                             </Button>
                                         </OverlayTrigger>
@@ -296,7 +296,7 @@ const Game = ({user, showModal, handleCloseModal, game, gameInfoUuid, setGameInf
                                             </Tooltip>
                                             }
                                         >
-                                            <Button className={"mx-2"} disabled={game.status === 3} variant={(game.status === 3) ? "success" : "outline-success" } onClick={game.status !== 3 ? ()=> handleChangeStatus(3, game.uuid, game.slug) : undefined} type={"button"}>
+                                            <Button className={"mx-2"} disabled={game.user_game_statuses[0].status.id=== 3} variant={(game.user_game_statuses[0].status.id === 3) ? "success" : "outline-success" } onClick={game.user_game_statuses[0].status.id !== 3 ? ()=> handleChangeStatus(3, game.uuid) : undefined} type={"button"}>
                                                 <p className={"modal-footer-btn-label"}><span>{trans("main.dashboard.games.status.titles.finished")} </span><FaCheck /></p>
                                             </Button>
                                         </OverlayTrigger>

@@ -19,7 +19,7 @@ const initialState  = {
     loaded : true
 }
 
-const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, handleShowModal, setGameInfoUuid, handleAddGame}) => {
+const DashboardSearch = ({user, userGames, handleChangeStatus, handleShowModal, setGameInfoUuid, handleAddGame}) => {
 
     const [searchState, setSearchState] = useState(initialState);
     const [trans, i18n] = useTranslation();
@@ -45,7 +45,7 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
                     if(result.data.count === 0) {
                         setSearchState(prevState => ({
                             ...prevState,
-                            error: t("main.dashboard.games.searchbar.error")
+                            error: trans("main.dashboard.games.searchbar.error")
                         }))
                     } else {
                         setSearchState(prevState => ({
@@ -172,7 +172,6 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
                                         game ? <DashboardSearchResult
                                                     handleChangeStatus={handleChangeStatus}
                                                     handleAddGame={handleAddGame}
-                                                    setLoadGames={setLoadGames}
                                                     key={game.id}
                                                     game={game}
                                                     userGames={userGames ? userGames : null}
@@ -192,7 +191,6 @@ const DashboardSearch = ({user, userGames, setLoadGames, handleChangeStatus, han
                             <Row>
                                 <Col md={12} className="text-center">
                                     { searchState.previous ?
-
                                         <Button className="mx-2" variant="primary" onClick={() => handleLoadPage(searchState.previous)} type="button">
                                             <FaAngleLeft /> Prev
                                         </Button>

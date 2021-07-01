@@ -14,7 +14,7 @@ import {useTranslation} from "react-i18next";
 import {SiEventbrite} from "react-icons/si";
 import {GiFrance} from "react-icons/gi";
 import {BiSearchAlt2} from "react-icons/bi";
-import {RiGamepadLine} from "react-icons/ri";
+import {RiAdminFill, RiGamepadLine} from "react-icons/ri";
 import {FiLogOut} from "react-icons/fi";
 import Account from "../Account/Account";
 import Admin from "../Admin/Admin";
@@ -61,8 +61,8 @@ const Dashboard = ({user, logout}) => {
         ;
     }
 
-    const handleChangeStatus = (statusId, gameUuid, gameSlug) => {
-        updateGameUserStatus(i18n.language, statusId, gameUuid, gameSlug)
+    const handleChangeStatus = (statusId, gameUuid) => {
+        updateGameUserStatus(i18n.language, statusId, gameUuid)
             .then(_ => {
                 setLoadGames(true);
             })
@@ -120,7 +120,7 @@ const Dashboard = ({user, logout}) => {
                                             user.data.roles[0] === "ROLE_ADMIN" ?
                                                 <>
                                                     <Dropdown.Divider />
-                                                    <Dropdown.Item eventKey="fourth">{trans("main.admin.title")}</Dropdown.Item>
+                                                    <Dropdown.Item eventKey="fourth"><RiAdminFill /> {trans("main.admin.title")}</Dropdown.Item>
                                                 </>
                                                 :
                                                 ""
@@ -168,7 +168,6 @@ const Dashboard = ({user, logout}) => {
                                             handleAddGame={handleAddGame}
                                             id="link2"
                                             user={user}
-                                            setLoadGames={setLoadGames}
                                             userGames={userGames ? userGames : null}
                                             handleShowModal={handleShow}
                                             setGameInfoUuid={setGameInfoUuid}
@@ -182,9 +181,11 @@ const Dashboard = ({user, logout}) => {
                                 </Tab.Content>
                                 {
                                     user.data.roles[0] === "ROLE_ADMIN" ?
-                                        <Tab.Pane eventKey="fourth">
-                                            <Admin user={user} />
-                                        </Tab.Pane>
+                                        <Tab.Content>
+                                            <Tab.Pane eventKey="fourth">
+                                                <Admin user={user} />
+                                            </Tab.Pane>
+                                        </Tab.Content>
                                         :
                                         ""
                                 }

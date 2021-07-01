@@ -13,9 +13,9 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
 
     if (userGames) {
         useEffect(() => {
-            let search = userGames.find(item => item.uuid === game.id.toString())
+            let search = userGames.find(item => item.uuid === game.id);
             if(search) {
-                setStateValue(search.status.id);
+                setStateValue(search.user_game_statuses[0].status.id);
                 setUserGame(search)
             }
         }, [userGames])
@@ -40,7 +40,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                     </Tooltip>
                                     }
                                 >
-                                    <Button className={"mx-2"} disabled={userGame.status === 1} variant={userGame.status === 1 ? "danger" : "outline-danger"} onClick={userGame.status !== 1 ? ()=> handleChangeStatus(1, game.id, game.slug) : undefined} type={"button"}>
+                                    <Button className={"mx-2"} disabled={userGame.user_game_statuses[0].status.id === 1} variant={userGame.user_game_statuses[0].status.id === 1 ? "danger" : "outline-danger"} onClick={userGame.user_game_statuses[0].status.id !== 1 ? ()=> handleChangeStatus(1, game.id) : undefined} type={"button"}>
                                         <FaTasks />
                                     </Button>
                                 </OverlayTrigger>
@@ -51,7 +51,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                     </Tooltip>
                                     }
                                 >
-                                    <Button className={"mx-2"} disabled={userGame.status === 2} variant={(userGame.status === 2) ? "warning" : "outline-warning"} onClick={userGame.status !== 2 ? ()=> handleChangeStatus(2, game.id, game.slug) : undefined} type={"button"}>
+                                    <Button className={"mx-2"} disabled={userGame.user_game_statuses[0].status.id === 2} variant={(userGame.user_game_statuses[0].status.id === 2) ? "warning" : "outline-warning"} onClick={userGame.user_game_statuses[0].status.id !== 2 ? ()=> handleChangeStatus(2, game.id) : undefined} type={"button"}>
                                         <FaSpinner />
                                     </Button>
                                 </OverlayTrigger>
@@ -62,7 +62,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                     </Tooltip>
                                     }
                                 >
-                                    <Button className={"mx-2"} disabled={userGame.status === 3} variant={(userGame.status === 3) ? "success" : "outline-success" } onClick={userGame.status !== 3 ? ()=> handleChangeStatus(3, game.id, game.slug) : undefined} type={"button"}>
+                                    <Button className={"mx-2"} disabled={userGame.user_game_statuses[0].status.id === 3} variant={(userGame.user_game_statuses[0].status.id === 3) ? "success" : "outline-success" } onClick={userGame.user_game_statuses[0].status.id !== 3 ? ()=> handleChangeStatus(3, game.id) : undefined} type={"button"}>
                                        <FaCheck />
                                     </Button>
                                 </OverlayTrigger>
@@ -85,6 +85,7 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                         released: game.released,
                                         platforms : platformsGame
                                     })
+
                                 }}
                             >
                                 <FaPlusCircle /> {trans("main.dashboard.games.status.card.add")}

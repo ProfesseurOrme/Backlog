@@ -2,6 +2,7 @@ import React from "react";
 import {Badge, Button, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {FaSearch} from "react-icons/fa";
+import {reformatDate} from "../../helpers/MiscService";
 
 const AdminTableRow = ({user}) => {
     return (
@@ -13,7 +14,7 @@ const AdminTableRow = ({user}) => {
                 {user.email}
             </td>
             <td style={{width: "30%"}} className={"cell-truncate"}>
-                {user.create_at}
+                {reformatDate(user.created_at)}
             </td>
             <td style={{width: "30%"}} className={"cell-truncate"}>
                 <Button onClick={() => {

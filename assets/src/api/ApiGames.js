@@ -6,8 +6,8 @@ export const getGamesPerUser = (locale) => {
     return ApiService.get(urlBacklogApi(locale) + "/api/games/", true);
 }
 
-export const updateGameUserStatus = (locale,statusId, gameUuid, gameSlug) => {
-    return ApiService.put(urlBacklogApi(locale) + "/api/games/" + gameUuid + "-" + gameSlug + "/status/" + statusId, {}, true);
+export const updateGameUserStatus = (locale,statusId, gameUuid) => {
+    return ApiService.put(urlBacklogApi(locale) + "/api/games/" + gameUuid + "/status/" + statusId, {}, true);
 }
 
 export const setGameWithUser = (locale,data) => {
