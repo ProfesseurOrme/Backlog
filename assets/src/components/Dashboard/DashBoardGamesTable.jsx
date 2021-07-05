@@ -31,8 +31,6 @@ const DashBoardGamesTable =({user, title, games, handleShowModal, setGameInfoUui
         setPagination({ ...pagination, offset })
     }
 
-    console.log(games);
-
     const titleColor = (title) => {
         let color, icon;
         switch (title) {

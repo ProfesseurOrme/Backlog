@@ -4,7 +4,7 @@ import ReactPaginate from "react-paginate";
 import {useTranslation} from "react-i18next";
 import AdminTableRow from "./AdminTableRow";
 
-const AdminTable = ({users, title}) => {
+const AdminTable = ({users, title, setUserInfo, handleShow}) => {
 
     const [pagination, setPagination] = useState({
         data: users,
@@ -40,16 +40,16 @@ const AdminTable = ({users, title}) => {
                     <thead>
                     <tr>
                         <th>
-                            Username
+                            {trans("main.admin.table.tags.username")}
                         </th>
                         <th>
-                            Email
+                            {trans("main.admin.table.tags.email")}
                         </th>
                         <th>
-                            Created at
+                            {trans("main.admin.table.tags.create_at")}
                         </th>
                         <th>
-                            Action
+                            {trans("main.admin.table.tags.action")}
                         </th>
                     </tr>
                     </thead>
@@ -57,11 +57,11 @@ const AdminTable = ({users, title}) => {
                     {
                         users.length > 0 ?
                             pagination.currentData && pagination.currentData.map(user => (
-                                <AdminTableRow key={user.id} user={user} />
+                                <AdminTableRow key={user.id} user={user} setUserInfo={setUserInfo} handleShow={handleShow}/>
                             ))
                             :
                             <tr>
-                                <td>{trans("main.dashboard.games.status.card.table.tags.empty")}</td>
+                                <td>{trans("main.admin.empty")}</td>
                             </tr>
                     }
                     </tbody>

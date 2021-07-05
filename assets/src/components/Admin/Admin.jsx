@@ -3,9 +3,10 @@ import {Button, Card, Col, Form, InputGroup, OverlayTrigger, Row, Tooltip} from 
 import {useTranslation} from "react-i18next";
 import {FaSearch} from "react-icons/fa";
 import {ImCross} from "react-icons/im";
-import {getUsers} from "../../api/ApiUser";
-import PlatformSelectService from "../../helpers/PlatformSelectService";
+import {deleteUser, getUsers} from "../../api/ApiUser";
+import PlatformSelectService from "../../helpers/SearchService";
 import DashBoardGamesTable from "../Dashboard/DashBoardGamesTable";
+import AdminModal from "./AdminModal";
 import AdminTable from "./AdminTable";
 
 const initialStateSort = {
@@ -21,18 +22,26 @@ const Admin = ({user}) => {
     const [users, setUsers] = useState([]);
     const [sort, setSort] = useState(initialStateSort);
     const [load, setLoaded] = useState(false);
+    const [show, setShow] = useState(false);
+    const [userInfo, setUserInfo] = useState("");
+
     const [trans, i18n] = useTranslation();
+
+    const handleClose = () => {
+        setUserInfo("")
+        setShow(false)
+    };
+    const handleShow = () => setShow(true);
 
     useEffect(() => {
         getBacklogUsers();
-    }, []);
+    }, [show]);
 
     const handleSearchUser = (event) => {
         event.preventDefault();
         if(sort.name) {
             setSort(prevState => ({...prevState, loaded: false}));
             const results = PlatformSelectService.searchByNameAndPlatform(sort.name, false, users);
-            console.log(results);
             setSort(prevState => ({...prevState, search:true, loaded: true, nbResults: results.nbResults, datas: results.datas}));
         }
     }
@@ -51,6 +60,12 @@ const Admin = ({user}) => {
 
     return(
         <>
+            {
+                userInfo ?
+                    <AdminModal show={show} handleClose={handleClose} user={userInfo}/>
+                    :
+                    ""
+            }
             <Row className="my-3 justify-content-center">
                 <Col lg={10} md={12} sm={12}>
                     <Card>
@@ -73,7 +88,7 @@ const Admin = ({user}) => {
                                                     <OverlayTrigger
                                                         placement={"bottom"}
                                                         overlay={<Tooltip id={"tooltip-bottom"}>
-                                                            <strong>Reset search</strong>
+                                                            <strong>{trans("main.admin.search.reset_tooltip")}</strong>
                                                         </Tooltip>
                                                         }
                                                     >
@@ -91,7 +106,7 @@ const Admin = ({user}) => {
                                         </InputGroup>
                                     </Col>
                                     <Col md={2} sm={12} className="my-1 justify-content-sm-center">
-                                        <Button type="submit"><FaSearch/> Rechercher</Button>
+                                        <Button type="submit"><FaSearch/> {trans("main.admin.search.search_button")}</Button>
                                     </Col>
                                 </Form.Row>
                             </Form>
@@ -105,18 +120,18 @@ const Admin = ({user}) => {
                         <Col>
                             {
                                 sort.nbResults > 0 ?
-                                    <AdminTable title={trans("main.dashboard.games.status.titles.results") + " : " + sort.nbResults} users={sort.datas}/>
+                                    <AdminTable title={trans("main.admin.table.title") + " : " + sort.nbResults} users={sort.datas} setUserInfo={setUserInfo} handleShow={handleShow}/>
                                     :
                                     <Row className="my-3">
                                         <Col>
-                                            <h3>{trans("main.dashboard.games.searchbar.error")} !</h3>
+                                            <h3>{trans("main.admin.search.error")} !</h3>
                                         </Col>
                                     </Row>
                             }
                         </Col>
                     </Row>
                     :
-                    <AdminTable title={"My users"} users={users}/>
+                    <AdminTable title={trans("main.admin.table.title")} users={users} setUserInfo={setUserInfo} handleShow={handleShow}/>
             }
         </>
     )

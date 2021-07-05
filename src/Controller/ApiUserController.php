@@ -104,11 +104,17 @@ class ApiUserController extends AbstractApiController
 		}
 
 		/**
-		* @Route("/", name="_delete", methods={"DELETE"})
+		* @Route("/{username}", name="_delete", methods={"DELETE"})
 	  * @Security("is_granted('ROLE_ADMIN')")
 		*/
-		public function deleteUser()
+		public function deleteUser(User $user) : Response
 		{
-
+			if ($user) {
+				$this->entityManager->remove($user);
+				$this->entityManager->flush();
+				return $this->respondDeleted();
+			} else {
+				return $this->respondNotFound("User not found");
+			}
 		}
 }

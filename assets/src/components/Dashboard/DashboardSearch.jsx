@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {ImCross} from "react-icons/im";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
 import {delay} from "../../helpers/DelayService";
-import PlatformSelectService from "../../helpers/PlatformSelectService";
+import PlatformSelectService from "../../helpers/SearchService";
 import DashboardSearchResult from "./DashboardSearchResult";
 import {getGames} from "../../api/ApiRawg";
 

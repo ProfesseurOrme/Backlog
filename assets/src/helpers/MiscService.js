@@ -7,10 +7,6 @@ export const splitArray = (array) => {
 }
 
 export const reformatDate = (date) => {
-    if (date) {
-        let dArr = date.split("-");
-        return dArr[2] + "/" + dArr[1] + "/" + dArr[0];
-    } else {
-        return "TBA";
-    }
+    const dateObject = new Date(date);
+    return ((dateObject.getDate() >= 10 ? dateObject.getDate() : "0" + dateObject.getDate())  + "/" + (dateObject.getMonth() >= 10 ? dateObject.getMonth() : "0" + dateObject.getMonth()) + "/" + dateObject.getFullYear())
 }

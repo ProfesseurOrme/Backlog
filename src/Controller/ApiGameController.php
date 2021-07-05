@@ -89,7 +89,6 @@ class ApiGameController extends AbstractApiController
 	 */
 	public function getGameRating(Game $game) : Response
 	{
-
 		$rating = $this->entityManager->getRepository(Rating::class)->findGameRating($game->getUuid(), $this->getUser()->getId());
 
 		if($rating) {

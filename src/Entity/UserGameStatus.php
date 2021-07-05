@@ -27,11 +27,13 @@ class UserGameStatus
 
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="userGameStatuses")
+		 * @Groups({"get_user"})
      */
     private $game;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="userGameStatuses")
+		 * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $user;
 

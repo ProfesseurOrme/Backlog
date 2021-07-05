@@ -65,18 +65,14 @@ class User implements UserInterface
     private $createdAt;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
-		 * @Groups({"get_user"})
-     */
-    private $lastActivity;
-
-    /**
      * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="user")
+		 * @Groups({"get_user"})
      */
     private $ratings;
 
     /**
      * @ORM\OneToMany(targetEntity=UserGameStatus::class, mappedBy="user")
+		 * @Groups({"get_user"})
      */
     private $userGameStatuses;
 
@@ -206,18 +202,6 @@ class User implements UserInterface
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getLastActivity(): ?\DateTimeInterface
-    {
-        return $this->lastActivity;
-    }
-
-    public function setLastActivity(?\DateTimeInterface $lastActivity): self
-    {
-        $this->lastActivity = $lastActivity;
 
         return $this;
     }

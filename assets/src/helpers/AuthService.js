@@ -38,13 +38,13 @@ class AuthService {
         const now = new Date();
 
         if (now.getTime() > pastDate) {
-            return await refreshToken(locale,{"refresh_token" : item.refresh_token})
+            return await refreshToken(locale, {"refresh_token": item.refresh_token})
                 .then(result => {
                     const newItem = {
                         ...item,
-                        token : result.data.token,
+                        token: result.data.token,
                         refresh_token: result.data.refresh_token,
-                        expired_token_date : this.setExpirationDate()
+                        expired_token_date: this.setExpirationDate()
                     };
                     localStorage.setItem(key, JSON.stringify(newItem));
                     return newItem;
@@ -52,8 +52,7 @@ class AuthService {
                 .catch(_ => {
                     localStorage.removeItem(key);
                     throw null;
-                })
-            ;
+                });
         } else {
             return item;
         }

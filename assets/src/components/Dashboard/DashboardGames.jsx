@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {FaSearch} from "react-icons/fa";
 import {ImCross} from "react-icons/im";
 import DashBoardGamesTable from "./DashBoardGamesTable";
-import PlatformSelectService from "../../helpers/PlatformSelectService";
+import PlatformSelectService from "../../helpers/SearchService";
 
 const initialStateSort = {
     name : "",
@@ -56,7 +56,6 @@ const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
         if(sort.name || sort.platform) {
             setSort(prevState => ({...prevState, loaded: false}));
             const results = PlatformSelectService.searchByNameAndPlatform(sort.name, sort.platform, userGames);
-            console.log(results);
             setSort(prevState => ({...prevState, search:true, loaded: true, nbResults: results.nbResults, datas: results.datas}));
         }
     }

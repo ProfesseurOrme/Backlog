@@ -23,20 +23,20 @@ class Game
 
     /**
      * @ORM\Column(type="integer", length=255, unique=true)
-		 * @Groups({"user_games"})
+		 * @Groups({"user_games", "get_user"})
      */
     private $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
-		 * @Groups({"user_games"})
+		 * @Groups({"user_games", "get_user"})
      */
     private $name;
 
     /**
 		 * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(type="string", length=255)
-		 * @Groups({"user_games"})
+		 * @Groups({"user_games", "get_user"})
      */
     private $slug;
 
@@ -47,13 +47,13 @@ class Game
 
     /**
      * @ORM\ManyToMany(targetEntity=Platform::class, inversedBy="games", cascade={"persist"})
-		 * @Groups({"user_games"})
+		 * @Groups({"user_games", "get_user"})
      */
     private $platforms;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-		 * @Groups({"user_games"})
+		 * @Groups({"user_games", "get_user"})
      */
     private $released;
 

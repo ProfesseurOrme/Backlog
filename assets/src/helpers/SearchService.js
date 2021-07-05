@@ -1,4 +1,4 @@
-class PlatformSelectService {
+class SearchService {
 
     sortValues(results) {
         return results.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
@@ -20,7 +20,7 @@ class PlatformSelectService {
             })
         })
 
-        return PlatformSelectService.prototype.sortValues(results);
+        return SearchService.prototype.sortValues(results);
     }
 
     static searchByNameAndPlatform = (name, option, datas) => {
@@ -48,8 +48,8 @@ class PlatformSelectService {
             finalResult = firstResult;
         }
 
-        return (finalResult.length >= 1) ? {nbResults : finalResult.length, datas :PlatformSelectService.prototype.sortValues(finalResult)} : [];
+        return (finalResult.length >= 1) ? {nbResults : finalResult.length, datas :SearchService.prototype.sortValues(finalResult)} : [];
     }
 }
 
-export default PlatformSelectService;
+export default SearchService;

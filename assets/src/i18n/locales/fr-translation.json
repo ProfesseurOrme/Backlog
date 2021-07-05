@@ -107,7 +107,29 @@
       }
     },
     "admin" : {
-      "title" : "Tableau d'administration"
+      "title" : "Tableau d'administration",
+      "search" : {
+        "search_placeholder" : "Rechercher l'utilisateur",
+        "reset_tooltip" : "Recharger la recherche",
+        "search_button" : "Rechercher",
+        "error" : "Il n'y a pas d'utilisateur à modérer"
+      },
+      "table" : {
+        "title" : "Mes utilisateurs",
+        "tags": {
+          "username": "Nom d'utilisateur",
+          "email": "Email",
+          "create_at": "Créé le",
+          "action": "Action"
+        },
+        "empty": "Il n'y a pas d'utilisateur à modérer"
+      },
+      "modal" : {
+        "title" : "Confirmer la suppression",
+        "body" : "Voulez-vous supprimer l'utilisateur",
+        "cancel" : "Annuler",
+        "delete" : "Supprimer"
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RatingRepository::class)
@@ -19,17 +20,19 @@ class Rating
 
     /**
      * @ORM\Column(type="float", scale=1, nullable=true)
+		 * @Groups({"get_user"})
      */
     private $rating;
 
     /**
      * @ORM\Column(type="datetime")
+		 * @Groups({"get_user"})
      */
     private $addedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="ratings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
 

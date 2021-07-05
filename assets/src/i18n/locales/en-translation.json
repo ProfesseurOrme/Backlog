@@ -108,6 +108,28 @@
     }
   },
   "admin" : {
-    "title" : "Admin dashboard"
+    "title" : "Admin dashboard",
+    "search" : {
+      "search_placeholder" : "Search user",
+      "reset_tooltip" : "Reset search",
+      "search_button" : "Search",
+      "error" : "There is no user to moderate"
+    },
+    "table" : {
+      "title" : "My users",
+      "tags": {
+        "username": "Username",
+        "email": "Email",
+        "create_at": "Created at",
+        "action": "Action"
+      },
+      "empty": "There is no user to moderate"
+    },
+    "modal" : {
+      "title" : "Confirm Deletion",
+      "body" : "Do you confirm the deletion of the user",
+      "cancel" : "Cancel",
+      "delete" : "Delete"
+    }
   }
 }

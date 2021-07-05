@@ -68,9 +68,9 @@ abstract class AbstractApiController extends AbstractController
 			return $this->setStatusCode(Response::HTTP_CREATED)->respond(["code" => Response::HTTP_CREATED, "message" => $message]);
 		}
 
-		public function respondDeleted($message) : Response
+		public function respondDeleted() : Response
 		{
-			return $this->setStatusCode(Response::HTTP_NO_CONTENT)->respond(["code" => Response::HTTP_NO_CONTENT, "message" => $message]);
+			return $this->setStatusCode(Response::HTTP_NO_CONTENT)->respond(["code" => Response::HTTP_NO_CONTENT]);
 		}
 
 		public function respondUpdated($message) : Response

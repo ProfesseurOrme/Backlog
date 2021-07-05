@@ -8,3 +8,7 @@ export const getUser = (locale, data) => {
 export const getUsers = (locale) => {
     return ApiService.get(urlBacklogApi(locale) + "/api/users/", true);
 }
+
+export const deleteUser = (locale, username) => {
+    return ApiService.delete(urlBacklogApi(locale) + "/api/users/" + username , true);
+}
