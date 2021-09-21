@@ -14,6 +14,7 @@ const resources = {
     }
 };
 
+// @ts-ignore
 i18n
     .use(detector)
     .use(initReactI18next)

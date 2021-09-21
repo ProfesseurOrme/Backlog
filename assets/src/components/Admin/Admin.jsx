@@ -34,6 +34,7 @@ const Admin = ({user}) => {
     const handleShow = () => setShow(true);
 
     useEffect(() => {
+        console.log("Coucou")
         getBacklogUsers();
     }, [show]);
 

@@ -239,7 +239,7 @@ const Register = () => {
                         </Card.Body>
                         <Card.Footer>
                             <p className={"text-body text-center"}>
-                                <Link to={"/login"} >{trans("main.register.inputs.account")}</Link>
+                                <Link to={"/login"} >{trans("main.login.inputs.account")}</Link>
                             </p>
                         </Card.Footer>
                     </Card>

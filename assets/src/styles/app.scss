@@ -94,6 +94,10 @@ body {
         font-family: var(--font-family-title);
         font-size: 1rem;
     }
+    .btn-nav {
+        text-decoration: none;
+        color: inherit;
+    }
 
     .navbar-collapse {
         .navbar-nav {

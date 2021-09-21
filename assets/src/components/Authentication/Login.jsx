@@ -83,7 +83,7 @@ const Login = ({setUser}) => {
                         </Card.Body>
                         <Card.Footer>
                             <p className={"text-body text-center"}>
-                                <Link to={"/register"} >{trans("main.login.inputs.account")}</Link>
+                                <Link to={"/register"} >{trans("main.register.inputs.account")}</Link>
                             </p>
                         </Card.Footer>
                     </Card>

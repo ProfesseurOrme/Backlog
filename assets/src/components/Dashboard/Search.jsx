@@ -4,9 +4,11 @@ import {Col, Row, Form, Button, InputGroup, Spinner, Tooltip, OverlayTrigger} fr
 import {useTranslation} from "react-i18next";
 import {ImCross} from "react-icons/im";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
+import {useDispatch, useSelector} from "react-redux";
 import {delay} from "../../helpers/DelayService";
 import PlatformSelectService from "../../helpers/SearchService";
-import DashboardSearchResult from "./DashboardSearchResult";
+import {selectGames} from "../../store/game";
+import SearchList from "./SearchList";
 import {getGames} from "../../api/ApiRawg";
 
 const initialState  = {
@@ -19,7 +21,7 @@ const initialState  = {
     loaded : true
 }
 
-const DashboardSearch = ({user, userGames, handleChangeStatus, handleShowModal, setGameInfoUuid, handleAddGame}) => {
+const Search = ({user, handleChangeStatus, userGames, handleShowModal, setGameInfoUuid, handleAddGame}) => {
 
     const [searchState, setSearchState] = useState(initialState);
     const [trans, i18n] = useTranslation();
@@ -169,7 +171,7 @@ const DashboardSearch = ({user, userGames, handleChangeStatus, handleShowModal, 
                             { searchState.searchedGames ?
                                 <>
                                     {searchState.searchedGames.map(game => (
-                                        game ? <DashboardSearchResult
+                                        game ? <SearchList
                                                     handleChangeStatus={handleChangeStatus}
                                                     handleAddGame={handleAddGame}
                                                     key={game.id}
@@ -220,4 +222,4 @@ const DashboardSearch = ({user, userGames, handleChangeStatus, handleShowModal, 
     )
 }
 
-export default DashboardSearch;
+export default Search;

@@ -2,17 +2,21 @@ import React, {useState, useEffect} from "react";
 import {Button, Card, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {FaCheck, FaPlusCircle, FaSearch, FaSpinner, FaTasks} from "react-icons/fa";
+import {useDispatch} from "react-redux";
 import placeholderImage from "../../img/placeholder-image.png";
 import {reformatDate} from "../../helpers/MiscService";
+import {addGameAsync} from "../../store/game";
 
-const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGame, handleShowModal, setGameInfoUuid}) => {
+const SearchList = ({game, userGames, handleChangeStatus, handleAddGame, handleShowModal, setGameInfoUuid}) => {
 
     const [userGame, setUserGame] = useState(null);
     const [stateValue, setStateValue] = useState("");
     const [trans , i18n] = useTranslation();
+    const dispatch = useDispatch();
 
     if (userGames) {
         useEffect(() => {
+            console.log(userGames);
             let search = userGames.find(item => item.uuid === game.id);
             if(search) {
                 setStateValue(search.user_game_statuses[0].status.id);
@@ -85,7 +89,6 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
                                         released: game.released,
                                         platforms : platformsGame
                                     })
-
                                 }}
                             >
                                 <FaPlusCircle /> {trans("main.dashboard.games.status.card.add")}
@@ -112,4 +115,4 @@ const DashboardSearchResult = ({game, userGames, handleChangeStatus, handleAddGa
 
 }
 
-export default DashboardSearchResult;
+export default SearchList;

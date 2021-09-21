@@ -4,12 +4,14 @@ import {useTranslation} from "react-i18next";
 import {BsStar, BsStarFill, BsStarHalf} from "react-icons/bs";
 import {FaAt, FaCheck, FaGamepad, FaPlusCircle, FaReddit, FaSpinner, FaTasks} from "react-icons/fa";
 import ReactStars from "react-rating-stars-component/dist/react-stars";
+import {useDispatch, useSelector} from "react-redux";
 import {getGameStatistics} from "../../api/ApiGames";
 import {getRating, setRating, updateRating} from "../../api/ApiRating";
 import {reformatDate, splitArray} from "../../helpers/MiscService";
 import {delay} from "../../helpers/DelayService";
 import {getGame} from "../../api/ApiRawg";
 import placeholderImage from "../../img/placeholder-image.png";
+import {selectGame, selectGames} from "../../store/game";
 
 /**
  * Note : Sometimes, RAWG API can remove some entries, so you have to use data from our API to display the desired modal

@@ -3,6 +3,8 @@ import {Button, Card, Col, Form, InputGroup, OverlayTrigger, Row, Spinner, Toolt
 import {useTranslation} from "react-i18next";
 import {FaSearch} from "react-icons/fa";
 import {ImCross} from "react-icons/im";
+import {useDispatch, useSelector} from "react-redux";
+import {selectGames} from "../../store/game";
 import DashBoardGamesTable from "./DashBoardGamesTable";
 import PlatformSelectService from "../../helpers/SearchService";
 
@@ -16,7 +18,7 @@ const initialStateSort = {
     search : false
 }
 
-const DashboardGames = ({userGames, handleShowModal, setGameInfoUuid}) => {
+const DashboardGames = ({handleShowModal, userGames, setGameInfoUuid}) => {
 
     const [state, setState] = useState({
         toDo: [],
